@@ -36,7 +36,9 @@ function short(str: string, n = 12): string {
 
 export default function ContractPage(): ReactNode {
   const { wallet } = useWallet();
-  const [viewContractId, setViewContractId] = useState("");
+  const [viewContractId, setViewContractId] = useState(
+    "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26"
+  );
   const [status, setStatus] = useState<TxStatus | null>(null);
   const [deploying, setDeploying] = useState(false);
   const [escrowData, setEscrowData] = useState<EscrowData | null>(null);
@@ -378,16 +380,23 @@ export default function ContractPage(): ReactNode {
                 </div>
               )}
               {listening && events.length === 0 && (
-                <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-6 text-center">
-                  <p className="text-sm text-neutral-500">
-                    Waiting for events... Deploy a contract and interact with it to see live data.
+                <div className="rounded-lg border border-dashed border-neutral-800 bg-neutral-950 p-6 text-center">
+                  <Zap className="h-5 w-5 text-neutral-600 mx-auto mb-2" />
+                  <p className="text-sm text-neutral-400">Listening for events...</p>
+                  <p className="text-xs text-neutral-600 mt-1">
+                    Deploy the contract above and call <code className="text-neutral-500">create()</code> to see events appear here.
                   </p>
                 </div>
               )}
               {!listening && events.length === 0 && (
-                <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-6 text-center">
-                  <p className="text-sm text-neutral-600">
-                    Enter a contract ID and connect the stream to see live events.
+                <div className="rounded-lg border border-dashed border-neutral-800 bg-neutral-950 p-8 text-center">
+                  <RadioTower className="h-6 w-6 text-neutral-600 mx-auto mb-3" />
+                  <p className="text-sm text-neutral-400 font-medium mb-1">Live contract event stream</p>
+                  <p className="text-xs text-neutral-600 max-w-sm mx-auto leading-relaxed">
+                    Subscribes to <code className="text-amber-400/70 bg-amber-400/5 px-1 rounded">created</code>,{" "}
+                    <code className="text-green-400/70 bg-green-400/5 px-1 rounded">settled</code>, and{" "}
+                    <code className="text-blue-400/70 bg-blue-400/5 px-1 rounded">refunded</code> events
+                    from the escrow contract. Click <strong>Connect Stream</strong> to start.
                   </p>
                 </div>
               )}
