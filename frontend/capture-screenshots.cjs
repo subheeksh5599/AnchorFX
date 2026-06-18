@@ -1,7 +1,7 @@
 const { chromium } = require("playwright");
 const path = require("path");
 
-const BASE = "https://frontend-ruby-tau-69.vercel.app";
+const BASE = "https://anchorfx.vercel.app";
 const OUT = "/home/arch/anchorfx/docs";
 
 const MOBILE = { width: 375, height: 812 }; // iPhone X
