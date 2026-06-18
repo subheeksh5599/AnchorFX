@@ -28,7 +28,8 @@ export type WalletType = "freighter" | "xbull" | "albedo";
 export type WalletError =
   | { type: "WALLET_NOT_FOUND"; wallet: WalletType; message: string }
   | { type: "USER_REJECTED"; message: string }
-  | { type: "INSUFFICIENT_BALANCE"; required: string; have: string; message: string };
+  | { type: "INSUFFICIENT_BALANCE"; required: string; have: string; message: string }
+  | { type: "TRANSACTION_FAILED"; message: string };
 
 interface XBullResponse {
   address: string;
@@ -189,7 +190,7 @@ export async function sendXLM(
     }
     return {
       success: false,
-      error: { type: "INSUFFICIENT_BALANCE", required: amount, have: "?", message: msg },
+      error: { type: "TRANSACTION_FAILED", message: msg },
     };
   }
 }
