@@ -106,7 +106,7 @@ export function Hero(): ReactNode {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-dvh flex-col items-center justify-start overflow-hidden px-6 pt-40 sm:pt-82"
+      className="relative flex min-h-dvh flex-col items-center justify-start overflow-hidden px-4 sm:px-6 pt-24 sm:pt-40 lg:pt-64"
     >
       {!isMobile && shouldRender && (
         <DitherCursor opacity={opacity} />
@@ -157,7 +157,7 @@ export function Hero(): ReactNode {
 
       {/* Carousel */}
       <div
-        className="relative -mx-6 mt-2 h-100 w-screen overflow-hidden sm:h-125 md:h-137.5 lg:h-150 xl:h-175"
+        className="relative -mx-4 sm:-mx-6 mt-2 h-72 w-screen overflow-hidden sm:h-100 md:h-137.5 lg:h-150 xl:h-175"
         style={{
           maskImage:
             "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
@@ -165,8 +165,8 @@ export function Hero(): ReactNode {
             "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
         }}
       >
-        <div className="absolute left-1/2 top-25 -translate-x-1/2 sm:top-30 lg:top-35 xl:top-40">
-          <div className="origin-top scale-[0.6] lg:scale-[0.7] xl:scale-100">
+        <div className="absolute left-1/2 top-12 sm:top-25 md:top-30 lg:top-35 xl:top-40 -translate-x-1/2">
+          <div className="origin-top scale-[0.45] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.7] xl:scale-100">
             <RotatingCards
               cards={carouselCards}
               radius={1000}

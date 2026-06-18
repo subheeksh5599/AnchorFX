@@ -270,7 +270,7 @@ export function Header(): ReactNode {
           className="bg-foreground shadow-2xl/20 border border-neutral-200/10 flex max-w-6xl flex-col overflow-hidden rounded-md"
           initial={false}
           animate={{ 
-            width: isMenuOpen ? "100%" : hasScrolled ? "56rem" : "42rem",
+            width: isMenuOpen ? "100%" : hasScrolled ? "min(56rem, calc(100vw - 2rem))" : "min(42rem, calc(100vw - 2rem))",
           }}
           transition={{ ...spring, delay: isMenuOpen ? 0 : 0.15 }}
         >

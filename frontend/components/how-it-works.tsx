@@ -42,7 +42,7 @@ function StepCard({
   return (
     <motion.div
       ref={ref}
-      className="bg-muted min-h-70 rounded-2xl p-6 md:p-8 flex flex-col"
+      className="bg-muted min-h-48 md:min-h-70 rounded-2xl p-6 md:p-8 flex flex-col"
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ duration: 0.6, delay: index * 0.1, ease: easeOut }}

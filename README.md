@@ -18,27 +18,29 @@ AnchorFX enables wallet connection, XLM transactions, multi-wallet support, and 
 
 ```
 anchorfx/
-├── frontend/                    # Next.js 16 app (landing page + wallet demo)
+├── .github/workflows/
+│   └── ci.yml                         # CI/CD: contract tests + frontend build + lint
+├── frontend/
 │   ├── app/
-│   │   ├── page.tsx            # Landing page
-│   │   ├── layout.tsx          # Root layout with providers
-│   │   └── wallet/
-│   │       └── page.tsx        # Wallet connect + balance + send XLM
+│   │   ├── page.tsx                   # Landing page
+│   │   ├── layout.tsx                 # Root layout with providers
+│   │   ├── wallet/page.tsx            # Multi-wallet connect + balance + send XLM
+│   │   ├── contract/page.tsx          # Deploy + read + real-time event stream
+│   │   └── api/events/route.ts        # SSE endpoint for live contract events
 │   ├── components/
-│   │   ├── wallet-provider.tsx # React context for Stellar wallet state
-│   │   ├── providers.tsx       # Theme + smooth scroll + wallet providers
-│   │   ├── hero.tsx, features.tsx, how-it-works.tsx, etc.
-│   │   └── header.tsx, footer.tsx
+│   │   ├── wallet-provider.tsx        # React context for multi-wallet state
+│   │   ├── providers.tsx              # Theme + smooth scroll + wallet providers
+│   │   └── hero.tsx, features.tsx, how-it-works.tsx, header.tsx, footer.tsx
 │   └── lib/
-│       ├── stellar.ts          # Freighter API + Stellar SDK helpers
-│       ├── config.ts           # Site configuration (AnchorFX branding)
-│       └── metadata.ts         # SEO metadata
+│       ├── multi-wallet.ts            # Freighter + xBull wallet adapter
+│       ├── contract-client.ts         # Contract deploy, SSE subscribe, escrow read
+│       ├── stellar.ts                 # Stellar SDK helpers
+│       └── config.ts                  # Site configuration
 └── contracts/
-    └── anchorfx-escrow/        # Soroban escrow contract (Rust)
+    └── anchorfx-escrow/
         ├── Cargo.toml
         └── src/
-            └── lib.rs          # Escrow: create, settle, refund, get_escrow
-```
+            └── lib.rs                 # Escrow contract + 5 unit tests
 
 ---
 
@@ -50,6 +52,60 @@ anchorfx/
 | Deploy TX | `0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e` |
 | WASM Upload TX | `353d42e6abe0da2e26fa4b1ebf1090812679445c8b8e4fead13d00b26463c85f` |
 | Stellar Expert | [View Contract](https://stellar.expert/explorer/testnet/tx/0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e) |
+
+---
+
+## Real-Time Event Streaming
+
+Contract events are streamed to the frontend via Server-Sent Events (SSE). The API endpoint `/api/events?contract=<contractId>` polls the Soroban RPC every 2 seconds and pushes new events to connected clients.
+
+**Event types emitted by the escrow contract:**
+- `created` — Escrow created with sender, receiver, token, amount
+- `settled` — Admin released funds to receiver
+- `refunded` — Sender reclaimed after timeout
+
+---
+
+## Smart Contract Tests
+
+5 passing tests covering the full escrow lifecycle:
+
+```
+running 5 tests
+test test::test_cannot_settle_twice ... ok
+test test::test_full_flow ... ok
+test test::test_refund_after_timeout ... ok
+test test::test_refund_too_early ... ok
+test test::test_version ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+
+Full output: [docs/test-output.txt](docs/test-output.txt)
+
+---
+
+## CI/CD Pipeline
+
+GitHub Actions workflow at `.github/workflows/ci.yml`:
+- Contract tests (cargo test) on wasm32 target
+- Frontend lint (eslint) and build (next build)
+- Runs on push and PR to main/master
+
+---
+
+## Inter-Contract Communication
+
+The escrow contract communicates with Stellar Asset Contracts (SAC) via cross-contract calls:
+- `create()` transfers tokens from sender to contract using SAC's `transfer()`
+- `settle()` transfers tokens from contract to receiver
+- `refund()` transfers tokens back to sender
+
+---
+
+## Demo Video
+
+*Add a 1-2 minute demo video link here showing the full flow: wallet connect, XLM send, contract deploy, real-time events.*
 
 ---
 

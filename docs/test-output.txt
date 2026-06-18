@@ -1,0 +1,12 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running unittests src/lib.rs (target/debug/deps/anchorfx_escrow-bb7de2c40171ee09)
+
+running 5 tests
+test test::test_cannot_settle_twice ... ok
+test test::test_full_flow ... ok
+test test::test_refund_after_timeout ... ok
+test test::test_version ... ok
+test test::test_refund_too_early ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+

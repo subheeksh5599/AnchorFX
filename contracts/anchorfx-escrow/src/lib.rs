@@ -97,3 +97,114 @@ impl AnchorFxEscrow {
 
     pub fn version() -> u32 { 1 }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use soroban_sdk::{testutils::{Address as _, Ledger}, Address, Env};
+
+    fn create_sac(env: &Env, admin: &Address) -> Address {
+        let sac = env
+            .register_stellar_asset_contract_v2(admin.clone());
+        let token = soroban_sdk::token::StellarAssetClient::new(env, &sac.address());
+        token.mint(&admin, &10000000);
+        sac.address()
+    }
+
+    #[test]
+    fn test_version() {
+        let env = Env::default();
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        assert_eq!(client.version(), 1);
+    }
+
+    #[test]
+    fn test_full_flow() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+
+        let token = create_sac(&env, &admin);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin);
+
+        // sender = admin (who holds the SAC tokens)
+        client.create(&admin, &receiver, &token, &1000_i128, &100_u32);
+        let escrow = client.get_escrow().unwrap();
+        assert_eq!(escrow.sender, admin);
+        assert_eq!(escrow.status, EscrowStatus::Created);
+
+        client.settle();
+        let settled = client.get_escrow().unwrap();
+        assert_eq!(settled.status, EscrowStatus::Settled);
+    }
+
+    #[test]
+    fn test_refund_after_timeout() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin);
+        client.create(&admin, &receiver, &token, &2000_i128, &5_u32);
+
+        env.ledger().set_sequence_number(env.ledger().sequence() + 10);
+
+        client.refund();
+        let refunded = client.get_escrow().unwrap();
+        assert_eq!(refunded.status, EscrowStatus::Refunded);
+    }
+
+    #[test]
+    fn test_cannot_settle_twice() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin);
+        client.create(&admin, &receiver, &token, &500_i128, &100_u32);
+
+        client.settle();
+        let settled = client.get_escrow().unwrap();
+        assert_eq!(settled.status, EscrowStatus::Settled);
+
+        let result = client.try_settle();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_refund_too_early() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin);
+        client.create(&admin, &receiver, &token, &500_i128, &100_u32);
+
+        let result = client.try_refund();
+        assert!(result.is_err());
+
+        let escrow = client.get_escrow().unwrap();
+        assert_eq!(escrow.status, EscrowStatus::Created);
+    }
+}

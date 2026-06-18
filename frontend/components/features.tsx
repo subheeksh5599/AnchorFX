@@ -59,7 +59,7 @@ function FeatureCard({
         ease: easeOut,
       }}
     >
-      <div className="px-4 py-28">
+      <div className="px-4 py-12 md:py-20 lg:py-28">
         <span className="text-muted-foreground bg-foreground/5 mb-4 block w-fit rounded-md px-2 py-1 text-sm font-medium transition-colors duration-300 group-hover:bg-foreground/10">
           {feature.number}
         </span>

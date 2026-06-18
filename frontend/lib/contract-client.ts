@@ -227,51 +227,34 @@ export async function trackTransaction(
 }
 
 /**
- * Listen to contract events via polling.
+ * Subscribe to contract events via Server-Sent Events.
+ * Returns an abort function to unsubscribe.
  */
-export async function pollContractEvents(
+export function subscribeContractEvents(
   contractId: string,
-  onEvent: (event: { type: string; data: unknown }) => void,
-  signal?: AbortSignal
-): Promise<void> {
-  const rpc = createRpcServer();
-  let cursor: string | undefined;
+  onEvent: (event: { type: string; data: unknown; ledger: number }) => void,
+  onError?: (err: Error) => void
+): () => void {
+  const url = `/api/events?contract=${encodeURIComponent(contractId)}`;
+  const source = new EventSource(url);
 
-  const poll = async () => {
-    if (signal?.aborted) return;
+  source.addEventListener("contract", (e) => {
     try {
-      const baseRequest = {
-        filters: [
-          {
-            type: "contract" as const,
-            contractIds: [contractId],
-          },
-        ],
-        limit: 10,
-      };
-
-      const request = cursor
-        ? { ...baseRequest, cursor }
-        : { ...baseRequest, startLedger: 1 };
-
-      const response = await rpc.getEvents(request);
-
-      for (const event of response.events) {
-        const rawType = event.topic[0]?.toString() ?? "unknown";
-        const type = rawType.replace(/^Symbol\(\)/, "").replace(/^"(.*)"$/, "$1");
-        onEvent({ type, data: event.value });
-      }
-
-      if (response.events.length > 0) {
-        cursor = response.cursor;
-      }
+      const ev = JSON.parse(e.data);
+      onEvent(ev);
     } catch {
-      // Retry
+      // skip malformed
     }
-    if (!signal?.aborted) {
-      setTimeout(poll, 5000);
-    }
-  };
+  });
 
-  poll();
+  source.addEventListener("open", () => {
+    // connected
+  });
+
+  source.addEventListener("error", () => {
+    onError?.(new Error("SSE connection error"));
+    source.close();
+  });
+
+  return () => source.close();
 }

@@ -6,7 +6,7 @@ import {
   deployContract,
   getEscrowFromContract,
   trackTransaction,
-  pollContractEvents,
+  subscribeContractEvents,
   type TxStatus,
   type EscrowData,
 } from "@/lib/contract-client";
@@ -15,7 +15,8 @@ import {
   Loader2,
   ExternalLink,
   Database,
-  Radio,
+  RadioTower,
+  Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
@@ -31,6 +32,7 @@ export default function ContractPage(): ReactNode {
   const [reading, setReading] = useState(false);
   const [events, setEvents] = useState<string[]>([]);
   const [listening, setListening] = useState(false);
+  const [liveLedger, setLiveLedger] = useState<number | null>(null);
 
   const handleDeploy = useCallback(async () => {
     if (!wallet.publicKey || !wallet.walletType) return;
@@ -66,19 +68,29 @@ export default function ContractPage(): ReactNode {
   const handleListen = useCallback(() => {
     if (!viewContractId || listening) return;
     setListening(true);
-    const controller = new AbortController();
-    pollContractEvents(
+    setEvents([]);
+
+    const cleanup = subscribeContractEvents(
       viewContractId,
       (event) => {
+        setLiveLedger(event.ledger);
         setEvents((prev) => [
-          `[${new Date().toLocaleTimeString()}] ${event.type}: ${JSON.stringify(event.data)}`,
+          `[ledger ${event.ledger}] ${event.type}: ${JSON.stringify(event.data)}`,
           ...prev.slice(0, 49),
         ]);
       },
-      controller.signal
+      () => {
+        setListening(false);
+      }
     );
-    return () => controller.abort();
+
+    return cleanup;
   }, [viewContractId, listening]);
+
+  const stopListening = useCallback(() => {
+    // cleanup handled by the return of handleListen, just reset state
+    setListening(false);
+  }, []);
 
   const statusLabel =
     status?.status === "success"
@@ -213,24 +225,43 @@ export default function ContractPage(): ReactNode {
 
               {/* Event listener */}
               <div className="bg-muted rounded-2xl p-6">
-                <h3 className="mb-4 text-lg font-medium">Contract Events</h3>
-                <button
-                  onClick={handleListen}
-                  disabled={listening || !viewContractId}
-                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
-                >
-                  {listening ? (
-                    <>
-                      <Radio className="h-4 w-4 animate-pulse text-green-500" />
-                      Listening...
-                    </>
-                  ) : (
-                    <>
-                      <Radio className="h-4 w-4" />
-                      Start Listening
-                    </>
+                <div className="flex items-center gap-2 mb-4">
+                  <h3 className="text-lg font-medium">Real-Time Events</h3>
+                  {listening && (
+                    <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                      <Zap className="h-3 w-3" /> Live
+                      {liveLedger && <span className="text-muted-foreground">· ledger {liveLedger}</span>}
+                    </span>
                   )}
-                </button>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleListen}
+                    disabled={listening || !viewContractId}
+                    className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
+                  >
+                    {listening ? (
+                      <>
+                        <RadioTower className="h-4 w-4 animate-pulse text-green-500" />
+                        Streaming
+                      </>
+                    ) : (
+                      <>
+                        <RadioTower className="h-4 w-4" />
+                        Connect Stream
+                      </>
+                    )}
+                  </button>
+                  {listening && (
+                    <button
+                      onClick={stopListening}
+                      className="text-muted-foreground hover:text-foreground text-sm transition-colors px-3"
+                    >
+                      Disconnect
+                    </button>
+                  )}
+                </div>
 
                 {events.length > 0 && (
                   <div className="bg-background mt-4 h-48 overflow-y-auto rounded-md p-3 font-mono text-xs">
