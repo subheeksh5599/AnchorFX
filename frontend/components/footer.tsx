@@ -16,16 +16,16 @@ const fadeInUp = {
 
 const productLinks = [
   { label: "Wallet", href: "/wallet" },
-  { label: "Smart Contracts", href: "#" },
-  { label: "Documentation", href: "#" },
+  { label: "Smart Contracts", href: "/contract" },
+  { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme" },
   { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX" },
 ];
 
 const companyLinks = [
-  { label: "About Stellar", href: "#" },
-  { label: "Builder Program", href: "#" },
-  { label: "Soroban", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "About Stellar", href: "https://stellar.org" },
+  { label: "Builder Program", href: "https://communityfund.stellar.org" },
+  { label: "Soroban", href: "https://soroban.stellar.org" },
+  { label: "Contact", href: "mailto:komasubheeksh@gmail.com" },
 ];
 
 const socialLinks = [
