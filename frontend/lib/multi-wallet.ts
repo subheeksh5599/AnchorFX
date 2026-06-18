@@ -11,7 +11,6 @@ import {
   Networks,
   TransactionBuilder,
   BASE_FEE,
-  Transaction,
   Operation,
   Asset,
 } from "@stellar/stellar-sdk";
@@ -181,9 +180,17 @@ export async function sendXLM(
       Networks.TESTNET
     );
 
-    const tx = new Transaction(signedTxXdr, Networks.TESTNET);
-    const result = await server.submitTransaction(tx);
-    return { success: true, hash: result.hash };
+    const body = new URLSearchParams({ tx: signedTxXdr });
+    const response = await fetch("https://horizon-testnet.stellar.org/transactions", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    const result = await response.json();
+    if (!response.ok || result.status === 400) {
+      throw new Error(result.detail || result.title || "Horizon rejected transaction");
+    }
+    return { success: true, hash: result.hash ?? result.id };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Transaction failed";
     if (msg.includes("reject") || msg.includes("denied")) {
