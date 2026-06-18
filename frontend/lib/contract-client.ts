@@ -161,31 +161,34 @@ export async function deployContract(
 
     // Step 3: Initialize the contract (call init with admin + oracle)
     onStatus({ status: "simulating" });
-    const account3 = await server.loadAccount(sourcePublicKey);
+    try {
+      const account3 = await server.loadAccount(sourcePublicKey);
 
-    const invoker = new Contract(contractId);
-    const initTx = new TransactionBuilder(account3, {
-      fee: "100000",
-      networkPassphrase: Networks.TESTNET,
-    })
-      .addOperation(invoker.call("init", adminAddress.toScVal(), adminAddress.toScVal()))
-      .setTimeout(30)
-      .build();
+      const invoker = new Contract(contractId);
+      const initTx = new TransactionBuilder(account3, {
+        fee: "100000",
+        networkPassphrase: Networks.TESTNET,
+      })
+        .addOperation(invoker.call("init", adminAddress.toScVal(), adminAddress.toScVal()))
+        .setTimeout(30)
+        .build();
 
-    const initPrep = await rpc.prepareTransaction(initTx);
-    const { signedTxXdr: initXdr } = await signSorobanTx(
-      walletType,
-      initPrep.toXDR(),
-      Networks.TESTNET
-    );
+      const initPrep = await rpc.prepareTransaction(initTx);
+      const { signedTxXdr: initXdr } = await signSorobanTx(
+        walletType,
+        initPrep.toXDR(),
+        Networks.TESTNET
+      );
 
-    const initResult = await rpc.sendTransaction(
-      TransactionBuilder.fromXDR(initXdr, Networks.TESTNET)
-    );
+      const initResult = await rpc.sendTransaction(
+        TransactionBuilder.fromXDR(initXdr, Networks.TESTNET)
+      );
 
-    if (String(initResult.status) !== "SUCCESS") {
-      // Still return success for contract creation — init failure is non-fatal
-      console.warn("Contract created but init failed:", initResult.errorResult);
+      if (String(initResult.status) !== "SUCCESS") {
+        console.warn("Contract created but init failed (may need to init manually):", initResult.errorResult);
+      }
+    } catch (initErr) {
+      console.warn("Init call failed — contract deployed but not initialized:", initErr);
     }
 
     onStatus({ status: "success", hash: createResult.hash, contractId });
