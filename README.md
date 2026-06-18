@@ -2,9 +2,15 @@
 
 **Atomic cross-border FX settlement on Stellar.**
 
-AnchorFX is a Level 1 (White Belt) submission for the Stellar Journey to Mastery builder program. It demonstrates wallet connection, balance display, and XLM transactions on Stellar testnet using the Freighter browser extension.
+AnchorFX is a Level 1 (White Belt) and Level 2 (Yellow Belt) submission for the Stellar Journey to Mastery builder program. It demonstrates wallet connection, multi-wallet support, XLM transactions, and Soroban smart contract deployment on Stellar testnet.
 
-The project also includes a Soroban smart contract (`anchorfx-escrow`) for atomic cross-border settlement between regulated financial anchors, planned for higher belt levels.
+**Live Demo:** [https://frontend-ruby-tau-69.vercel.app](https://frontend-ruby-tau-69.vercel.app)
+
+| Route | URL |
+|---|---|
+| Landing | https://frontend-ruby-tau-69.vercel.app |
+| Wallet | https://frontend-ruby-tau-69.vercel.app/wallet |
+| Contract | https://frontend-ruby-tau-69.vercel.app/contract |
 
 ---
 
