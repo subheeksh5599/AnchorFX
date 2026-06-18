@@ -18,9 +18,12 @@ AnchorFX enables wallet connection, XLM transactions, multi-wallet support, and 
 | **WASM Upload TX** | `353d42e6abe0da2e26fa4b1ebf1090812679445c8b8e4fead13d00b26463c85f` |
 | **Interaction TX** | *Recorded in demo video — run `create()`, `settle()`, `refund()` on `/contract`* |
 | **CI/CD** | [GitHub Actions](.github/workflows/ci.yml) — contract tests + frontend tests + build + lint |
-| **Contract Tests** | 5 passing — `cargo test` (full flow, refund, double-settle guard, early refund, version) |
+| **Contract Tests** | 8 passing — `cargo test` (full flow, multi-escrow, refund, cancel, summaries, oracle update, duplicates, version) |
 | **Frontend Tests** | 26 passing — `npm test` (validation, rate limiting, schema checks) |
-| **Demo Video** | *Add YouTube/Loom/Drive link here* |
+| **Oracle Contract** | FX Rate Oracle with rate expiry (separate contract, cross-contract calls) |
+| **Demo Video** | [docs/demo-video.webm](docs/demo-video.webm) — upload to YouTube/Loom and link here |
+| **User Feedback** | [Google Form](https://forms.gle/YOUR_FORM_ID) — embedded on /contract page |
+| **Users Onboarded** | *Collect via Google Form — list wallet addresses + feedback here* |
 
 ### Live URLs
 
@@ -175,10 +178,52 @@ fn get_escrow(env: Env) -> Option<Escrow>;
 ### CI/CD Pipeline — GitHub Actions
 ![CI/CD Pipeline](docs/ci-pipeline.png)
 
-### Smart Contract Tests — 5 Passing
+### Smart Contract Tests — 8 Passing
 ![Test Output](docs/test-output.png)
 
 ---
+
+## Green Belt — Production MVP
+
+### User Onboarding
+AnchorFX collects user feedback via a Google Form embedded on the `/contract` page. Each user submits their Stellar wallet address, email, experience rating (1-5), and optional feedback. All responses are exported to an Excel sheet linked below.
+
+- **Google Form Link**: [Submit Feedback](https://forms.gle/YOUR_FORM_ID)
+- **User Data Sheet**: *Export responses from Google Form and link here*
+- **Target**: 10+ users for Green Belt, 50+ for Blue Belt
+
+### Product Quality
+- Production deployed on Vercel with auto-deploy from GitHub
+- Mobile responsive (tested at 375px iPhone X)
+- Error handling for all states (loading, empty, error, success)
+- Rate limiting on API endpoints (30 burst, 2 req/s)
+- Input validation on all user inputs (Stellar addresses, amounts, contract IDs)
+- Security headers (CSP, X-Frame-Options, X-Content-Type-Options)
+
+### Roadmap & Improvements
+Based on collected user feedback, planned improvements:
+1. **Mercury event streaming** — replace SSE polling with production-grade event indexing
+2. **Passkey smart accounts** — CAP-0051 biometric auth for institutional users
+3. **Multi-corridor support** — USD→PHP, EUR→BRL, USDC→NGN
+4. **Anchor SDK** — self-service integration for new anchor operators
+
+### Technical Architecture
+```
+User Browser
+    │
+    ├── Next.js Frontend (Vercel)
+    │   ├── /wallet — Connect Freighter/xBull, send XLM
+    │   ├── /contract — Deploy escrow, read state, real-time events
+    │   └── /api/events — SSE endpoint for contract event streaming
+    │
+    ├── Stellar Testnet
+    │   ├── AnchorFX Escrow Contract — Multi-escrow factory + FX Oracle
+    │   ├── AnchorFX Oracle Contract — FX rates with expiry
+    │   └── Horizon + Soroban RPC — Transaction submission + queries
+    │
+    └── GitHub Actions
+        └── CI/CD — cargo test → npm ci → npm test → next build
+```
 
 ## License
 
