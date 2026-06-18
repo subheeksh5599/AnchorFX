@@ -5,6 +5,8 @@ import {
   Operation,
   Address,
   Contract,
+  hash,
+  StrKey,
   xdr,
   scValToNative,
 } from "@stellar/stellar-sdk";
@@ -147,8 +149,15 @@ export async function deployContract(
       return { status: "failed", error: `Contract creation failed: ${JSON.stringify(createResult.errorResult ?? "unknown")}` };
     }
 
-    // Derive contract ID
-    const contractId = `C${(createResult.hash ?? "unknown").slice(0, 54)}`;
+    // Compute deterministic contract ID: SHA256(HashIDPreimage::ENVELOPE_TYPE_CONTRACT_ID || deployer_xdr || salt || wasmHash)
+    const preimage = Buffer.concat([
+      Buffer.from([0, 0, 0, 1]), // ENVELOPE_TYPE_CONTRACT_ID = 1
+      Buffer.from(adminAddress.toScAddress().toXDR("base64"), "base64"),
+      salt,
+      wasmHash,
+    ]);
+    const contractIdHash = hash(preimage);
+    const contractId = StrKey.encodeContract(contractIdHash);
 
     // Step 3: Initialize the contract (call init with admin + oracle)
     onStatus({ status: "simulating" });
