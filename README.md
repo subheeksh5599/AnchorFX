@@ -172,23 +172,11 @@ fn get_escrow(env: Env) -> Option<Escrow>;
 ### Transaction Confirmation — Success Card with TX Hash
 ![Confirmation](docs/confirmation.png)
 
-### CI/CD Pipeline — GitHub Actions (`.github/workflows/ci.yml`)
-- Contract tests (cargo test) on wasm32 target
-- Frontend lint (eslint) + build (next build)
-- Triggers on push and PR to main
+### CI/CD Pipeline — GitHub Actions
+![CI/CD Pipeline](docs/ci-pipeline.png)
 
 ### Smart Contract Tests — 5 Passing
-```
-running 5 tests
-test test::test_cannot_settle_twice ... ok
-test test::test_full_flow ... ok
-test test::test_refund_after_timeout ... ok
-test test::test_refund_too_early ... ok
-test test::test_version ... ok
-
-test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
-```
-Full output: [docs/test-output.txt](docs/test-output.txt)
+![Test Output](docs/test-output.png)
 
 ---
 
