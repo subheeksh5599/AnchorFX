@@ -11,6 +11,7 @@ import {
   Networks,
   TransactionBuilder,
   BASE_FEE,
+  Transaction,
   Operation,
   Asset,
 } from "@stellar/stellar-sdk";
@@ -180,7 +181,7 @@ export async function sendXLM(
       Networks.TESTNET
     );
 
-    const tx = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
+    const tx = new Transaction(signedTxXdr, Networks.TESTNET);
     const result = await server.submitTransaction(tx);
     return { success: true, hash: result.hash };
   } catch (err: unknown) {
