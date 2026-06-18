@@ -17,12 +17,22 @@ import {
   Database,
   RadioTower,
   Zap,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  FileCode,
+  ArrowUpRight,
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { validateContractId } from "@/lib/validation";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
+
+function short(str: string, n = 12): string {
+  return str.length > n * 2 ? `${str.slice(0, n)}...${str.slice(-4)}` : str;
+}
 
 export default function ContractPage(): ReactNode {
   const { wallet } = useWallet();
@@ -52,7 +62,6 @@ export default function ContractPage(): ReactNode {
     setStatus(result);
     setDeploying(false);
 
-    // Track tx if hash exists
     if (result.hash) {
       trackTransaction(result.hash, (s) => setStatus(s));
     }
@@ -60,7 +69,6 @@ export default function ContractPage(): ReactNode {
 
   const handleReadContract = useCallback(async () => {
     if (!viewContractId) return;
-    // OWASP: Validate contract ID
     const validation = validateContractId(viewContractId);
     if (!validation.valid) {
       setStatus({ status: "failed", error: validation.error });
@@ -74,7 +82,6 @@ export default function ContractPage(): ReactNode {
 
   const handleListen = useCallback(() => {
     if (!viewContractId || listening) return;
-    // OWASP: Validate contract ID
     const validation = validateContractId(viewContractId);
     if (!validation.valid) {
       setStatus({ status: "failed", error: validation.error });
@@ -92,16 +99,13 @@ export default function ContractPage(): ReactNode {
           ...prev.slice(0, 49),
         ]);
       },
-      () => {
-        setListening(false);
-      }
+      () => setListening(false)
     );
 
     return cleanup;
   }, [viewContractId, listening]);
 
   const stopListening = useCallback(() => {
-    // cleanup handled by the return of handleListen, just reset state
     setListening(false);
   }, []);
 
@@ -114,193 +118,291 @@ export default function ContractPage(): ReactNode {
           ? `Status: ${status.status}`
           : null;
 
+  const statusIcon =
+    status?.status === "success" ? (
+      <CheckCircle2 className="h-5 w-5 text-green-400" />
+    ) : status?.status === "failed" ? (
+      <XCircle className="h-5 w-5 text-red-400" />
+    ) : status?.status ? (
+      <Loader2 className="h-5 w-5 text-amber-400 animate-spin" />
+    ) : null;
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-6 pt-32 pb-24">
-      <div className="w-full max-w-2xl">
+    <main className="min-h-screen bg-neutral-950 text-neutral-100 font-sans">
+      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: easeOut }}
+          transition={{ duration: 0.5, ease: easeOut }}
+          className="flex items-center justify-between mb-10"
         >
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-medium tracking-tight md:text-4xl">
-              AnchorFX Contract
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Deploy and interact with the Soroban escrow contract on testnet
-            </p>
-          </div>
-
-          {!wallet.connected ? (
-            <div className="bg-muted rounded-2xl p-8 text-center">
-              <Rocket className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-              <h2 className="mb-2 text-xl font-medium">Connect your wallet first</h2>
-              <p className="text-muted-foreground mb-6 text-sm">
-                Go to the wallet page to connect, then return here to deploy contracts.
-              </p>
-              <Link
-                href="/wallet"
-                className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-6 py-3 font-medium transition-colors"
-              >
-                Connect Wallet
-              </Link>
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <FileCode className="h-6 w-6 text-amber-400" />
+              <h1 className="text-2xl font-medium tracking-tight">AnchorFX Contract</h1>
             </div>
-          ) : (
-            <div className="space-y-6">
-              {/* Deploy */}
-              <div className="bg-muted rounded-2xl p-6">
-                <h3 className="mb-4 text-lg font-medium">Deploy Escrow Contract</h3>
-                <p className="text-muted-foreground mb-4 text-sm">
-                  Deploys the AnchorFX escrow contract to Stellar testnet. The
-                  connected wallet pays for deployment.
-                </p>
+            <p className="text-sm text-neutral-500 font-mono">SOROBAN ESCROW · TESTNET · SSE EVENTS</p>
+          </div>
+          <Link
+            href="/wallet"
+            className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-400 transition-colors px-3 py-1.5 rounded-md border border-neutral-800 hover:border-amber-400/30"
+          >
+            <ArrowUpRight className="h-3.5 w-3.5" />
+            Wallet
+          </Link>
+        </motion.div>
 
-                <button
-                  onClick={handleDeploy}
-                  disabled={deploying}
-                  className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-6 py-3 font-medium transition-colors disabled:opacity-50"
-                >
-                  {deploying ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Rocket className="h-4 w-4" />
-                  )}
-                  {deploying ? "Deploying..." : "Deploy Contract"}
-                </button>
+        {!wallet.connected ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: easeOut }}
+            className="border border-neutral-800 rounded-2xl p-10 text-center bg-neutral-900/50 backdrop-blur"
+          >
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-neutral-800 mb-6">
+              <Rocket className="h-7 w-7 text-neutral-400" />
+            </div>
+            <h2 className="text-xl font-medium mb-2">Connect your wallet first</h2>
+            <p className="text-neutral-500 text-sm mb-6">
+              Go to the wallet page to connect, then return here to deploy contracts.
+            </p>
+            <Link
+              href="/wallet"
+              className="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-medium px-6 py-3 text-sm transition-colors"
+            >
+              Connect Wallet
+            </Link>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: easeOut }}
+            className="space-y-4"
+          >
+            {/* Deploy Section */}
+            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Rocket className="h-4 w-4 text-neutral-500" />
+                <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Deploy Escrow Contract</h3>
+              </div>
+              <p className="text-sm text-neutral-500 mb-5">
+                Deploy the AnchorFX escrow contract to Stellar testnet. The connected wallet pays gas.
+              </p>
 
-                {statusLabel && (
-                  <div
-                    className={`mt-4 rounded-md p-4 text-sm ${
-                      status?.status === "success"
-                        ? "bg-green-500/10 text-green-600 dark:text-green-400"
-                        : status?.status === "failed"
-                          ? "bg-red-500/10 text-red-600 dark:text-red-400"
-                          : "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
-                    }`}
-                  >
-                    <div className="mb-1 font-medium">{statusLabel}</div>
-                    {status?.hash && (
-                      <a
-                        href={`https://stellar.expert/explorer/testnet/tx/${status.hash}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 underline"
-                      >
-                        {status.hash.slice(0, 12)}... <ExternalLink className="h-3 w-3" />
-                      </a>
-                    )}
-                    {status?.contractId && (
-                      <div className="mt-1 font-mono text-xs break-all">
-                        Contract: {status.contractId}
-                      </div>
-                    )}
-                    {status?.error && <p className="mt-1">{status.error}</p>}
-                  </div>
+              <button
+                onClick={handleDeploy}
+                disabled={deploying}
+                className="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-black font-medium px-6 py-3 text-sm transition-colors"
+              >
+                {deploying ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Deploying...</>
+                ) : (
+                  <><Rocket className="h-4 w-4" /> Deploy Contract</>
                 )}
+              </button>
+
+              {/* Status */}
+              {status && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-4 rounded-lg px-4 py-3 text-sm border ${
+                    status.status === "success"
+                      ? "border-green-400/20 bg-green-400/5"
+                      : status.status === "failed"
+                        ? "border-red-400/20 bg-red-400/5"
+                        : "border-amber-400/20 bg-amber-400/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    {statusIcon}
+                    <span className={`font-medium ${
+                      status.status === "success" ? "text-green-400" :
+                      status.status === "failed" ? "text-red-400" : "text-amber-400"
+                    }`}>{statusLabel}</span>
+                  </div>
+                  {status.hash && (
+                    <a
+                      href={`https://stellar.expert/explorer/testnet/tx/${status.hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-200 transition-colors font-mono text-xs ml-7"
+                    >
+                      TX: {short(status.hash)}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  )}
+                  {status.contractId && (
+                    <div className="mt-1 font-mono text-xs text-neutral-400 ml-7 break-all">
+                      Contract: {status.contractId}
+                    </div>
+                  )}
+                  {status.error && (
+                    <div className="mt-1 text-xs text-neutral-400 ml-7 flex items-start gap-1.5">
+                      <AlertTriangle className="h-3 w-3 shrink-0 mt-0.5" />
+                      {status.error}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </div>
+
+            {/* Read Contract */}
+            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Database className="h-4 w-4 text-neutral-500" />
+                <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Read Contract State</h3>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  value={viewContractId}
+                  onChange={(e) => setViewContractId(e.target.value)}
+                  placeholder="C..."
+                  className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm font-mono text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all"
+                />
+                <button
+                  onClick={handleReadContract}
+                  disabled={reading || !viewContractId}
+                  className="rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 border border-neutral-700 text-neutral-200 font-medium px-5 py-2.5 text-sm transition-colors inline-flex items-center gap-2 shrink-0"
+                >
+                  {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}
+                  Read
+                </button>
               </div>
 
-              {/* Read Contract */}
-              <div className="bg-muted rounded-2xl p-6">
-                <h3 className="mb-4 text-lg font-medium">Read Contract State</h3>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={viewContractId}
-                    onChange={(e) => setViewContractId(e.target.value)}
-                    placeholder="Contract ID (C...)"
-                    className="bg-background border-border flex-1 rounded-md border px-3 py-2.5 text-sm outline-none"
-                  />
-                  <button
-                    onClick={handleReadContract}
-                    disabled={reading || !viewContractId}
-                    className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
-                  >
-                    {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}
-                    Read
-                  </button>
-                </div>
-
-                {escrowData && (
-                  <div className="bg-background mt-4 rounded-md p-4 font-mono text-sm">
-                    <div className="grid grid-cols-2 gap-2">
-                      <span className="text-muted-foreground">Sender:</span>
-                      <span className="truncate">{escrowData.sender}</span>
-                      <span className="text-muted-foreground">Receiver:</span>
-                      <span className="truncate">{escrowData.receiver}</span>
-                      <span className="text-muted-foreground">Amount:</span>
-                      <span>{escrowData.amount}</span>
-                      <span className="text-muted-foreground">Status:</span>
-                      <span className="text-accent uppercase">{escrowData.status}</span>
+              {escrowData && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 rounded-lg border border-neutral-700 bg-neutral-800/50 p-4 font-mono text-xs"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                    <div>
+                      <span className="text-neutral-500">Sender</span>
+                      <p className="text-neutral-300 truncate">{short(escrowData.sender, 14)}</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Receiver</span>
+                      <p className="text-neutral-300 truncate">{short(escrowData.receiver, 14)}</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Amount</span>
+                      <p className="text-neutral-300">{escrowData.amount}</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Status</span>
+                      <p className={`font-medium uppercase ${
+                        escrowData.status === "Created" ? "text-amber-400" :
+                        escrowData.status === "Settled" ? "text-green-400" :
+                        escrowData.status === "Refunded" ? "text-blue-400" : "text-neutral-400"
+                      }`}>{escrowData.status}</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Timeout Ledger</span>
+                      <p className="text-neutral-300">{escrowData.timeoutLedger}</p>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Created At</span>
+                      <p className="text-neutral-300">{escrowData.createdAt}</p>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <span className="text-neutral-500">Token</span>
+                      <p className="text-neutral-300 truncate">{escrowData.token || "—"}</p>
                     </div>
                   </div>
-                )}
-              </div>
+                </motion.div>
+              )}
+            </div>
 
-              {/* Event listener */}
-              <div className="bg-muted rounded-2xl p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <h3 className="text-lg font-medium">Real-Time Events</h3>
+            {/* Events Stream */}
+            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <RadioTower className="h-4 w-4 text-neutral-500" />
+                  <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Real-Time Events</h3>
                   {listening && (
-                    <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                      <Zap className="h-3 w-3" /> Live
-                      {liveLedger && <span className="text-muted-foreground">· ledger {liveLedger}</span>}
+                    <span className="flex items-center gap-1.5 text-[11px] text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full font-medium">
+                      <Zap className="h-3 w-3" />
+                      LIVE
+                      {liveLedger && <span className="text-neutral-500 font-normal">#{liveLedger}</span>}
                     </span>
                   )}
                 </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleListen}
-                    disabled={listening || !viewContractId}
-                    className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
-                  >
-                    {listening ? (
-                      <>
-                        <RadioTower className="h-4 w-4 animate-pulse text-green-500" />
-                        Streaming
-                      </>
-                    ) : (
-                      <>
-                        <RadioTower className="h-4 w-4" />
-                        Connect Stream
-                      </>
-                    )}
-                  </button>
-                  {listening && (
-                    <button
-                      onClick={stopListening}
-                      className="text-muted-foreground hover:text-foreground text-sm transition-colors px-3"
-                    >
-                      Disconnect
-                    </button>
-                  )}
-                </div>
-
-                {events.length > 0 && (
-                  <div className="bg-background mt-4 h-48 overflow-y-auto rounded-md p-3 font-mono text-xs">
-                    {events.map((e, i) => (
-                      <div key={i} className="text-muted-foreground py-0.5">{e}</div>
-                    ))}
-                  </div>
-                )}
-                {listening && events.length === 0 && (
-                  <p className="text-muted-foreground mt-4 text-sm">
-                    Waiting for events... Interact with the contract to see live events.
-                  </p>
+                {listening && (
+                  <span className="flex items-center gap-1.5 text-xs text-neutral-400">
+                    <Clock className="h-3 w-3" />
+                    2s poll
+                  </span>
                 )}
               </div>
-            </div>
-          )}
 
-          <div className="mt-12 text-center">
-            <Link
-              href="/"
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              Back to Home
-            </Link>
-          </div>
-        </motion.div>
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={handleListen}
+                  disabled={listening || !viewContractId}
+                  className="rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 border border-neutral-700 text-neutral-200 font-medium px-4 py-2 text-sm transition-colors inline-flex items-center gap-2"
+                >
+                  {listening ? (
+                    <><RadioTower className="h-4 w-4 animate-pulse text-green-400" /> Streaming</>
+                  ) : (
+                    <><RadioTower className="h-4 w-4" /> Connect Stream</>
+                  )}
+                </button>
+                {listening && (
+                  <button
+                    onClick={stopListening}
+                    className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors px-3"
+                  >
+                    Disconnect
+                  </button>
+                )}
+              </div>
+
+              {events.length > 0 && (
+                <div className="rounded-lg border border-neutral-800 bg-neutral-950 h-48 overflow-y-auto p-3 font-mono text-[11px] leading-relaxed">
+                  {events.map((e, i) => (
+                    <div key={i} className="text-neutral-500 hover:text-neutral-300 transition-colors py-px">
+                      {e}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {listening && events.length === 0 && (
+                <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-6 text-center">
+                  <p className="text-sm text-neutral-500">
+                    Waiting for events... Deploy a contract and interact with it to see live data.
+                  </p>
+                </div>
+              )}
+              {!listening && events.length === 0 && (
+                <div className="rounded-lg border border-neutral-800 bg-neutral-950 p-6 text-center">
+                  <p className="text-sm text-neutral-600">
+                    Enter a contract ID and connect the stream to see live events.
+                  </p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        <div className="mt-12 text-center">
+          <Link
+            href="/"
+            className="text-xs text-neutral-600 hover:text-neutral-400 transition-colors"
+          >
+            Back to Home
+          </Link>
+        </div>
       </div>
     </main>
   );
