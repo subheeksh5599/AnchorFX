@@ -1,0 +1,9 @@
+node_modules/
+.next/
+target/
+test_snapshots/
+*.wasm
+*.lock
+*.tsbuildinfo
+.env*
+dist/
