@@ -1,7 +1,10 @@
 import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
+import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
+import { validateContractId } from "@/lib/validation";
 
 const RPC_URL = "https://soroban-testnet.stellar.org";
-const DEPLOYED_CONTRACT = "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
+// Contract ID default — use env var in production, testnet fallback for development
+const DEPLOYED_CONTRACT = process.env.CONTRACT_ID ?? "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
 
 interface ContractEvent {
   type: string;
@@ -11,8 +14,30 @@ interface ContractEvent {
 }
 
 export async function GET(request: Request) {
+  // OWASP: Rate limit — per-IP, 30 burst, 2 req/s sustained
+  const limitResult = rateLimit(request, RATE_LIMITS.api, "events");
+  if (!limitResult.allowed) {
+    return new Response(JSON.stringify({ error: "Too many requests" }), {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    });
+  }
+
   const url = new URL(request.url);
-  const contractId = url.searchParams.get("contract") ?? DEPLOYED_CONTRACT;
+  const rawContractId = url.searchParams.get("contract") ?? DEPLOYED_CONTRACT;
+
+  // OWASP: Validate contract ID format before using it
+  const validation = validateContractId(rawContractId);
+  if (!validation.valid) {
+    return new Response(JSON.stringify({ error: validation.error }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+  const contractId = validation.sanitized!;
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
@@ -94,6 +119,7 @@ export async function GET(request: Request) {
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
       "X-Accel-Buffering": "no",
+      ...rateLimitHeaders(limitResult),
     },
   });
 }
