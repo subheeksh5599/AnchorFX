@@ -4,7 +4,7 @@
 
 AnchorFX is an event-driven settlement platform built on Stellar testnet. It powers a multi-escrow system backed by an FX Rate Oracle — senders lock tokens, the oracle provides exchange rates, and settlement is triggered by contract events streamed in real-time. Cross-contract calls between the escrow factory and oracle enable trustless, atomic FX settlement between Stellar accounts.
 
-**Live Demo:** [https://frontend-ruby-tau-69.vercel.app](https://frontend-ruby-tau-69.vercel.app)
+**Live Demo:** [https://anchorfx.vercel.app](https://anchorfx.vercel.app)
 
 ---
 
@@ -29,9 +29,9 @@ AnchorFX is an event-driven settlement platform built on Stellar testnet. It pow
 
 | Route | URL |
 |---|---|
-| Landing | https://frontend-ruby-tau-69.vercel.app |
-| Wallet | https://frontend-ruby-tau-69.vercel.app/wallet |
-| Contract | https://frontend-ruby-tau-69.vercel.app/contract |
+| Landing | https://anchorfx.vercel.app |
+| Wallet | https://anchorfx.vercel.app/wallet |
+| Contract | https://anchorfx.vercel.app/contract |
 
 ---
 
