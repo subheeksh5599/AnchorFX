@@ -368,6 +368,22 @@ export default function ContractPage(): ReactNode {
           </motion.div>
         )}
 
+        {/* User Feedback */}
+        <div className="mt-12 border border-neutral-800 p-8">
+          <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-2">Feedback</h3>
+          <p className="text-[11px] text-neutral-600 mb-4 tracking-wide leading-relaxed">
+            Help improve AnchorFX. Share your experience, report issues, or suggest features.
+          </p>
+          <a
+            href="https://forms.gle/YOUR_FORM_ID"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-white hover:bg-neutral-200 text-black font-bold uppercase tracking-[0.3em] text-xs py-3 px-6 transition-colors"
+          >
+            Submit Feedback
+          </a>
+        </div>
+
         <div className="mt-20 text-center">
           <Link
             href="/"
