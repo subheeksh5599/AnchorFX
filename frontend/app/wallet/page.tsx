@@ -15,6 +15,7 @@ import {
 import { motion } from "motion/react";
 import Link from "next/link";
 import type { WalletType } from "@/lib/multi-wallet";
+import { validateStellarAddress, validateXlmAmount } from "@/lib/validation";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -52,9 +53,22 @@ export default function WalletPage(): ReactNode {
     async (e: FormEvent) => {
       e.preventDefault();
       if (!destination || !amount) return;
+
+      // OWASP: Validate inputs before sending
+      const addrResult = validateStellarAddress(destination);
+      const amtResult = validateXlmAmount(amount);
+      if (!addrResult.valid) {
+        setTxResult({ success: false, error: addrResult.error });
+        return;
+      }
+      if (!amtResult.valid) {
+        setTxResult({ success: false, error: amtResult.error });
+        return;
+      }
+
       setSending(true);
       setTxResult(null);
-      const result = await send(destination, amount);
+      const result = await send(addrResult.sanitized!, amtResult.sanitized!);
       setTxResult({
         success: result.success,
         ...(result.hash !== undefined && { hash: result.hash }),

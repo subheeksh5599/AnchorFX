@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { validateContractId } from "@/lib/validation";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -59,19 +60,31 @@ export default function ContractPage(): ReactNode {
 
   const handleReadContract = useCallback(async () => {
     if (!viewContractId) return;
+    // OWASP: Validate contract ID
+    const validation = validateContractId(viewContractId);
+    if (!validation.valid) {
+      setStatus({ status: "failed", error: validation.error });
+      return;
+    }
     setReading(true);
-    const data = await getEscrowFromContract(viewContractId);
+    const data = await getEscrowFromContract(validation.sanitized!);
     setEscrowData(data);
     setReading(false);
   }, [viewContractId]);
 
   const handleListen = useCallback(() => {
     if (!viewContractId || listening) return;
+    // OWASP: Validate contract ID
+    const validation = validateContractId(viewContractId);
+    if (!validation.valid) {
+      setStatus({ status: "failed", error: validation.error });
+      return;
+    }
     setListening(true);
     setEvents([]);
 
     const cleanup = subscribeContractEvents(
-      viewContractId,
+      validation.sanitized!,
       (event) => {
         setLiveLedger(event.ledger);
         setEvents((prev) => [
