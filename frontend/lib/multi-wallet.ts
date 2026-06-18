@@ -176,7 +176,7 @@ export async function sendXLM(
 
     const { signedTxXdr } = await signSorobanTx(
       walletType,
-      transaction.toXDR(),
+      transaction.toEnvelope().toXDR("base64"),
       Networks.TESTNET
     );
 
