@@ -5,6 +5,7 @@ import {
   Operation,
   Address,
   Contract,
+  Account,
   hash,
   StrKey,
   xdr,
@@ -149,19 +150,21 @@ export async function deployContract(
       return { status: "failed", error: `Contract creation failed: ${JSON.stringify(createResult.errorResult ?? "unknown")}` };
     }
 
-    // Compute deterministic contract ID: SHA256(HashIDPreimage::ENVELOPE_TYPE_CONTRACT_ID || deployer_xdr || salt || wasmHash)
+    // Compute deterministic contract ID
     const preimage = Buffer.concat([
-      Buffer.from([0, 0, 0, 1]), // ENVELOPE_TYPE_CONTRACT_ID = 1
+      Buffer.from([0, 0, 0, 1]),
       Buffer.from(adminAddress.toScAddress().toXDR("base64"), "base64"),
       salt,
       wasmHash,
     ]);
-    const contractIdHash = hash(preimage);
-    const contractId = StrKey.encodeContract(contractIdHash);
+    const contractId = StrKey.encodeContract(hash(preimage));
 
-    // Step 3: Initialize the contract (call init with admin + oracle)
-    onStatus({ status: "simulating" });
+    // Report success immediately — contract is created
+    onStatus({ status: "success", hash: createResult.hash, contractId });
+
+    // Step 3: Initialize in background (non-blocking)
     try {
+      await new Promise((resolve) => setTimeout(resolve, 4000));
       const account3 = await server.loadAccount(sourcePublicKey);
 
       const invoker = new Contract(contractId);
@@ -184,14 +187,15 @@ export async function deployContract(
         TransactionBuilder.fromXDR(initXdr, Networks.TESTNET)
       );
 
-      if (String(initResult.status) !== "SUCCESS") {
-        console.warn("Contract created but init failed (may need to init manually):", initResult.errorResult);
+      if (String(initResult.status) === "SUCCESS") {
+        onStatus({ status: "success", hash: createResult.hash, contractId });
+        console.log("Contract initialized successfully");
       }
     } catch (initErr) {
-      console.warn("Init call failed — contract deployed but not initialized:", initErr);
+      console.warn("Init deferred — contract deployed, init failed:", initErr);
     }
 
-    onStatus({ status: "success", hash: createResult.hash, contractId });
+    return { status: "success", hash: createResult.hash, contractId };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Deployment failed";
     return { status: "failed", error: msg };
@@ -203,42 +207,44 @@ export async function deployContract(
  * Read escrow data from an existing contract.
  */
 export async function getEscrowFromContract(
-  contractId: string
+  contractId: string,
+  escrowId: number = 1
 ): Promise<EscrowData | null> {
   try {
     const rpc = createRpcServer();
 
-    const key = xdr.LedgerKey.contractData(
-      new xdr.LedgerKeyContractData({
-        contract: new Address(contractId).toScAddress(),
-        key: xdr.ScVal.scvVec([xdr.ScVal.scvSymbol("Escrow")]),
-        durability: xdr.ContractDataDurability.persistent(),
-      })
-    );
+    const contract = new Contract(contractId);
+    const sourcePublicKey = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+    const fakeAccount = new Account(sourcePublicKey, "1");
 
-    const result = await rpc.getLedgerEntries(key);
-    if (!result.entries?.length || result.entries.length === 0) return null;
+    const tx = new TransactionBuilder(fakeAccount, {
+      fee: "100",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(contract.call("get_escrow", xdr.ScVal.scvU64(new xdr.Uint64(escrowId))))
+      .setTimeout(30)
+      .build();
 
-    const entry = result.entries[0];
-    if (!entry) return null;
+    const sim = await rpc.simulateTransaction(tx);
+    if (!sim || "error" in sim) return null;
 
-    // Parse the ledger entry data to extract escrow fields
-    const contractData = entry.val.contractData();
-    if (!contractData) return null;
+    const simResult = (sim as { result?: { retval?: xdr.ScVal } }).result;
+    if (!simResult?.retval) return null;
 
-    const data = scValToNative(contractData.val());
-    if (!data || typeof data !== "object") return null;
+    const native = scValToNative(simResult.retval);
+    if (!native || typeof native !== "object") return null;
 
-    const unpacked = data as Record<string, unknown>;
+    const data = native as Record<string, unknown>;
+    if (!data.sender) return null;
 
     return {
-      sender: String(unpacked.sender ?? ""),
-      receiver: String(unpacked.receiver ?? ""),
-      token: String(unpacked.token ?? ""),
-      amount: String(unpacked.amount ?? "0"),
-      timeoutLedger: Number(unpacked.timeout_ledger ?? 0),
-      status: String(unpacked.status ?? "unknown"),
-      createdAt: Number(unpacked.created_at ?? 0),
+      sender: String(data.sender ?? ""),
+      receiver: String(data.receiver ?? ""),
+      token: String(data.token ?? ""),
+      amount: String(data.amount ?? "0"),
+      timeoutLedger: Number(data.timeout_ledger ?? 0),
+      status: String(data.status ?? "unknown"),
+      createdAt: Number(data.created_at ?? 0),
     };
   } catch {
     return null;
