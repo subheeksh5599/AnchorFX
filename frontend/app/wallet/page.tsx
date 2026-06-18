@@ -10,9 +10,11 @@ import {
   ArrowUpRight,
   Loader2,
   ExternalLink,
+  AlertTriangle,
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import type { WalletType } from "@/lib/multi-wallet";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 
@@ -20,8 +22,13 @@ function shortAddr(addr: string): string {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
 
+const WALLET_OPTIONS: { type: WalletType; label: string; icon: string }[] = [
+  { type: "freighter", label: "Freighter", icon: "🦊" },
+  { type: "xbull", label: "xBull", icon: "🐂" },
+];
+
 export default function WalletPage(): ReactNode {
-  const { wallet, balance, loading, connect, refreshBalance, send } =
+  const { wallet, balance, loading, error, availableWallets, connect, disconnect, refreshBalance, send } =
     useWallet();
   const [copied, setCopied] = useState(false);
   const [destination, setDestination] = useState("");
@@ -48,7 +55,11 @@ export default function WalletPage(): ReactNode {
       setSending(true);
       setTxResult(null);
       const result = await send(destination, amount);
-      setTxResult(result);
+      setTxResult({
+        success: result.success,
+        ...(result.hash !== undefined && { hash: result.hash }),
+        ...(result.error?.message !== undefined && { error: result.error.message }),
+      });
       setSending(false);
       if (result.success) {
         setDestination("");
@@ -73,16 +84,26 @@ export default function WalletPage(): ReactNode {
               AnchorFX Wallet
             </h1>
             <p className="text-muted-foreground mt-2">
-              Stellar Testnet — Connect Freighter to send XLM
+              Stellar Testnet — Multi-wallet support
             </p>
           </div>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-4 flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-red-600 dark:text-red-400">{error.type.replace(/_/g, " ")}</p>
+                <p className="text-muted-foreground mt-1">{error.message}</p>
+              </div>
+            </div>
+          )}
 
           {!wallet.connected ? (
             <div className="bg-muted rounded-2xl p-8 text-center">
               <Wallet className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
               <h2 className="mb-2 text-xl font-medium">Connect your wallet</h2>
               <p className="text-muted-foreground mb-6 text-sm">
-                Install{" "}
+                Choose a Stellar wallet to connect. Install{" "}
                 <a
                   href="https://freighter.app"
                   target="_blank"
@@ -91,29 +112,56 @@ export default function WalletPage(): ReactNode {
                 >
                   Freighter
                 </a>{" "}
-                and connect to Stellar Testnet to get started.
+                or{" "}
+                <a
+                  href="https://xbull.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground underline underline-offset-4"
+                >
+                  xBull
+                </a>{" "}
+                to get started.
               </p>
-              <button
-                onClick={connect}
-                disabled={loading}
-                className="bg-foreground text-background hover:bg-foreground/90 inline-flex items-center gap-2 rounded-md px-6 py-3 font-medium transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Wallet className="h-4 w-4" />
-                )}
-                {loading ? "Connecting..." : "Connect Freighter"}
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                {WALLET_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.type}
+                    onClick={() => connect(opt.type)}
+                    disabled={loading}
+                    className={`bg-background hover:bg-background/80 border-border flex items-center justify-center gap-2 rounded-xl border p-4 text-sm font-medium transition-colors disabled:opacity-50 ${
+                      availableWallets.includes(opt.type)
+                        ? "border-accent/50"
+                        : "border-border opacity-60"
+                    }`}
+                  >
+                    <span className="text-lg">{opt.icon}</span>
+                    {opt.label}
+                    {availableWallets.includes(opt.type) ? (
+                      <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    ) : (
+                      <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
+                    )}
+                  </button>
+                ))}
+              </div>
+              <p className="text-muted-foreground mt-3 text-xs">
+                Green dot = wallet detected in browser
+              </p>
             </div>
           ) : (
             <div className="space-y-6">
               {/* Wallet card */}
               <div className="bg-muted rounded-2xl p-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-muted-foreground text-sm font-medium uppercase">
-                    Connected Wallet
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-sm font-medium uppercase">
+                      Connected
+                    </span>
+                    <span className="rounded-md bg-accent/20 px-1.5 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
+                      {wallet.walletType}
+                    </span>
+                  </div>
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                       isTestnet
@@ -140,6 +188,12 @@ export default function WalletPage(): ReactNode {
                     )}
                   </button>
                 </div>
+                <button
+                  onClick={disconnect}
+                  className="text-muted-foreground hover:text-foreground mt-3 text-xs transition-colors"
+                >
+                  Disconnect
+                </button>
               </div>
 
               {/* Balance card */}
@@ -177,10 +231,7 @@ export default function WalletPage(): ReactNode {
               </div>
 
               {/* Send form */}
-              <form
-                onSubmit={handleSend}
-                className="bg-muted rounded-2xl p-6"
-              >
+              <form onSubmit={handleSend} className="bg-muted rounded-2xl p-6">
                 <h3 className="mb-4 text-lg font-medium">Send XLM</h3>
                 <div className="space-y-4">
                   <div>
@@ -225,7 +276,6 @@ export default function WalletPage(): ReactNode {
                   </button>
                 </div>
 
-                {/* Transaction result */}
                 {txResult && (
                   <div
                     className={`mt-4 rounded-md p-4 text-sm ${
@@ -236,9 +286,7 @@ export default function WalletPage(): ReactNode {
                   >
                     {txResult.success ? (
                       <div>
-                        <p className="mb-1 font-medium">
-                          Transaction Successful
-                        </p>
+                        <p className="mb-1 font-medium">Transaction Successful</p>
                         <a
                           href={`https://stellar.expert/explorer/testnet/tx/${txResult.hash}`}
                           target="_blank"
@@ -258,10 +306,19 @@ export default function WalletPage(): ReactNode {
                   </div>
                 )}
               </form>
+
+              {/* Contract link */}
+              <div className="text-center pt-4">
+                <Link
+                  href="/contract"
+                  className="text-accent hover:underline inline-flex items-center gap-1 text-sm"
+                >
+                  Deploy & Interact with Smart Contract <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              </div>
             </div>
           )}
 
-          {/* Footer */}
           <div className="mt-12 text-center">
             <Link
               href="/"

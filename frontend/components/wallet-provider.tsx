@@ -8,15 +8,31 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { checkConnection, connectWallet, getBalance, sendXLM, type WalletState } from "@/lib/stellar";
+import {
+  checkConnection,
+  connectWallet,
+  getBalance,
+  sendXLM,
+  getAvailableWallets,
+  type WalletState,
+  type WalletType,
+  type WalletError,
+} from "@/lib/multi-wallet";
 
 interface WalletContextValue {
   wallet: WalletState;
   balance: string;
   loading: boolean;
-  connect: () => Promise<void>;
+  error: WalletError | null;
+  availableWallets: WalletType[];
+  connect: (type: WalletType) => Promise<void>;
+  disconnect: () => void;
   refreshBalance: () => Promise<void>;
-  send: (destination: string, amount: string) => Promise<{ success: boolean; hash?: string; error?: string }>;
+  send: (destination: string, amount: string) => Promise<{
+    success: boolean;
+    hash?: string;
+    error?: WalletError;
+  }>;
 }
 
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -27,11 +43,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     publicKey: null,
     network: null,
     networkPassphrase: null,
+    walletType: null,
   });
   const [balance, setBalance] = useState("0");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<WalletError | null>(null);
+  const [availableWallets, setAvailableWallets] = useState<WalletType[]>([]);
 
   useEffect(() => {
+    getAvailableWallets().then(setAvailableWallets);
     checkConnection().then((state) => {
       setWallet(state);
       if (state.connected && state.publicKey) {
@@ -40,43 +60,63 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const connect = useCallback(async () => {
+  const connect = useCallback(async (type: WalletType) => {
     setLoading(true);
-    const state = await connectWallet();
-    if (state) {
-      setWallet(state);
-      if (state.publicKey) {
-        const bal = await getBalance(state.publicKey);
+    setError(null);
+    const result = await connectWallet(type);
+    if (result.state) {
+      setWallet(result.state);
+      if (result.state.publicKey) {
+        const bal = await getBalance(result.state.publicKey);
         setBalance(bal);
       }
     }
+    if (result.error) {
+      setError(result.error);
+    }
     setLoading(false);
+  }, []);
+
+  const disconnect = useCallback(() => {
+    setWallet({
+      connected: false,
+      publicKey: null,
+      network: null,
+      networkPassphrase: null,
+      walletType: null,
+    });
+    setBalance("0");
+    setError(null);
   }, []);
 
   const refreshBalance = useCallback(async () => {
     if (wallet.publicKey) {
       const bal = await getBalance(wallet.publicKey);
       setBalance(bal);
+      setError(null);
     }
   }, [wallet.publicKey]);
 
   const send = useCallback(
     async (destination: string, amount: string) => {
-      if (!wallet.publicKey) {
-        return { success: false, error: "Wallet not connected" };
+      if (!wallet.publicKey || !wallet.walletType) {
+        return { success: false, error: { type: "WALLET_NOT_FOUND" as const, wallet: "freighter" as const, message: "Wallet not connected" } };
       }
-      const result = await sendXLM(wallet.publicKey, destination, amount);
+      const result = await sendXLM(wallet.publicKey, destination, amount, wallet.walletType);
       if (result.success) {
         await refreshBalance();
       }
-      return result;
+      if (result.error) {
+        setError(result.error);
+      }
+      return { success: result.success, hash: result.hash, error: result.error };
     },
-    [wallet.publicKey, refreshBalance],
+    [wallet.publicKey, wallet.walletType, refreshBalance],
   );
 
   return (
     <WalletContext.Provider
-      value={{ wallet, balance, loading, connect, refreshBalance, send }}
+      value={{ wallet, balance, loading, error, availableWallets, connect, disconnect, refreshBalance, send }}
     >
       {children}
     </WalletContext.Provider>
