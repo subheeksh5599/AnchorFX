@@ -1,16 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-// Mock Request for rate limiter tests
-class MockRequest {
-  headers: Map<string, string>;
-  constructor(headers: Record<string, string> = {}) {
-    this.headers = new Map(Object.entries(headers));
-  }
-  get headerGet() {
-    return (name: string) => this.headers.get(name) ?? null;
-  }
-}
-
 // Dynamic import to isolate module-level state
 describe("rateLimit", () => {
   let rateLimit: typeof import("@/lib/rate-limit").rateLimit;

@@ -10,17 +10,12 @@ export const siteConfig = {
     "AnchorFX enables trustless, atomic FX settlement between regulated financial anchors on the Stellar network. Lock, swap, settle — in one transaction.",
   url: "https://anchorfx.dev",
   social: {
-    twitter: "@anchorfx",
-    github: "https://github.com/anchorfx",
+    github: "https://github.com/subheeksh5599/AnchorFX",
   },
   nav: {
     cta: {
       text: "Launch Demo",
       href: "/wallet",
-    },
-    signIn: {
-      text: "Docs",
-      href: "#",
     },
   },
 } as const;
@@ -107,7 +102,7 @@ export const faqConfig = {
     text: "Building on Stellar? We'd love to hear from you.",
     cta: {
       text: "Get in Touch",
-      href: "mailto:hello@anchorfx.dev",
+      href: "mailto:komasubheeksh@gmail.com",
     },
   },
 } as const;
@@ -147,7 +142,7 @@ export const footerConfig = {
     location: "Stellar Testnet",
     address: "Stellar Journey to Mastery\nBuilder Track - Level 1",
     hours: "Open source. Build anytime.",
-    email: "hello@anchorfx.dev",
+    email: "komasubheeksh@gmail.com",
   },
   copyright: `Built on Stellar. AnchorFX ${new Date().getFullYear()}.`,
 } as const;
