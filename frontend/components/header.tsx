@@ -33,15 +33,15 @@ const menuCards = [
     links: [
       { label: "Wallet", href: "/wallet", badge: "LIVE" },
       { label: "Smart Contract", href: "/contract", badge: "NEW" },
-      { label: "Documentation", href: "#", badge: null },
+      { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme", badge: null },
     ],
   },
   {
     id: "resources",
     title: "RESOURCES",
     links: [
-      { label: "Stellar Docs", href: "#", badge: null },
-      { label: "Soroban SDK", href: "#", badge: null },
+      { label: "Stellar Docs", href: "https://developers.stellar.org", badge: null },
+      { label: "Soroban SDK", href: "https://soroban.stellar.org", badge: null },
       { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX", badge: null },
       { label: "Freighter Wallet", href: "https://freighter.app", badge: null },
     ],
