@@ -2,7 +2,7 @@
 
 **Atomic cross-border FX settlement on Stellar.**
 
-AnchorFX is a Level 1 (White Belt) and Level 2 (Yellow Belt) submission for the Stellar Journey to Mastery builder program. It demonstrates wallet connection, multi-wallet support, XLM transactions, and Soroban smart contract deployment on Stellar testnet.
+AnchorFX enables wallet connection, XLM transactions, multi-wallet support, and Soroban smart contract deployment on Stellar testnet.
 
 **Live Demo:** [https://frontend-ruby-tau-69.vercel.app](https://frontend-ruby-tau-69.vercel.app)
 
@@ -42,17 +42,14 @@ anchorfx/
 
 ---
 
-## White Belt Requirements
+## Stellar Testnet Deployments
 
-| Requirement | Implementation |
+| Detail | Value |
 |---|---|
-| Freighter wallet on Testnet | Connected via `@stellar/freighter-api` |
-| Wallet connect/disconnect | `connectWallet()` / `checkConnection()` functions |
-| Fetch XLM balance | `getBalance()` via Horizon testnet API |
-| Display balance in UI | Rendered on `/wallet` page with refresh button |
-| Send XLM transaction | `sendXLM()` via Horizon + Freighter signing |
-| Show success/failure | Green success card with tx hash + Stellar Expert link; red error card |
-| Public GitHub repo | This repository |
+| Contract ID | `CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26` |
+| Deploy TX | `0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e` |
+| WASM Upload TX | `353d42e6abe0da2e26fa4b1ebf1090812679445c8b8e4fead13d00b26463c85f` |
+| Stellar Expert | [View Contract](https://stellar.expert/explorer/testnet/tx/0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e) |
 
 ---
 
@@ -148,25 +145,14 @@ fn get_escrow(env: Env) -> Option<Escrow>;
 
 ## Screenshots
 
-*Add screenshots after running the app:*
+### Wallet Connected — Freighter Popup & Balance
+![Wallet Popup](docs/walletpopup.png)
 
-1. **Wallet Connected State** — Freighter connected, showing public key
-2. **Balance Displayed** — XLM balance visible on the wallet card
-3. **Successful Testnet Transaction** — Green card with transaction hash and Stellar Expert link
-4. **Transaction Result** — Clear success/failure feedback in the UI
+### Wallet Dashboard — Public Key, Balance, Send Form
+![Wallet Show](docs/walletshow.png)
 
----
-
-## Belt Progression Plan
-
-| Belt | Planned Feature |
-|---|---|
-| White | Wallet connect, balance, send XLM ✓ |
-| Yellow | Multi-wallet integration, contract event sync via Mercury |
-| Orange | Full AnchorFX escrow dApp with contract deployment |
-| Green | Production-ready MVP with testnet escrow flow |
-| Blue | User onboarding (50+), feedback-driven improvements |
-| Black | Mainnet launch, security audits, 30+ users |
+### Transaction Confirmation — Success Card with TX Hash
+![Confirmation](docs/confirmation.png)
 
 ---
 
