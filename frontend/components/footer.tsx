@@ -15,7 +15,7 @@ const fadeInUp = {
 };
 
 const productLinks = [
-  { label: "Demo Wallet", href: "/wallet" },
+  { label: "Wallet", href: "/wallet" },
   { label: "Smart Contracts", href: "#" },
   { label: "Documentation", href: "#" },
   { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX" },
