@@ -127,6 +127,35 @@ export default function ContractPage(): ReactNode {
           </div>
         </motion.div>
 
+        {/* What this page does — clear explanation */}
+        <div className="border border-neutral-800 p-6 mb-8 text-xs leading-relaxed tracking-wide">
+          <p className="text-neutral-400 mb-3">
+            <span className="text-white font-bold uppercase tracking-[0.2em]">AnchorFX Escrow</span>{" "}
+            is a Soroban smart contract that locks tokens between two Stellar accounts
+            for atomic cross-border settlement. It integrates an{" "}
+            <span className="text-amber-400">FX Rate Oracle</span> to determine exchange rates
+            at settlement time.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[10px] uppercase tracking-[0.2em]">
+            <div className="border border-neutral-800 p-3">
+              <span className="text-amber-400 font-bold block mb-1">Create</span>
+              <span className="text-neutral-500">Sender locks tokens with oracle FX rate</span>
+            </div>
+            <div className="border border-neutral-800 p-3">
+              <span className="text-green-400 font-bold block mb-1">Settle</span>
+              <span className="text-neutral-500">Admin releases to receiver at locked rate</span>
+            </div>
+            <div className="border border-neutral-800 p-3">
+              <span className="text-blue-400 font-bold block mb-1">Refund</span>
+              <span className="text-neutral-500">Sender reclaims after timeout expires</span>
+            </div>
+            <div className="border border-neutral-800 p-3">
+              <span className="text-neutral-400 font-bold block mb-1">Events</span>
+              <span className="text-neutral-500">Real-time SSE stream of all state changes</span>
+            </div>
+          </div>
+        </div>
+
         <hr className="border-neutral-800 mb-12" />
 
         {!wallet.connected ? (

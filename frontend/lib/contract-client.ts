@@ -92,11 +92,15 @@ export async function deployContract(
       return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
     }
 
+    // Refresh account after upload (sequence incremented)
+    const account2 = await server.loadAccount(sourcePublicKey);
+
     // Step 2: Create contract
     const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
     const adminAddress = Address.fromString(sourcePublicKey);
 
-    const createTx = new TransactionBuilder(sourceAccount, {
+    // Pass admin as both admin and initial oracle (can be updated later via set_oracle)
+    const createTx = new TransactionBuilder(account2, {
       fee: "100000",
       networkPassphrase: Networks.TESTNET,
     })
@@ -105,7 +109,7 @@ export async function deployContract(
           wasmHash,
           address: adminAddress,
           salt,
-          constructorArgs: [adminAddress.toScVal()],
+          constructorArgs: [adminAddress.toScVal(), adminAddress.toScVal()],
         })
       )
       .setTimeout(30)
