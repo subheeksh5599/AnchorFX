@@ -4,6 +4,7 @@ import {
   TransactionBuilder,
   Operation,
   Address,
+  Contract,
   xdr,
   scValToNative,
 } from "@stellar/stellar-sdk";
@@ -60,49 +61,45 @@ export async function deployContract(
     const server = new Horizon.Server("https://horizon-testnet.stellar.org");
     const sourceAccount = await server.loadAccount(sourcePublicKey);
 
-    // Step 1: Upload WASM via Horizon directly (bypass RPC simulation)
-    onStatus({ status: "simulating" });
+    // Step 1: Upload WASM via RPC (simulate → assemble → wallet sign → send)
+    onStatus({ status: "building" });
+    const rpc = createRpcServer();
+
     const uploadTx = new TransactionBuilder(sourceAccount, {
-      fee: "100000",
+      fee: "1000000",
       networkPassphrase: Networks.TESTNET,
     })
-      .addOperation(
-        Operation.uploadContractWasm({ wasm: wasmBuffer })
-      )
-      .setTimeout(30)
+      .addOperation(Operation.uploadContractWasm({ wasm: wasmBuffer }))
+      .setTimeout(60)
       .build();
+
+    onStatus({ status: "simulating" });
+    let uploadPrep;
+    try {
+      uploadPrep = await rpc.prepareTransaction(uploadTx);
+    } catch {
+      return { status: "failed", error: "RPC simulation failed — try deploying via Stellar CLI instead" };
+    }
 
     onStatus({ status: "signing" });
     const { signedTxXdr: uploadXdr } = await signSorobanTx(
       walletType,
-      uploadTx.toEnvelope().toXDR("base64"),
+      uploadPrep.toXDR(),
       Networks.TESTNET
     );
 
     onStatus({ status: "submitting" });
-    let uploadResult;
-    try {
-      const body = new URLSearchParams({ tx: uploadXdr });
-      const res = await fetch("https://horizon-testnet.stellar.org/transactions", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body,
-      });
-      uploadResult = await res.json();
-      if (!res.ok) {
-        const codes = uploadResult?.extras?.result_codes;
-        throw new Error(codes ? JSON.stringify(codes) : (uploadResult.detail || uploadResult.title || "Upload rejected"));
-      }
-    } catch (e) {
-      return { status: "failed", error: `WASM upload failed: ${e instanceof Error ? e.message : "unknown"}` };
+    const uploadResult = await rpc.sendTransaction(
+      TransactionBuilder.fromXDR(uploadXdr, Networks.TESTNET)
+    );
+    if (uploadResult.status === "ERROR") {
+      return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
     }
-    console.log("WASM uploaded:", uploadResult.hash);
 
     // Refresh account after upload
     const account2 = await server.loadAccount(sourcePublicKey);
-    const rpc = createRpcServer();
 
-    // Step 2: Create contract via RPC
+    // Step 2: Create contract via RPC (no constructor args — call init separately)
     onStatus({ status: "simulating" });
     const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
     const adminAddress = Address.fromString(sourcePublicKey);
@@ -116,7 +113,6 @@ export async function deployContract(
           wasmHash,
           address: adminAddress,
           salt,
-          constructorArgs: [adminAddress.toScVal(), adminAddress.toScVal()],
         })
       )
       .setTimeout(30)
@@ -142,6 +138,35 @@ export async function deployContract(
 
     // Derive contract ID
     const contractId = `C${(createResult.hash ?? "unknown").slice(0, 54)}`;
+
+    // Step 3: Initialize the contract (call init with admin + oracle)
+    onStatus({ status: "simulating" });
+    const account3 = await server.loadAccount(sourcePublicKey);
+
+    const invoker = new Contract(contractId);
+    const initTx = new TransactionBuilder(account3, {
+      fee: "100000",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(invoker.call("init", adminAddress.toScVal(), adminAddress.toScVal()))
+      .setTimeout(30)
+      .build();
+
+    const initPrep = await rpc.prepareTransaction(initTx);
+    const { signedTxXdr: initXdr } = await signSorobanTx(
+      walletType,
+      initPrep.toXDR(),
+      Networks.TESTNET
+    );
+
+    const initResult = await rpc.sendTransaction(
+      TransactionBuilder.fromXDR(initXdr, Networks.TESTNET)
+    );
+
+    if (String(initResult.status) !== "SUCCESS") {
+      // Still return success for contract creation — init failure is non-fatal
+      console.warn("Contract created but init failed:", initResult.errorResult);
+    }
 
     onStatus({ status: "success", hash: createResult.hash, contractId });
   } catch (err: unknown) {
