@@ -187,8 +187,10 @@ export async function sendXLM(
       body,
     });
     const result = await response.json();
-    if (!response.ok || result.status === 400) {
-      throw new Error(result.detail || result.title || "Horizon rejected transaction");
+    if (!response.ok) {
+      const codes = result?.extras?.result_codes;
+      const detail = codes ? JSON.stringify(codes) : (result.detail || result.title || "Horizon rejected transaction");
+      throw new Error(String(detail));
     }
     return { success: true, hash: result.hash ?? result.id };
   } catch (err: unknown) {
