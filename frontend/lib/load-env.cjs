@@ -1,23 +1,30 @@
 // OWASP: Never hardcode secrets. Load from environment variables.
-// Usage: const loadEnv = require("./load-env.cjs"); const { mnemonic, keypair } = loadEnv();
+// Accepts either STELLAR_SECRET_KEY (raw S...) or STELLAR_MNEMONIC (BIP39 phrase).
+// Usage: const loadEnv = require("./load-env.cjs"); const { keypair } = loadEnv();
 
 const StellarSdk = require("@stellar/stellar-sdk");
 const HDWallet = require("stellar-hd-wallet").default;
 
 function loadEnv() {
+  const secretKey = process.env.STELLAR_SECRET_KEY;
   const mnemonic = process.env.STELLAR_MNEMONIC;
-  if (!mnemonic) {
-    console.error("STELLAR_MNEMONIC environment variable is required");
-    console.error("Create a .env file or export STELLAR_MNEMONIC=...");
-    process.exit(1);
+
+  if (secretKey) {
+    const keypair = StellarSdk.Keypair.fromSecret(secretKey);
+    return { publicKey: keypair.publicKey(), secretKey: secretKey, keypair };
   }
 
-  const wallet = HDWallet.fromMnemonic(mnemonic);
-  const publicKey = wallet.getPublicKey(0);
-  const secretKey = wallet.getSecret(0);
-  const keypair = StellarSdk.Keypair.fromSecret(secretKey);
+  if (mnemonic) {
+    const wallet = HDWallet.fromMnemonic(mnemonic);
+    const publicKey = wallet.getPublicKey(0);
+    const sk = wallet.getSecret(0);
+    const keypair = StellarSdk.Keypair.fromSecret(sk);
+    return { publicKey, secretKey: sk, keypair };
+  }
 
-  return { mnemonic, publicKey, secretKey, keypair };
+  console.error("STELLAR_SECRET_KEY or STELLAR_MNEMONIC environment variable is required");
+  console.error("Create a .env file or export STELLAR_SECRET_KEY=S...");
+  process.exit(1);
 }
 
 module.exports = loadEnv;
