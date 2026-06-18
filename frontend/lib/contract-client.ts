@@ -49,8 +49,6 @@ export async function deployContract(
   try {
     onStatus({ status: "building" });
 
-    const rpc = createRpcServer();
-
     // Load WASM
     const wasmResponse = await fetch(WASM_PATH);
     if (!wasmResponse.ok) {
@@ -62,7 +60,8 @@ export async function deployContract(
     const server = new Horizon.Server("https://horizon-testnet.stellar.org");
     const sourceAccount = await server.loadAccount(sourcePublicKey);
 
-    // Step 1: Upload WASM
+    // Step 1: Upload WASM via Horizon directly (bypass RPC simulation)
+    onStatus({ status: "simulating" });
     const uploadTx = new TransactionBuilder(sourceAccount, {
       fee: "100000",
       networkPassphrase: Networks.TESTNET,
@@ -73,33 +72,41 @@ export async function deployContract(
       .setTimeout(30)
       .build();
 
-    onStatus({ status: "simulating" });
-    const uploadPrep = await rpc.prepareTransaction(uploadTx);
-
     onStatus({ status: "signing" });
     const { signedTxXdr: uploadXdr } = await signSorobanTx(
       walletType,
-      uploadPrep.toXDR(),
+      uploadTx.toEnvelope().toXDR("base64"),
       Networks.TESTNET
     );
 
     onStatus({ status: "submitting" });
-    const uploadResult = await rpc.sendTransaction(
-      TransactionBuilder.fromXDR(uploadXdr, Networks.TESTNET)
-    );
-
-    if (uploadResult.status === "ERROR") {
-      return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
+    let uploadResult;
+    try {
+      const body = new URLSearchParams({ tx: uploadXdr });
+      const res = await fetch("https://horizon-testnet.stellar.org/transactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      uploadResult = await res.json();
+      if (!res.ok) {
+        const codes = uploadResult?.extras?.result_codes;
+        throw new Error(codes ? JSON.stringify(codes) : (uploadResult.detail || uploadResult.title || "Upload rejected"));
+      }
+    } catch (e) {
+      return { status: "failed", error: `WASM upload failed: ${e instanceof Error ? e.message : "unknown"}` };
     }
+    console.log("WASM uploaded:", uploadResult.hash);
 
-    // Refresh account after upload (sequence incremented)
+    // Refresh account after upload
     const account2 = await server.loadAccount(sourcePublicKey);
+    const rpc = createRpcServer();
 
-    // Step 2: Create contract
+    // Step 2: Create contract via RPC
+    onStatus({ status: "simulating" });
     const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
     const adminAddress = Address.fromString(sourcePublicKey);
 
-    // Pass admin as both admin and initial oracle (can be updated later via set_oracle)
     const createTx = new TransactionBuilder(account2, {
       fee: "100000",
       networkPassphrase: Networks.TESTNET,
@@ -117,12 +124,14 @@ export async function deployContract(
 
     const createPrep = await rpc.prepareTransaction(createTx);
 
+    onStatus({ status: "signing" });
     const { signedTxXdr: createXdr } = await signSorobanTx(
       walletType,
       createPrep.toXDR(),
       Networks.TESTNET
     );
 
+    onStatus({ status: "submitting" });
     const createResult = await rpc.sendTransaction(
       TransactionBuilder.fromXDR(createXdr, Networks.TESTNET)
     );
