@@ -13,11 +13,11 @@ soroban-sdk = "22"
 soroban-sdk = { version = "22", features = ["testutils"] }
 
 [profile.release]
-opt-level = "z"
+opt-level = "s"
 overflow-checks = true
 debug = 0
-strip = "symbols"
+strip = "none"
 debug-assertions = false
 panic = "abort"
 codegen-units = 1
-lto = true
+lto = false

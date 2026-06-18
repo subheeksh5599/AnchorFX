@@ -34,7 +34,7 @@ const menuCards = [
     title: "BUILD",
     links: [
       { label: "Demo Wallet", href: "/wallet", badge: "LIVE" },
-      { label: "Smart Contracts", href: "#", badge: null },
+      { label: "Smart Contract", href: "/contract", badge: "NEW" },
       { label: "Documentation", href: "#", badge: null },
     ],
   },
