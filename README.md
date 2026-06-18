@@ -2,7 +2,7 @@
 
 **Atomic cross-border FX settlement on Stellar.**
 
-AnchorFX enables wallet connection, XLM transactions, multi-wallet support, and Soroban smart contract deployment on Stellar testnet.
+AnchorFX is an event-driven settlement platform built on Stellar testnet. It powers a multi-escrow system backed by an FX Rate Oracle — senders lock tokens, the oracle provides exchange rates, and settlement is triggered by contract events streamed in real-time. Cross-contract calls between the escrow factory and oracle enable trustless, atomic FX settlement between Stellar accounts.
 
 **Live Demo:** [https://frontend-ruby-tau-69.vercel.app](https://frontend-ruby-tau-69.vercel.app)
 
