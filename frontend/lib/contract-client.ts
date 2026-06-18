@@ -96,8 +96,19 @@ export async function deployContract(
       return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
     }
 
-    // Refresh account after upload
-    const account2 = await server.loadAccount(sourcePublicKey);
+    // Wait for upload transaction to confirm on ledger before getting new sequence
+    await new Promise((resolve) => setTimeout(resolve, 4000));
+
+    // Refresh account with retry in case upload hasn't landed yet
+    let account2;
+    for (let i = 0; i < 10; i++) {
+      account2 = await server.loadAccount(sourcePublicKey);
+      if (BigInt(account2.sequence) > BigInt(sourceAccount.sequence)) break;
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+    if (!account2!) {
+      return { status: "failed", error: "Timed out waiting for upload to confirm" };
+    }
 
     // Step 2: Create contract via RPC (no constructor args — call init separately)
     onStatus({ status: "simulating" });
