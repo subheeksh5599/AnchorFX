@@ -2,32 +2,19 @@
 
 import { useWallet } from "@/components/wallet-provider";
 import { useState, useCallback, type FormEvent, type ReactNode } from "react";
-import {
-  Wallet,
-  Copy,
-  Check,
-  Send,
-  ArrowUpRight,
-  Loader2,
-  ExternalLink,
-  AlertTriangle,
-  CircleDollarSign,
-  Activity,
-} from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import type { WalletType } from "@/lib/multi-wallet";
 import { validateStellarAddress, validateXlmAmount } from "@/lib/validation";
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
 function shortAddr(addr: string): string {
-  return `${addr.slice(0, 10)}...${addr.slice(-6)}`;
+  return `${addr.slice(0, 12)}...${addr.slice(-8)}`;
 }
 
 const WALLET_OPTIONS: { type: WalletType; label: string; icon: string }[] = [
-  { type: "freighter", label: "Freighter", icon: "🦊" },
-  { type: "xbull", label: "xBull", icon: "🐂" },
+  { type: "freighter", label: "Freighter", icon: "" },
+  { type: "xbull", label: "xBull", icon: "" },
 ];
 
 export default function WalletPage(): ReactNode {
@@ -88,200 +75,191 @@ export default function WalletPage(): ReactNode {
   const balanceNum = Number.parseFloat(balance);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100 font-sans">
-      {/* Grid background */}
-      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+    <main className="min-h-screen bg-black text-white font-mono">
+      {/* Grid overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
+          backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
+          backgroundSize: "48px 48px",
         }}
       />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-        {/* Header */}
+      <div className="relative z-10 max-w-5xl mx-auto px-5 py-16">
+        {/* Header — architectural, split layout */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: easeOut }}
-          className="flex items-center justify-between mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 mb-16"
         >
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <CircleDollarSign className="h-6 w-6 text-amber-400" />
-              <h1 className="text-2xl font-medium tracking-tight">AnchorFX Wallet</h1>
+            <h1 className="text-[2.5rem] font-bold leading-[0.9] tracking-[-0.04em] uppercase mb-3">
+              Wallet
+            </h1>
+            <div className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+              Stellar Testnet · Freighter · xBull
             </div>
-            <p className="text-sm text-neutral-500 font-mono">STELLAR TESTNET · FREIGHTER · XBULL</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-end">
             <Link
               href="/contract"
-              className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-400 transition-colors px-3 py-1.5 rounded-md border border-neutral-800 hover:border-amber-400/30"
+              className="group text-xs uppercase tracking-[0.2em] text-neutral-400 hover:text-red-400 transition-colors flex items-center gap-2 pb-1 border-b border-neutral-800 hover:border-red-400"
             >
-              <Activity className="h-3.5 w-3.5" />
-              Smart Contract
+              Contract
+              <span className="text-neutral-600 group-hover:text-red-400 transition-colors">→</span>
             </Link>
           </div>
         </motion.div>
 
+        {/* Horizontal rule */}
+        <hr className="border-neutral-800 mb-12" />
+
         {/* Error Banner */}
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 border border-red-500/20 bg-red-500/5 rounded-lg px-4 py-3 flex items-start gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-10 border border-red-400/30 p-5 text-sm"
           >
-            <AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-medium text-red-400">{error.type.replace(/_/g, " ")}</p>
-              <p className="text-neutral-400 mt-0.5">{error.message}</p>
+            <div className="flex items-start gap-3">
+              <span className="text-red-400 mt-0.5">◆</span>
+              <div>
+                <p className="text-red-400 uppercase tracking-wider text-xs font-bold mb-1">
+                  {error.type.replace(/_/g, " ")}
+                </p>
+                <p className="text-neutral-400 text-xs">{error.message}</p>
+              </div>
             </div>
           </motion.div>
         )}
 
         {!wallet.connected ? (
-          /* --- CONNECT STATE --- */
+          /* CONNECT STATE */
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: easeOut, delay: 0.1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="border border-neutral-800 p-12 text-center"
           >
-            <div className="border border-neutral-800 rounded-2xl p-10 text-center bg-neutral-900/50 backdrop-blur">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-neutral-800 mb-6">
-                <Wallet className="h-7 w-7 text-neutral-400" />
-              </div>
-              <h2 className="text-xl font-medium mb-2">Connect your wallet</h2>
-              <p className="text-neutral-500 text-sm max-w-sm mx-auto mb-8">
-                Choose a Stellar wallet to interact with AnchorFX on testnet.
-                Install{" "}
-                <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline">
-                  Freighter
-                </a>{" "}
-                or{" "}
-                <a href="https://xbull.app" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline">
-                  xBull
-                </a>.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-sm mx-auto">
-                {WALLET_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.type}
-                    onClick={() => connect(opt.type)}
-                    disabled={loading}
-                    className={`flex items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-medium transition-all duration-200 disabled:opacity-50 border ${
-                      availableWallets.includes(opt.type)
-                        ? "border-amber-400/30 bg-amber-400/5 hover:bg-amber-400/10 hover:border-amber-400/50 text-amber-200"
-                        : "border-neutral-800 bg-neutral-900 text-neutral-500"
-                    }`}
-                  >
-                    <span className="text-lg">{opt.icon}</span>
-                    {opt.label}
-                    {availableWallets.includes(opt.type) ? (
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                    ) : (
-                      <span className="h-1.5 w-1.5 rounded-full bg-neutral-600" />
-                    )}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-neutral-600 mt-4">
-                Green dot = wallet detected in browser
-              </p>
+            <div className="text-[10rem] leading-none font-black text-neutral-900 mb-8 select-none">◆</div>
+            <h2 className="text-lg uppercase tracking-[0.3em] font-bold mb-6">Connect Wallet</h2>
+            <p className="text-neutral-500 text-xs max-w-md mx-auto mb-10 leading-relaxed tracking-wide">
+              Choose a Stellar wallet to interact with AnchorFX on testnet.
+              Install{" "}
+              <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-white hover:text-red-400 underline underline-offset-4">
+                Freighter
+              </a>{" "}
+              or{" "}
+              <a href="https://xbull.app" target="_blank" rel="noopener noreferrer" className="text-white hover:text-red-400 underline underline-offset-4">
+                xBull
+              </a>.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-sm mx-auto">
+              {WALLET_OPTIONS.map((opt) => (
+                <button
+                  key={opt.type}
+                  onClick={() => connect(opt.type)}
+                  disabled={loading}
+                  className={`text-xs uppercase tracking-[0.2em] font-bold py-4 px-6 transition-all duration-150 disabled:opacity-30 ${
+                    availableWallets.includes(opt.type)
+                      ? "border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 text-white"
+                      : "border border-neutral-800 text-neutral-600"
+                  }`}
+                >
+                  {opt.label}
+                  {availableWallets.includes(opt.type) ? (
+                    <span className="ml-2 text-green-400">●</span>
+                  ) : (
+                    <span className="ml-2 text-neutral-700">○</span>
+                  )}
+                </button>
+              ))}
             </div>
+            <p className="text-[10px] text-neutral-700 mt-6 tracking-wider uppercase">
+              Green dot = detected in browser
+            </p>
           </motion.div>
         ) : (
-          /* --- CONNECTED STATE --- */
+          /* CONNECTED STATE */
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: easeOut }}
-            className="space-y-4"
+            transition={{ duration: 0.3 }}
+            className="space-y-8"
           >
-            {/* Top row: Address + Network */}
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
-              {/* Address card */}
-              <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-5">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium">
-                    {wallet.walletType}
-                  </span>
-                  <button
-                    onClick={disconnect}
-                    className="text-[11px] text-neutral-500 hover:text-red-400 transition-colors uppercase tracking-wider"
-                  >
-                    Disconnect
-                  </button>
-                </div>
-                <div className="flex items-center gap-3">
-                  <code className="text-sm text-neutral-200 font-mono truncate flex-1">
-                    {wallet.publicKey}
-                  </code>
-                  <button
-                    onClick={copyAddress}
-                    className="shrink-0 p-2 rounded-lg border border-neutral-700 hover:border-neutral-500 transition-colors text-neutral-400 hover:text-neutral-200"
-                    aria-label="Copy address"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-green-400" /> : <Copy className="h-4 w-4" />}
-                  </button>
+            {/* Top bar: type + network + disconnect */}
+            <div className="grid grid-cols-[1fr_auto_auto] gap-4 items-end pb-6 border-b border-neutral-800">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-1">Wallet</div>
+                <div className="text-sm uppercase tracking-wider">{wallet.walletType}</div>
+              </div>
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-1">Network</div>
+                <div className={`text-sm uppercase tracking-wider ${isTestnet ? "text-amber-400" : "text-green-400"}`}>
+                  {wallet.network ?? "Unknown"}
                 </div>
               </div>
+              <button
+                onClick={disconnect}
+                className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-red-400 transition-colors"
+              >
+                Disconnect
+              </button>
+            </div>
 
-              {/* Network badge */}
-              <div className={`border rounded-xl p-5 flex flex-col justify-center min-w-[140px] ${
-                isTestnet
-                  ? "border-amber-400/20 bg-amber-400/5"
-                  : "border-green-400/20 bg-green-400/5"
-              }`}>
-                <span className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium mb-1">Network</span>
-                <span className={`text-sm font-mono font-medium ${
-                  isTestnet ? "text-amber-400" : "text-green-400"
-                }`}>
-                  {wallet.network ?? "Unknown"}
-                </span>
+            {/* Address row */}
+            <div className="border border-neutral-800 p-5">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Address</div>
+              <div className="flex items-center gap-3">
+                <code className="text-sm text-neutral-300 flex-1 break-all">{wallet.publicKey}</code>
+                <button
+                  onClick={copyAddress}
+                  className="text-xs uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors shrink-0"
+                >
+                  {copied ? "COPIED" : "COPY"}
+                </button>
               </div>
             </div>
 
-            {/* Balance card */}
-            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
+            {/* Balance — big number, no decoration */}
+            <div className="border border-neutral-800 p-8">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium">XLM Balance</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-neutral-500">Balance</span>
                 <button
                   onClick={refreshBalance}
-                  className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+                  className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors"
                 >
                   Refresh
                 </button>
               </div>
-              <div className="flex items-baseline gap-3">
-                <span className="text-5xl font-light tracking-tight tabular-nums">
+              <div className="flex items-baseline gap-4">
+                <span className="text-6xl font-black tabular-nums tracking-[-0.03em]">
                   {balanceNum.toLocaleString(undefined, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 6,
                   })}
                 </span>
-                <span className="text-xl text-neutral-500 font-light">XLM</span>
+                <span className="text-lg font-bold uppercase text-neutral-600">XLM</span>
               </div>
               {isTestnet && balanceNum === 0 && (
                 <a
                   href="https://laboratory.stellar.org/#account-creator?network=test"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 transition-colors"
+                  className="inline-flex items-center gap-2 mt-4 text-xs uppercase tracking-[0.2em] text-red-400 hover:text-red-300 transition-colors"
                 >
                   Fund with Friendbot <ArrowUpRight className="h-3 w-3" />
                 </a>
               )}
             </div>
 
-            {/* Send form */}
-            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <Send className="h-4 w-4 text-neutral-500" />
-                <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Send XLM</h3>
-              </div>
-              <form onSubmit={handleSend} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-[1fr_200px] gap-3">
+            {/* Send form — brutalist, minimal */}
+            <div className="border border-neutral-800 p-8">
+              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-6">Send XLM</h3>
+              <form onSubmit={handleSend} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-4">
                   <div>
-                    <label className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium block mb-1.5">
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 block mb-2">
                       Destination
                     </label>
                     <input
@@ -290,12 +268,12 @@ export default function WalletPage(): ReactNode {
                       onChange={(e) => setDestination(e.target.value)}
                       placeholder="G..."
                       required
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm font-mono text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all"
+                      className="w-full bg-transparent border-b border-neutral-800 focus:border-white outline-none py-3 text-sm text-white placeholder:text-neutral-700 tracking-wide transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="text-[11px] uppercase tracking-widest text-neutral-500 font-medium block mb-1.5">
-                      Amount
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 block mb-2">
+                      Amount (XLM)
                     </label>
                     <input
                       type="number"
@@ -305,49 +283,47 @@ export default function WalletPage(): ReactNode {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.0"
                       required
-                      className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm font-mono text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all"
+                      className="w-full bg-transparent border-b border-neutral-800 focus:border-white outline-none py-3 text-sm text-white placeholder:text-neutral-700 tracking-wide transition-colors"
                     />
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={sending || !destination || !amount}
-                  className="w-full rounded-lg bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-black font-medium py-3 px-6 text-sm transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-600 text-black font-bold uppercase tracking-[0.3em] text-xs py-4 transition-colors"
                 >
-                  {sending ? (
-                    <><Loader2 className="h-4 w-4 animate-spin" /> Sending...</>
-                  ) : (
-                    <><Send className="h-4 w-4" /> Send XLM</>
-                  )}
+                  {sending ? "Sending..." : "Send"}
                 </button>
               </form>
 
               {/* TX Result */}
               {txResult && (
                 <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 rounded-lg px-4 py-3 text-sm border ${
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className={`mt-6 p-5 border-l-4 ${
                     txResult.success
-                      ? "border-green-400/20 bg-green-400/5 text-green-400"
-                      : "border-red-400/20 bg-red-400/5 text-red-400"
+                      ? "border-green-400 bg-green-400/5"
+                      : "border-red-400 bg-red-400/5"
                   }`}
                 >
-                  <p className="font-medium mb-1">
-                    {txResult.success ? "Transaction Successful" : "Transaction Failed"}
+                  <p className={`text-xs uppercase tracking-[0.2em] font-bold mb-1 ${
+                    txResult.success ? "text-green-400" : "text-red-400"
+                  }`}>
+                    {txResult.success ? "Success" : "Failed"}
                   </p>
                   {txResult.success && txResult.hash ? (
                     <a
                       href={`https://stellar.expert/explorer/testnet/tx/${txResult.hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-200 transition-colors font-mono text-xs"
+                      className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs"
                     >
                       {shortAddr(txResult.hash)}
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   ) : (
-                    <p className="text-neutral-400">{txResult.error}</p>
+                    <p className="text-neutral-400 text-xs">{txResult.error}</p>
                   )}
                 </motion.div>
               )}
@@ -355,13 +331,12 @@ export default function WalletPage(): ReactNode {
           </motion.div>
         )}
 
-        {/* Back to home */}
-        <div className="mt-12 text-center">
+        <div className="mt-20 text-center">
           <Link
             href="/"
-            className="text-xs text-neutral-600 hover:text-neutral-400 transition-colors"
+            className="text-[10px] uppercase tracking-[0.3em] text-neutral-700 hover:text-neutral-500 transition-colors"
           >
-            Back to Home
+            Home
           </Link>
         </div>
       </div>

@@ -11,27 +11,17 @@ import {
   type EscrowData,
 } from "@/lib/contract-client";
 import {
-  Rocket,
-  Loader2,
   ExternalLink,
-  Database,
   RadioTower,
-  Zap,
   Clock,
-  CheckCircle2,
-  XCircle,
   AlertTriangle,
-  FileCode,
-  ArrowUpRight,
 } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { validateContractId } from "@/lib/validation";
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-function short(str: string, n = 12): string {
-  return str.length > n * 2 ? `${str.slice(0, n)}...${str.slice(-4)}` : str;
+function short(str: string, n = 14): string {
+  return str.length > n * 2 ? `${str.slice(0, n)}...${str.slice(-6)}` : str;
 }
 
 export default function ContractPage(): ReactNode {
@@ -58,15 +48,11 @@ export default function ContractPage(): ReactNode {
       setStatus
     );
 
-    if (result.contractId) {
-      setViewContractId(result.contractId);
-    }
+    if (result.contractId) setViewContractId(result.contractId);
     setStatus(result);
     setDeploying(false);
 
-    if (result.hash) {
-      trackTransaction(result.hash, (s) => setStatus(s));
-    }
+    if (result.hash) trackTransaction(result.hash, (s) => setStatus(s));
   }, [wallet.publicKey, wallet.walletType]);
 
   const handleReadContract = useCallback(async () => {
@@ -77,8 +63,7 @@ export default function ContractPage(): ReactNode {
       return;
     }
     setReading(true);
-    const data = await getEscrowFromContract(validation.sanitized!);
-    setEscrowData(data);
+    setEscrowData(await getEscrowFromContract(validation.sanitized!));
     setReading(false);
   }, [viewContractId]);
 
@@ -91,166 +76,136 @@ export default function ContractPage(): ReactNode {
     }
     setListening(true);
     setEvents([]);
-
-    const cleanup = subscribeContractEvents(
+    return subscribeContractEvents(
       validation.sanitized!,
       (event) => {
         setLiveLedger(event.ledger);
         setEvents((prev) => [
-          `[ledger ${event.ledger}] ${event.type}: ${JSON.stringify(event.data)}`,
+          `[#${event.ledger}] ${event.type}: ${JSON.stringify(event.data)}`,
           ...prev.slice(0, 49),
         ]);
       },
       () => setListening(false)
     );
-
-    return cleanup;
   }, [viewContractId, listening]);
 
-  const stopListening = useCallback(() => {
-    setListening(false);
-  }, []);
-
-  const statusLabel =
-    status?.status === "success"
-      ? "Deployment Successful"
-      : status?.status === "failed"
-        ? "Deployment Failed"
-        : status?.status
-          ? `Status: ${status.status}`
-          : null;
-
-  const statusIcon =
-    status?.status === "success" ? (
-      <CheckCircle2 className="h-5 w-5 text-green-400" />
-    ) : status?.status === "failed" ? (
-      <XCircle className="h-5 w-5 text-red-400" />
-    ) : status?.status ? (
-      <Loader2 className="h-5 w-5 text-amber-400 animate-spin" />
-    ) : null;
+  const stopListening = useCallback(() => setListening(false), []);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100 font-sans">
-      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
+    <main className="min-h-screen bg-black text-white font-mono">
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
+          backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
+          backgroundSize: "48px 48px",
         }}
       />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+      <div className="relative z-10 max-w-5xl mx-auto px-5 py-16">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: easeOut }}
-          className="flex items-center justify-between mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 mb-16"
         >
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <FileCode className="h-6 w-6 text-amber-400" />
-              <h1 className="text-2xl font-medium tracking-tight">AnchorFX Contract</h1>
+            <h1 className="text-[2.5rem] font-bold leading-[0.9] tracking-[-0.04em] uppercase mb-3">
+              Contract
+            </h1>
+            <div className="text-xs uppercase tracking-[0.3em] text-neutral-500">
+              Soroban Escrow · Oracle · SSE Events
             </div>
-            <p className="text-sm text-neutral-500 font-mono">SOROBAN ESCROW · TESTNET · SSE EVENTS</p>
           </div>
-          <Link
-            href="/wallet"
-            className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-400 transition-colors px-3 py-1.5 rounded-md border border-neutral-800 hover:border-amber-400/30"
-          >
-            <ArrowUpRight className="h-3.5 w-3.5" />
-            Wallet
-          </Link>
+          <div className="flex items-end">
+            <Link
+              href="/wallet"
+              className="group text-xs uppercase tracking-[0.2em] text-neutral-400 hover:text-red-400 transition-colors flex items-center gap-2 pb-1 border-b border-neutral-800 hover:border-red-400"
+            >
+              Wallet
+              <span className="text-neutral-600 group-hover:text-red-400 transition-colors">→</span>
+            </Link>
+          </div>
         </motion.div>
+
+        <hr className="border-neutral-800 mb-12" />
 
         {!wallet.connected ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: easeOut }}
-            className="border border-neutral-800 rounded-2xl p-10 text-center bg-neutral-900/50 backdrop-blur"
+            className="border border-neutral-800 p-16 text-center"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-neutral-800 mb-6">
-              <Rocket className="h-7 w-7 text-neutral-400" />
-            </div>
-            <h2 className="text-xl font-medium mb-2">Connect your wallet first</h2>
-            <p className="text-neutral-500 text-sm mb-6">
-              Go to the wallet page to connect, then return here to deploy contracts.
-            </p>
+            <div className="text-8xl font-black text-neutral-900 mb-8 select-none">{ }</div>
+            <h2 className="text-lg uppercase tracking-[0.3em] font-bold mb-6">Connect Wallet</h2>
+            <p className="text-neutral-500 text-xs mb-8 tracking-wide">Connect to deploy and interact with contracts.</p>
             <Link
               href="/wallet"
-              className="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-medium px-6 py-3 text-sm transition-colors"
+              className="inline-block bg-white hover:bg-neutral-200 text-black font-bold uppercase tracking-[0.3em] text-xs px-8 py-4 transition-colors"
             >
-              Connect Wallet
+              Go to Wallet
             </Link>
           </motion.div>
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: easeOut }}
-            className="space-y-4"
+            transition={{ duration: 0.3 }}
+            className="space-y-8"
           >
-            {/* Deploy Section */}
-            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Rocket className="h-4 w-4 text-neutral-500" />
-                <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Deploy Escrow Contract</h3>
-              </div>
-              <p className="text-sm text-neutral-500 mb-5">
-                Deploy the AnchorFX escrow contract to Stellar testnet. The connected wallet pays gas.
+            {/* ── DEPLOY ── */}
+            <div className="border border-neutral-800 p-8">
+              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-2">Deploy</h3>
+              <p className="text-[11px] text-neutral-600 mb-6 tracking-wide leading-relaxed">
+                Deploy the AnchorFX escrow contract with FX oracle integration to Stellar testnet.
               </p>
-
               <button
                 onClick={handleDeploy}
                 disabled={deploying}
-                className="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-black font-medium px-6 py-3 text-sm transition-colors"
+                className="bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-600 text-black font-bold uppercase tracking-[0.3em] text-xs py-4 px-8 transition-colors"
               >
-                {deploying ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Deploying...</>
-                ) : (
-                  <><Rocket className="h-4 w-4" /> Deploy Contract</>
-                )}
+                {deploying ? "DEPLOYING..." : "Deploy"}
               </button>
 
-              {/* Status */}
               {status && (
                 <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 rounded-lg px-4 py-3 text-sm border ${
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className={`mt-6 p-5 border-l-4 ${
                     status.status === "success"
-                      ? "border-green-400/20 bg-green-400/5"
+                      ? "border-green-400 bg-green-400/5"
                       : status.status === "failed"
-                        ? "border-red-400/20 bg-red-400/5"
-                        : "border-amber-400/20 bg-amber-400/5"
+                        ? "border-red-400 bg-red-400/5"
+                        : "border-amber-400 bg-amber-400/5"
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    {statusIcon}
-                    <span className={`font-medium ${
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`text-xs uppercase tracking-[0.2em] font-bold ${
                       status.status === "success" ? "text-green-400" :
                       status.status === "failed" ? "text-red-400" : "text-amber-400"
-                    }`}>{statusLabel}</span>
+                    }`}>
+                      {status.status === "success" ? "Success" :
+                       status.status === "failed" ? "Failed" : status.status}
+                    </span>
                   </div>
                   {status.hash && (
                     <a
                       href={`https://stellar.expert/explorer/testnet/tx/${status.hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-200 transition-colors font-mono text-xs ml-7"
+                      className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs"
                     >
                       TX: {short(status.hash)}
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
                   {status.contractId && (
-                    <div className="mt-1 font-mono text-xs text-neutral-400 ml-7 break-all">
+                    <div className="mt-1 text-xs text-neutral-500 break-all">
                       Contract: {status.contractId}
                     </div>
                   )}
                   {status.error && (
-                    <div className="mt-1 text-xs text-neutral-400 ml-7 flex items-start gap-1.5">
-                      <AlertTriangle className="h-3 w-3 shrink-0 mt-0.5" />
+                    <div className="mt-2 text-xs text-neutral-400 flex items-start gap-1.5">
+                      <AlertTriangle className="h-3 w-3 shrink-0 mt-0.5 text-red-400" />
                       {status.error}
                     </div>
                   )}
@@ -258,158 +213,138 @@ export default function ContractPage(): ReactNode {
               )}
             </div>
 
-            {/* Read Contract */}
-            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Database className="h-4 w-4 text-neutral-500" />
-                <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Read Contract State</h3>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+            {/* ── READ ── */}
+            <div className="border border-neutral-800 p-8">
+              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-2">Read State</h3>
+              <p className="text-[11px] text-neutral-600 mb-5 tracking-wide leading-relaxed">
+                Query on-chain escrow data — sender, receiver, amount, status.
+              </p>
+              <div className="flex flex-col md:flex-row gap-3">
                 <input
                   type="text"
                   value={viewContractId}
                   onChange={(e) => setViewContractId(e.target.value)}
                   placeholder="C..."
-                  className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm font-mono text-neutral-200 placeholder:text-neutral-600 outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all"
+                  className="flex-1 bg-transparent border-b border-neutral-800 focus:border-white outline-none py-3 text-xs text-white placeholder:text-neutral-700 tracking-wide transition-colors"
                 />
                 <button
                   onClick={handleReadContract}
                   disabled={reading || !viewContractId}
-                  className="rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 border border-neutral-700 text-neutral-200 font-medium px-5 py-2.5 text-sm transition-colors inline-flex items-center gap-2 shrink-0"
+                  className="bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 text-white font-bold uppercase tracking-[0.3em] text-xs py-3 px-6 transition-colors shrink-0"
                 >
-                  {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}
-                  Read
+                  {reading ? "..." : "Read"}
                 </button>
               </div>
 
               {escrowData && (
                 <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 rounded-lg border border-neutral-700 bg-neutral-800/50 p-4 font-mono text-xs"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-5 border border-neutral-800 p-5"
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                     <div>
-                      <span className="text-neutral-500">Sender</span>
-                      <p className="text-neutral-300 truncate">{short(escrowData.sender, 14)}</p>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-1">Sender</div>
+                      <div className="text-neutral-300 truncate">{short(escrowData.sender)}</div>
                     </div>
                     <div>
-                      <span className="text-neutral-500">Receiver</span>
-                      <p className="text-neutral-300 truncate">{short(escrowData.receiver, 14)}</p>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-1">Receiver</div>
+                      <div className="text-neutral-300 truncate">{short(escrowData.receiver)}</div>
                     </div>
                     <div>
-                      <span className="text-neutral-500">Amount</span>
-                      <p className="text-neutral-300">{escrowData.amount}</p>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-1">Amount</div>
+                      <div className="text-neutral-300 font-bold">{escrowData.amount}</div>
                     </div>
                     <div>
-                      <span className="text-neutral-500">Status</span>
-                      <p className={`font-medium uppercase ${
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-1">Status</div>
+                      <div className={`font-bold uppercase tracking-wider ${
                         escrowData.status === "Created" ? "text-amber-400" :
                         escrowData.status === "Settled" ? "text-green-400" :
-                        escrowData.status === "Refunded" ? "text-blue-400" : "text-neutral-400"
-                      }`}>{escrowData.status}</p>
-                    </div>
-                    <div>
-                      <span className="text-neutral-500">Timeout Ledger</span>
-                      <p className="text-neutral-300">{escrowData.timeoutLedger}</p>
-                    </div>
-                    <div>
-                      <span className="text-neutral-500">Created At</span>
-                      <p className="text-neutral-300">{escrowData.createdAt}</p>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <span className="text-neutral-500">Token</span>
-                      <p className="text-neutral-300 truncate">{escrowData.token || "—"}</p>
+                        escrowData.status === "Refunded" ? "text-blue-400" :
+                        escrowData.status === "Cancelled" ? "text-neutral-500" : "text-neutral-400"
+                      }`}>{escrowData.status}</div>
                     </div>
                   </div>
                 </motion.div>
               )}
             </div>
 
-            {/* Events Stream */}
-            <div className="border border-neutral-800 rounded-xl bg-neutral-900/50 backdrop-blur p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <RadioTower className="h-4 w-4 text-neutral-500" />
-                  <h3 className="text-sm font-medium tracking-wide uppercase text-neutral-300">Real-Time Events</h3>
-                  {listening && (
-                    <span className="flex items-center gap-1.5 text-[11px] text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full font-medium">
-                      <Zap className="h-3 w-3" />
-                      LIVE
-                      {liveLedger && <span className="text-neutral-500 font-normal">#{liveLedger}</span>}
-                    </span>
-                  )}
-                </div>
+            {/* ── EVENTS ── */}
+            <div className="border border-neutral-800 p-8">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">Events</h3>
                 {listening && (
-                  <span className="flex items-center gap-1.5 text-xs text-neutral-400">
-                    <Clock className="h-3 w-3" />
-                    2s poll
-                  </span>
+                  <div className="flex items-center gap-2 text-[10px]">
+                    <span className="flex items-center gap-1 text-green-400 uppercase tracking-[0.2em] font-bold">
+                      <span className="inline-block w-2 h-2 bg-green-400 animate-pulse" />
+                      Live
+                    </span>
+                    {liveLedger && <span className="text-neutral-600">#{liveLedger}</span>}
+                    <Clock className="h-3 w-3 text-neutral-600" />
+                    <span className="text-neutral-600">2s</span>
+                  </div>
                 )}
               </div>
+              <p className="text-[11px] text-neutral-600 mb-5 tracking-wide leading-relaxed">
+                Real-time SSE stream of <code className="text-amber-400">created</code>,{" "}
+                <code className="text-green-400">settled</code>,{" "}
+                <code className="text-blue-400">refunded</code>, and{" "}
+                <code className="text-neutral-400">cancelled</code> events.
+              </p>
 
-              <div className="flex gap-2 mb-4">
+              <div className="flex gap-3 mb-5">
                 <button
                   onClick={handleListen}
                   disabled={listening || !viewContractId}
-                  className="rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 border border-neutral-700 text-neutral-200 font-medium px-4 py-2 text-sm transition-colors inline-flex items-center gap-2"
+                  className="bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 text-white font-bold uppercase tracking-[0.3em] text-xs py-3 px-6 transition-colors flex items-center gap-2"
                 >
                   {listening ? (
-                    <><RadioTower className="h-4 w-4 animate-pulse text-green-400" /> Streaming</>
+                    <><RadioTower className="h-3 w-3 text-green-400" /> Streaming</>
                   ) : (
-                    <><RadioTower className="h-4 w-4" /> Connect Stream</>
+                    <><RadioTower className="h-3 w-3" /> Connect</>
                   )}
                 </button>
                 {listening && (
                   <button
                     onClick={stopListening}
-                    className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors px-3"
+                    className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 hover:text-red-400 transition-colors"
                   >
-                    Disconnect
+                    Stop
                   </button>
                 )}
               </div>
 
+              {/* Event log or empty states */}
               {events.length > 0 && (
-                <div className="rounded-lg border border-neutral-800 bg-neutral-950 h-48 overflow-y-auto p-3 font-mono text-[11px] leading-relaxed">
+                <div className="border border-neutral-800 h-56 overflow-y-auto p-4 text-[11px] leading-relaxed">
                   {events.map((e, i) => (
-                    <div key={i} className="text-neutral-500 hover:text-neutral-300 transition-colors py-px">
+                    <div key={i} className="text-neutral-500 hover:text-neutral-300 py-px">
                       {e}
                     </div>
                   ))}
                 </div>
               )}
               {listening && events.length === 0 && (
-                <div className="rounded-lg border border-dashed border-neutral-800 bg-neutral-950 p-6 text-center">
-                  <Zap className="h-5 w-5 text-neutral-600 mx-auto mb-2" />
-                  <p className="text-sm text-neutral-400">Listening for events...</p>
-                  <p className="text-xs text-neutral-600 mt-1">
-                    Deploy the contract above and call <code className="text-neutral-500">create()</code> to see events appear here.
-                  </p>
+                <div className="border border-dashed border-neutral-800 p-10 text-center">
+                  <p className="text-xs text-neutral-500">Listening for contract events...</p>
                 </div>
               )}
               {!listening && events.length === 0 && (
-                <div className="rounded-lg border border-dashed border-neutral-800 bg-neutral-950 p-8 text-center">
-                  <RadioTower className="h-6 w-6 text-neutral-600 mx-auto mb-3" />
-                  <p className="text-sm text-neutral-400 font-medium mb-1">Live contract event stream</p>
-                  <p className="text-xs text-neutral-600 max-w-sm mx-auto leading-relaxed">
-                    Subscribes to <code className="text-amber-400/70 bg-amber-400/5 px-1 rounded">created</code>,{" "}
-                    <code className="text-green-400/70 bg-green-400/5 px-1 rounded">settled</code>, and{" "}
-                    <code className="text-blue-400/70 bg-blue-400/5 px-1 rounded">refunded</code> events
-                    from the escrow contract. Click <strong>Connect Stream</strong> to start.
-                  </p>
+                <div className="border border-dashed border-neutral-800 p-10 text-center">
+                  <RadioTower className="h-5 w-5 text-neutral-800 mx-auto mb-3" />
+                  <p className="text-xs text-neutral-600">Connect to stream live contract events</p>
                 </div>
               )}
             </div>
           </motion.div>
         )}
 
-        <div className="mt-12 text-center">
+        <div className="mt-20 text-center">
           <Link
             href="/"
-            className="text-xs text-neutral-600 hover:text-neutral-400 transition-colors"
+            className="text-[10px] uppercase tracking-[0.3em] text-neutral-700 hover:text-neutral-500 transition-colors"
           >
-            Back to Home
+            Home
           </Link>
         </div>
       </div>
