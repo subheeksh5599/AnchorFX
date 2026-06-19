@@ -75,13 +75,25 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
 
     const escrowsResult = await rpc.getLedgerEntries(escrowsKey);
     if (escrowsResult.entries?.length) {
-      const raw = scValToNative(escrowsResult.entries[0]!.val.contractData().val());
-      if (raw && typeof raw === "object") {
-        const map = raw as Array<{ key: unknown; val: Record<string, unknown> }>;
-        if (Array.isArray(map)) {
-          for (const entry of map) {
-            const id = Number(entry.key);
+      try {
+        const raw = scValToNative(escrowsResult.entries[0]!.val.contractData().val());
+        if (raw && typeof raw === "object") {
+          // Soroban Map returns as object with BigInt keys for u64
+          // Handle both array (from older SDK) and object (Map) formats
+          const entries = Array.isArray(raw)
+            ? (raw as Array<{ key: unknown; val: Record<string, unknown> }>)
+            : Object.entries(raw as Record<string, Record<string, unknown>>).map(([k, v]) => ({ key: k, val: v }));
+
+          for (const entry of entries) {
+            let id: number;
+            if (typeof entry.key === "bigint") id = Number(entry.key);
+            else if (typeof entry.key === "string" && /^\d+$/.test(entry.key)) id = parseInt(entry.key, 10);
+            else if (typeof entry.key === "number") id = entry.key;
+            else continue;
+
             const val = entry.val;
+            if (!val || typeof val !== "object") continue;
+
             results.push({
               id,
               sender: String(val.sender ?? ""),
@@ -95,6 +107,8 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
             });
           }
         }
+      } catch {
+        // BigInt serialization issue — fall through to legacy format
       }
     }
 
