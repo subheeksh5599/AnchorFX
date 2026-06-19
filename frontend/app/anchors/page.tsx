@@ -272,6 +272,106 @@ export default function AnchorsPage(): ReactNode {
           </div>
         </div>
 
+        {/* FX Route Discovery */}
+        <div className="border border-neutral-800 p-8 mb-8">
+          <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">FX Route Discovery</h3>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const from = (form.querySelector('[name=from]') as HTMLSelectElement).value;
+            const to = (form.querySelector('[name=to]') as HTMLSelectElement).value;
+            const amt = (form.querySelector('[name=amount]') as HTMLInputElement).value;
+            const res = await fetch(`/api/fxroute?from=${from}&to=${to}&amount=${amt}`);
+            const data = await res.json();
+            const el = document.getElementById("fx-result");
+            if (el) el.textContent = res.ok ? `${data.route} | Rate: ${data.rate} | Fee: ${data.feePercent}% | Receive: ${data.estimatedReceive} ${data.to}` : data.error || "No route";
+          }} className="flex flex-wrap gap-3 items-end">
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">From</label>
+              <select name="from" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 uppercase tracking-[0.2em]">
+                <option value="US">🇺🇸 USD</option>
+                <option value="EUR">🇪🇺 EUR</option>
+              </select>
+            </div>
+            <span className="text-neutral-600 pb-2">→</span>
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">To</label>
+              <select name="to" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 uppercase tracking-[0.2em]">
+                <option value="PH">🇵🇭 PHP</option>
+                <option value="MX">🇲🇽 MXN</option>
+                <option value="BR">🇧🇷 BRL</option>
+                <option value="NG">🇳🇬 NGN</option>
+                <option value="IN">🇮🇳 INR</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Amount</label>
+              <input name="amount" type="number" defaultValue="1000" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-24" />
+            </div>
+            <button type="submit" className="bg-white text-black px-6 py-2 text-xs uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Find Route</button>
+          </form>
+          <div id="fx-result" className="mt-4 text-xs text-neutral-300 font-mono"></div>
+        </div>
+
+        {/* Anchor Reputation + Export */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="border border-neutral-800">
+            <div className="p-5 border-b border-neutral-800 flex items-center justify-between">
+              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">Anchor Reputation</h3>
+            </div>
+            <div className="p-5">
+              <div className="border border-neutral-800 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold">Anchor A (US)</span>
+                  <span className="text-[11px] text-green-400 font-bold">98% success</span>
+                </div>
+                <div className="flex items-center gap-4 text-[10px] text-neutral-500">
+                  <span>3 settlements</span>
+                  <span>~5s avg time</span>
+                  <span>0% refund rate</span>
+                </div>
+              </div>
+              <div className="border border-neutral-800 p-4 mt-2">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold">Anchor B (PH)</span>
+                  <span className="text-[11px] text-green-400 font-bold">100% approval</span>
+                </div>
+                <div className="flex items-center gap-4 text-[10px] text-neutral-500">
+                  <span>3 received</span>
+                  <span>~3s approve time</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-neutral-800">
+            <div className="p-5 border-b border-neutral-800 flex items-center justify-between">
+              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">Actions</h3>
+            </div>
+            <div className="p-5 space-y-3">
+              <a
+                href={`/api/export?contract=${CONTRACT_ID}&format=csv`}
+                className="block w-full bg-white text-black text-xs uppercase tracking-[0.2em] font-bold py-3 text-center hover:bg-neutral-200 transition-colors"
+              >
+                Export CSV
+              </a>
+              <a
+                href={`/api/export?contract=${CONTRACT_ID}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full border border-neutral-800 text-neutral-400 text-xs uppercase tracking-[0.2em] font-bold py-3 text-center hover:text-white transition-colors"
+              >
+                Export JSON Report
+              </a>
+              <div className="border border-dashed border-neutral-800 p-4 mt-4 text-[10px] text-neutral-600 leading-relaxed">
+                <p className="uppercase tracking-[0.2em] font-bold mb-1">SEP-31 Readiness</p>
+                <p>Incoming settlement → Escrow created → Oracle locked → Counterparty approved → Settled.</p>
+                <p className="mt-1">Mock SEP-31 receiver endpoint: <code className="text-neutral-500">POST /sep31/receive</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-20 text-center">
           <Link href="/" className="text-[10px] uppercase tracking-[0.3em] text-neutral-700 hover:text-neutral-500 transition-colors">Home</Link>
         </div>
