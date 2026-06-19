@@ -23,7 +23,6 @@ AnchorFX is an event-driven settlement platform built on Stellar testnet. It pow
 | **Oracle Contract** | FX Rate Oracle with rate expiry (separate contract, cross-contract calls) |
 | **Demo Video** | [docs/demo-video.webm](docs/demo-video.webm) — upload to YouTube/Loom and link here |
 | **User Feedback** | [Google Form](https://forms.gle/YOUR_FORM_ID) — embedded on /contract page |
-| **Users Onboarded** | *Collect via Google Form — list wallet addresses + feedback here* |
 
 ### Live URLs
 
