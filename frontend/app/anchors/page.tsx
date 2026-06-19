@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Globe, Clock, DollarSign } from "lucide-react";
+import { Globe, Clock } from "lucide-react";
 
 type AnchorRole = "anchor_a" | "anchor_b";
 
@@ -21,7 +21,7 @@ interface EscrowRecord {
   settledAt: number;
 }
 
-const CONTRACT_ID = "CBXJRCVLWK5GGBKVC5RAFCTCDCCRRXLBXDNVRVW7YUGPLFW3K3BVXC6Y";
+const CONTRACT_ID = "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
 
 const CORRIDORS: Record<number, { from: string; to: string }> = {
   1: { from: "US", to: "PH" },
@@ -95,7 +95,6 @@ export default function AnchorsPage(): ReactNode {
   };
 
   const roleLabel = role === "anchor_a" ? "Anchor A · United States" : "Anchor B · Philippines";
-  const roleFlag = role === "anchor_a" ? "🇺🇸" : "🇵🇭";
 
   return (
     <main className="min-h-screen bg-black text-white font-mono">
@@ -131,7 +130,7 @@ export default function AnchorsPage(): ReactNode {
                   role === r ? "bg-white text-black border-white" : "border-neutral-800 text-neutral-400 hover:text-white"
                 }`}
               >
-                {r === "anchor_a" ? "🇺🇸 Anchor A · US" : "🇵🇭 Anchor B · Philippines"}
+                {r === "anchor_a" ? "Anchor A · US" : "Anchor B · Philippines"}
               </button>
             ))}
           </div>
@@ -141,7 +140,7 @@ export default function AnchorsPage(): ReactNode {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
           <div className="border border-neutral-800 p-5">
             <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Role</div>
-            <div className="text-lg font-black">{roleFlag} {roleLabel}</div>
+            <div className="text-lg font-black">{roleLabel}</div>
           </div>
           <div className="border border-neutral-800 p-5">
             <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Pending</div>
@@ -183,68 +182,6 @@ export default function AnchorsPage(): ReactNode {
             <div className="text-2xl font-black">{feedback.total}</div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Responses</div>
           </div>
-        </div>
-
-        {/* Top Requested Features */}
-        {feedback.topFeatures && feedback.topFeatures.length > 0 && (
-          <div className="border border-neutral-800 p-4 mb-8 text-[10px]">
-            <span className="uppercase tracking-[0.2em] text-neutral-500 font-bold">Most Requested: </span>
-            {feedback.topFeatures.map((f, i) => (
-              <span key={f.feature} className="text-neutral-400">
-                {i > 0 && " · "}
-                <span className="font-bold">{f.feature}</span> ({f.count})
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Feedback Form */}
-        <div className="border border-neutral-800 p-6 mb-8">
-          <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">Submit Feedback</h3>
-          <form onSubmit={async (e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            const rating = parseInt((form.querySelector('[name=rating]') as HTMLSelectElement).value, 10);
-            const confused = (form.querySelector('[name=confused]') as HTMLInputElement).value;
-            const requested = (form.querySelector('[name=requested]') as HTMLSelectElement).value;
-            const wouldUse = (form.querySelector('[name=would_use]') as HTMLInputElement).checked;
-            await fetch("/api/feedback", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ rating, confused, wouldUseAgain: wouldUse, requestedFeature: requested }),
-            });
-            alert("Feedback submitted. Thanks!");
-            form.reset();
-            fetchEscrows(); // refresh all data
-          }} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-            <div>
-              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Rating</label>
-              <select name="rating" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-full uppercase tracking-[0.2em]">
-                {[5,4,3,2,1].map(n => <option key={n} value={n}>★ {n}</option>)}
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">What confused you?</label>
-              <input name="confused" placeholder="e.g. settlement flow..." className="bg-transparent border-b border-neutral-800 focus:border-white outline-none py-2 text-xs text-white placeholder:text-neutral-700 w-full" />
-            </div>
-            <div>
-              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Request Feature</label>
-              <select name="requested" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-full">
-                <option value="">—</option>
-                <option>Faster onboarding</option>
-                <option>More corridors</option>
-                <option>Mobile app</option>
-                <option>Dashboard improvements</option>
-                <option>API access</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 text-[10px] text-neutral-500 uppercase tracking-[0.2em]">
-                <input type="checkbox" name="would_use" defaultChecked className="accent-white" /> Again?
-              </label>
-              <button type="submit" className="bg-white text-black px-5 py-2 text-xs uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Send</button>
-            </div>
-          </form>
         </div>
 
         {/* Settlement Lifecycle */}
@@ -333,80 +270,7 @@ export default function AnchorsPage(): ReactNode {
           )}
         </div>
 
-        {/* Corridor Analytics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="border border-neutral-800">
-            <div className="p-5 border-b border-neutral-800 flex items-center gap-2">
-              <Globe className="h-4 w-4 text-neutral-500" />
-              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">Corridor Analytics</h3>
-            </div>
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-neutral-800 text-[10px] uppercase tracking-[0.2em] text-neutral-500">
-                  <th className="text-left p-4 font-bold">Pair</th>
-                  <th className="text-right p-4 font-bold">Settlements</th>
-                  <th className="text-right p-4 font-bold">Volume</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from(corridorPairs.entries()).map(([pair, stats]) => (
-                  <tr key={pair} className="border-b border-neutral-900">
-                    <td className="p-4 text-neutral-300">{pair}</td>
-                    <td className="p-4 text-right font-bold">{stats.count}</td>
-                    <td className="p-4 text-right text-neutral-500">{stats.volume.toLocaleString()}</td>
-                  </tr>
-                ))}
-                {corridorPairs.size === 0 && (
-                  <tr><td colSpan={3} className="p-8 text-center text-neutral-600 text-xs uppercase">No corridor data yet</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="border border-neutral-800">
-            <div className="p-5 border-b border-neutral-800 flex items-center gap-2">
-              <DollarSign className="h-4 w-4 text-neutral-500" />
-              <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">Settlement Volume</h3>
-            </div>
-            <div className="p-5">
-              {/* ASCII-style volume bar chart */}
-              <div className="space-y-3">
-                {Array.from(corridorPairs.entries()).map(([pair, stats]) => {
-                  const maxVol = Math.max(...Array.from(corridorPairs.values()).map(v => v.volume), 1);
-                  const pct = Math.round((stats.volume / maxVol) * 100);
-                  return (
-                    <div key={pair} className="flex items-center gap-3">
-                      <span className="text-[10px] text-neutral-500 w-16 text-right">{pair}</span>
-                      <div className="flex-1 bg-neutral-900 h-5">
-                        <div className="h-full bg-white" style={{ width: `${pct}%` }} />
-                      </div>
-                      <span className="text-[10px] text-neutral-400 w-20">{stats.volume.toLocaleString()}</span>
-                    </div>
-                  );
-                })}
-                {corridorPairs.size === 0 && (
-                  <div className="text-center text-neutral-600 text-xs uppercase py-6">No volume data</div>
-                )}
-              </div>
-              <div className="grid grid-cols-3 gap-4 mt-6 text-center">
-                <div className="border border-neutral-800 p-3">
-                  <div className="text-2xl font-black">{escrows.length}</div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Total</div>
-                </div>
-                <div className="border border-neutral-800 p-3">
-                  <div className="text-2xl font-black text-green-400">{completed.filter(e => e.status === "Settled").length}</div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Settled</div>
-                </div>
-                <div className="border border-neutral-800 p-3">
-                  <div className="text-2xl font-black text-amber-400">{escrows.filter(e => e.status === "Created" || e.status === "CounterpartyApproved").length}</div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Active</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Polished Demo Corridor */}
+        {/* Demo Corridor */}
         <div className="border border-white/20 bg-white/5 p-6 mb-8">
           <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">Demo Corridor · US → Philippines</h3>
           <div className="grid grid-cols-1 md:grid-cols-7 gap-2 text-center text-[10px]">
