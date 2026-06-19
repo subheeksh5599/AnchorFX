@@ -135,7 +135,7 @@ export function FAQ(): ReactNode {
             Still have questions? We&apos;re here to help.
           </p>
           <a
-            href="mailto:hello@tldr.app"
+            href="mailto:komasubheeksh@gmail.com"
             className="group inline-flex items-center gap-3 rounded-md bg-background py-3 pl-5 pr-3 font-medium text-foreground shadow-lg transition-all duration-500 ease-out hover:rounded-[50px]"
           >
             <span>Get in Touch</span>
