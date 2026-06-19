@@ -64,7 +64,7 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
   const results: EscrowRecord[] = [];
 
   try {
-    // Read the ESCROWS map from persistent storage
+    // Try v2 format: Map<u64, Escrow> at key "ESCROWS"
     const escrowsKey = xdr.LedgerKey.contractData(
       new xdr.LedgerKeyContractData({
         contract: Address.fromString(contractId).toScAddress(),
@@ -94,6 +94,36 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
               createdAt: Number(val.created_at ?? 0),
             });
           }
+        }
+      }
+    }
+
+    // Fallback: try v1 format — single Escrow at key "ESCROW"
+    if (results.length === 0) {
+      const legacyKey = xdr.LedgerKey.contractData(
+        new xdr.LedgerKeyContractData({
+          contract: Address.fromString(contractId).toScAddress(),
+          key: xdr.ScVal.scvSymbol("ESCROW"),
+          durability: xdr.ContractDataDurability.persistent(),
+        })
+      );
+
+      const legacyResult = await rpc.getLedgerEntries(legacyKey);
+      if (legacyResult.entries?.length) {
+        const raw = scValToNative(legacyResult.entries[0]!.val.contractData().val());
+        if (raw && typeof raw === "object") {
+          const val = raw as Record<string, unknown>;
+          results.push({
+            id: 1,
+            sender: String(val.sender ?? ""),
+            receiver: String(val.receiver ?? ""),
+            token: String(val.token ?? ""),
+            amount: String(val.amount ?? "0"),
+            fxRate: 0,
+            timeoutLedger: Number(val.timeout_ledger ?? 0),
+            status: String(val.status ?? "unknown"),
+            createdAt: Number(val.created_at ?? 0),
+          });
         }
       }
     }
