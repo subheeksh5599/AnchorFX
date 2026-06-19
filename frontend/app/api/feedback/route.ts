@@ -4,6 +4,7 @@ interface FeedbackEntry {
   rating: number;
   confused: string;
   wouldUseAgain: boolean;
+  requestedFeature: string;
   wallet?: string;
   timestamp: string;
 }
@@ -22,10 +23,22 @@ export async function GET(request: Request) {
   const avgRating = ratings.length ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : "0";
   const wouldUseAgain = feedbackEntries.filter((e) => e.wouldUseAgain).length;
 
+  const featureCounts = new Map<string, number>();
+  for (const e of feedbackEntries) {
+    if (e.requestedFeature) {
+      featureCounts.set(e.requestedFeature, (featureCounts.get(e.requestedFeature) ?? 0) + 1);
+    }
+  }
+  const topFeatures = Array.from(featureCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([feature, count]) => ({ feature, count }));
+
   return new Response(JSON.stringify({
     total: feedbackEntries.length,
     averageRating: avgRating,
     wouldUseAgain,
+    topFeatures,
     recent: feedbackEntries.slice(-5).reverse(),
     all: feedbackEntries,
   }), {
@@ -55,6 +68,7 @@ export async function POST(request: Request) {
     rating,
     confused: String(body.confused ?? "").slice(0, 500),
     wouldUseAgain: body.wouldUseAgain === true || body.wouldUseAgain === "true",
+    requestedFeature: String(body.requestedFeature ?? "").slice(0, 200),
     wallet: String(body.wallet ?? "").slice(0, 56),
     timestamp: new Date().toISOString(),
   };
