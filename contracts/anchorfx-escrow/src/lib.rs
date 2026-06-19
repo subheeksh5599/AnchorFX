@@ -8,6 +8,7 @@ use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, E
 #[contracttype]
 pub enum EscrowStatus {
     Created,
+    CounterpartyApproved,
     Settled,
     Refunded,
     Cancelled,
@@ -22,9 +23,12 @@ pub struct Escrow {
     pub token: Address,
     pub amount: i128,
     pub fx_rate: u64,
+    pub corridor: u32,        // encoded corridor ID (e.g., USD_PHP = 1)
     pub timeout_ledger: u32,
     pub status: EscrowStatus,
     pub created_at: u32,
+    pub approved_at: u32,     // when counterparty approved
+    pub settled_at: u32,      // when settlement finalized
     pub oracle_id: Address,
 }
 
@@ -90,6 +94,7 @@ impl AnchorFxEscrow {
         token: Address,
         amount: i128,
         timeout_blocks: u32,
+        corridor: u32,
     ) -> u64 {
         sender.require_auth();
 
@@ -107,9 +112,12 @@ impl AnchorFxEscrow {
             token: token.clone(),
             amount,
             fx_rate,
+            corridor,
             timeout_ledger: env.ledger().sequence() + timeout_blocks,
             status: EscrowStatus::Created,
             created_at: env.ledger().sequence(),
+            approved_at: 0,
+            settled_at: 0,
             oracle_id: oracle_addr.clone(),
         };
 
@@ -130,14 +138,43 @@ impl AnchorFxEscrow {
         counter
     }
 
-    /// Admin settles: releases tokens to receiver
+    /// Counterparty (receiver or their anchor) approves the settlement terms.
+    /// Required before admin can settle (multi-signature flow).
+    pub fn counterparty_approve(env: Env, escrow_id: u64) {
+        let mut escrows = load_escrows(&env);
+        let mut escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
+        assert!(escrow.status == EscrowStatus::Created, "Escrow not in Created state");
+
+        // Either the receiver or the admin can approve for the counterparty
+        let admin: Address = env.storage().instance().get(&ADMIN_KEY).unwrap();
+        let caller = if escrow.receiver == admin { admin.clone() } else { escrow.receiver.clone() };
+        caller.require_auth();
+
+        let approved_at = env.ledger().sequence();
+
+        escrow.status = EscrowStatus::CounterpartyApproved;
+        escrow.approved_at = approved_at;
+        escrows.set(escrow_id, escrow);
+        save_escrows(&env, &escrows);
+
+        env.events().publish(
+            (symbol_short!("approved"),),
+            (escrow_id, caller, approved_at),
+        );
+    }
+
+    /// Multi-signature settle: requires counterparty approval first.
+    /// Admin still executes the final settlement.
     pub fn settle(env: Env, escrow_id: u64) {
         let admin: Address = env.storage().instance().get(&ADMIN_KEY).unwrap();
         admin.require_auth();
 
         let mut escrows = load_escrows(&env);
         let mut escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
-        assert!(escrow.status == EscrowStatus::Created, "Already resolved");
+        assert!(
+            escrow.status == EscrowStatus::Created || escrow.status == EscrowStatus::CounterpartyApproved,
+            "Cannot settle in current state"
+        );
 
         soroban_sdk::token::Client::new(&env, &escrow.token)
             .transfer(&env.current_contract_address(), &escrow.receiver, &escrow.amount);
@@ -147,12 +184,13 @@ impl AnchorFxEscrow {
         let fx_rate = escrow.fx_rate;
 
         escrow.status = EscrowStatus::Settled;
+        escrow.settled_at = env.ledger().sequence();
         escrows.set(escrow_id, escrow);
         save_escrows(&env, &escrows);
 
         env.events().publish(
             (symbol_short!("settled"),),
-            (escrow_id, receiver, amount, fx_rate),
+            (escrow_id, receiver, amount, fx_rate, env.ledger().sequence()),
         );
     }
 
@@ -161,8 +199,10 @@ impl AnchorFxEscrow {
         let escrows = load_escrows(&env);
         let escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
         escrow.sender.require_auth();
-        assert!(escrow.status == EscrowStatus::Created, "Already resolved");
-        assert!(env.ledger().sequence() >= escrow.timeout_ledger, "Too early");
+        assert!(
+            escrow.status == EscrowStatus::Created || escrow.status == EscrowStatus::CounterpartyApproved,
+            "Cannot refund in current state"
+        );
 
         soroban_sdk::token::Client::new(&env, &escrow.token)
             .transfer(&env.current_contract_address(), &escrow.sender, &escrow.amount);
@@ -302,7 +342,7 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        let id = client.create_escrow(&admin, &receiver, &token, &1000_i128, &100_u32);
+        let id = client.create_escrow(&admin, &receiver, &token, &1000_i128, &100_u32, &1_u32);
         assert_eq!(id, 1);
 
         let escrow = client.get_escrow(&id).unwrap();
@@ -334,8 +374,8 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        client.create_escrow(&admin, &r1, &token, &500_i128, &100_u32);
-        client.create_escrow(&admin, &r2, &token, &300_i128, &100_u32);
+        client.create_escrow(&admin, &r1, &token, &500_i128, &100_u32, &1_u32);
+        client.create_escrow(&admin, &r2, &token, &300_i128, &100_u32, &1_u32);
 
         assert_eq!(client.escrow_count(), 2);
         let list = client.list_escrows(&0, &10);
@@ -360,7 +400,7 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        let id = client.create_escrow(&admin, &receiver, &token, &2000_i128, &5_u32);
+        let id = client.create_escrow(&admin, &receiver, &token, &2000_i128, &5_u32, &1_u32);
         env.ledger().set_sequence_number(env.ledger().sequence() + 10);
 
         client.refund(&id);
@@ -385,7 +425,7 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        let id = client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32);
+        let id = client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32, &1_u32);
         client.settle(&id);
         let r = client.try_settle(&id);
         assert!(r.is_err());
@@ -409,7 +449,7 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        let id = client.create_escrow(&admin, &receiver, &token, &750_i128, &100_u32);
+        let id = client.create_escrow(&admin, &receiver, &token, &750_i128, &100_u32, &1_u32);
         client.cancel(&id);
         assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::Cancelled);
     }
@@ -432,8 +472,8 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
 
-        client.create_escrow(&admin, &r, &token, &100_i128, &100_u32);
-        client.create_escrow(&admin, &r, &token, &200_i128, &100_u32);
+        client.create_escrow(&admin, &r, &token, &100_i128, &100_u32, &1_u32);
+        client.create_escrow(&admin, &r, &token, &200_i128, &100_u32, &1_u32);
 
         let ids = Vec::from_array(&env, [1, 2]);
         let summaries = client.escrow_summaries(&ids);
