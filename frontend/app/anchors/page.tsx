@@ -37,12 +37,22 @@ export default function AnchorsPage(): ReactNode {
   const [role, setRole] = useState<AnchorRole>("anchor_a");
   const [escrows, setEscrows] = useState<EscrowRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [analytics, setAnalytics] = useState<Record<string, number>>({});
+  const [feedback, setFeedback] = useState<{ total: number; averageRating: string; wouldUseAgain: number }>({ total: 0, averageRating: "0", wouldUseAgain: 0 });
 
   const fetchEscrows = useCallback(async () => {
     try {
-      const res = await fetch(`/api/escrows?contract=${CONTRACT_ID}`);
-      const data = await res.json();
+      const [escrowsRes, analyticsRes, feedbackRes] = await Promise.all([
+        fetch(`/api/escrows?contract=${CONTRACT_ID}`),
+        fetch("/api/analytics/events"),
+        fetch("/api/feedback"),
+      ]);
+      const data = await escrowsRes.json();
       setEscrows(data.escrows ?? []);
+      const aData = await analyticsRes.json();
+      setAnalytics(aData.metrics ?? {});
+      const fData = await feedbackRes.json();
+      setFeedback(fData);
     } catch { /* ignore */ }
     setLoading(false);
   }, []);
@@ -145,6 +155,71 @@ export default function AnchorsPage(): ReactNode {
             <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Settled</div>
             <div className="text-4xl font-black text-green-400">{completed.filter(e => e.status === "Settled").length}</div>
           </div>
+        </div>
+
+        {/* Analytics + Feedback Row */}
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-8 text-center">
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black">{analytics.wallet_connections ?? 0}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Connections</div>
+          </div>
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black">{analytics.escrows_created ?? 0}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Escrows</div>
+          </div>
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black text-green-400">{analytics.settlements_completed ?? 0}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Settled</div>
+          </div>
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black text-red-400">{analytics.refunds ?? 0}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Refunds</div>
+          </div>
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black text-amber-400">★ {feedback.averageRating}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Rating</div>
+          </div>
+          <div className="border border-neutral-800 p-3">
+            <div className="text-2xl font-black">{feedback.total}</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Responses</div>
+          </div>
+        </div>
+
+        {/* Feedback Form */}
+        <div className="border border-neutral-800 p-6 mb-8">
+          <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">Submit Feedback</h3>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const rating = parseInt((form.querySelector('[name=rating]') as HTMLSelectElement).value, 10);
+            const confused = (form.querySelector('[name=confused]') as HTMLInputElement).value;
+            const wouldUse = (form.querySelector('[name=would_use]') as HTMLInputElement).checked;
+            await fetch("/api/feedback", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ rating, confused, wouldUseAgain: wouldUse }),
+            });
+            alert("Feedback submitted. Thanks!");
+            form.reset();
+            fetchEscrows(); // refresh all data
+          }} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Rating (1-5)</label>
+              <select name="rating" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-full uppercase tracking-[0.2em]">
+                {[5,4,3,2,1].map(n => <option key={n} value={n}>★ {n}</option>)}
+              </select>
+            </div>
+            <div className="md:col-span-2">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">What confused you?</label>
+              <input name="confused" placeholder="e.g. settlement flow, wallet setup..." className="bg-transparent border-b border-neutral-800 focus:border-white outline-none py-2 text-xs text-white placeholder:text-neutral-700 w-full" />
+            </div>
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 text-[10px] text-neutral-500 uppercase tracking-[0.2em]">
+                <input type="checkbox" name="would_use" defaultChecked className="accent-white" /> Use again?
+              </label>
+              <button type="submit" className="bg-white text-black px-6 py-2 text-xs uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Send</button>
+            </div>
+          </form>
         </div>
 
         {/* Settlement Lifecycle */}

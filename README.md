@@ -224,6 +224,94 @@ User Browser
         └── CI/CD — cargo test → npm ci → npm test → next build
 ```
 
+## Pitch Deck
+
+A professional pitch deck covering AnchorFX for investors and reviewers.
+
+### Slide 1: Problem
+Cross-border payments take 3-5 days, cost 6.5% on average, and rely on correspondent banking chains. $800B market with no atomic settlement layer.
+
+### Slide 2: Why Stellar
+5-second finality, built-in DEX, Anchor protocol (SEP-6/24/31), Soroban smart contracts, $0.00001 TX cost. Purpose-built for payments.
+
+### Slide 3: Product — AnchorFX
+Multi-escrow settlement protocol with FX Oracle integration. Lock → Rate → Approve → Settle. Atomic, trustless, 5 seconds.
+
+### Slide 4: Architecture
+```
+Anchor A ──→ Escrow Contract ──→ Anchor B
+              │ (Soroban)
+              ├── Oracle (FX rates)
+              ├── Multi-sig (approve → settle)
+              ├── Event stream (SSE)
+              └── APIs (REST + admin dashboard)
+```
+
+### Slide 5: Demo Flow
+1. Anchor A creates settlement (USD→PHP, 1000 XLM)
+2. Oracle locks FX rate (1 USD = 56.4 PHP)
+3. Anchor B receives notification
+4. Anchor B approves (counterparty_approve)
+5. Multi-sig settle executes
+6. Audit trail generated
+7. CSV export available
+
+### Slide 6: Market
+$800B cross-border payments market. Target: 50+ Stellar anchors (SEP-24/31). Early adopters: remittance corridors (USD→PHP, EUR→BRL, USDC→NGN).
+
+### Slide 7: Roadmap
+| Phase | Focus |
+|---|---|
+| Phase 1 (done) | MVP — escrow + oracle + multi-sig on testnet |
+| Phase 2 | Mercury event streaming, SEP-31 compliance, InstaAward |
+| Phase 3 | Mainnet launch, security audit, $150K SCF |
+| Phase 4 | 10+ corridors, anchor SDK, self-service integration |
+| Phase 5 | Institutional dashboard, liquidity optimization, banking integration |
+| Phase 6 | Settlement standard, ZK compliance proofs, funded team |
+
+### Slide 8: Funding Use
+- $15K InstaAward: Security review + partner onboarding
+- $150K SCF: Mainnet deployment, 3 corridors, anchor incentives
+- Revenue: Protocol fees on settlement volume
+
+## Demo Story
+
+The complete AnchorFX walkthrough for demo videos and presentations:
+
+```
+1. Connect Freighter wallet (testnet XLM)
+2. Navigate to AnchorFX Settlement (/anchors)
+3. Select Anchor A (US) role
+4. Create settlement: USD → PHP, 1000 XLM
+      ↓
+5. Oracle locks FX rate: 1 USD = 56.4 PHP
+      ↓
+6. Switch to Anchor B (Philippines)
+7. View pending settlement in "Need Approval"
+8. Approve settlement (counterparty_approve)
+      ↓
+9. Admin executes multi-sig settle
+      ↓
+10. Settlement lifecycle updates:
+    Created → CounterpartyApproved → Settled
+      ↓
+11. Analytics update: escrows +1, settled +1
+      ↓
+12. Audit trail shows timeline with timestamps
+      ↓
+13. Export CSV for operations team
+      ↓
+14. Submit feedback: rate experience 5/5
+      ↓
+15. View anchor reputation: 98% success rate
+```
+
+### Key URLs for Demo
+- Settlement Dashboard: `https://anchorfx.vercel.app/anchors`
+- Admin Dashboard: `https://anchorfx.vercel.app/admin`
+- API: `https://anchorfx.vercel.app/api/escrows`
+- Export: `https://anchorfx.vercel.app/api/export?format=csv`
+
 ## License
 
 MIT
