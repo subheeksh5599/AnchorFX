@@ -16,9 +16,12 @@ export interface EscrowRecord {
   token: string;
   amount: string;
   fxRate: number;
+  corridor: number;
   timeoutLedger: number;
   status: string;
   createdAt: number;
+  approvedAt: number;
+  settledAt: number;
 }
 
 export interface EventRecord {
@@ -101,9 +104,12 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
               token: String(val.token ?? ""),
               amount: String(val.amount ?? "0"),
               fxRate: Number(val.fx_rate ?? 0),
+              corridor: Number(val.corridor ?? 0),
               timeoutLedger: Number(val.timeout_ledger ?? 0),
               status: String(val.status ?? "unknown"),
               createdAt: Number(val.created_at ?? 0),
+              approvedAt: Number(val.approved_at ?? 0),
+              settledAt: Number(val.settled_at ?? 0),
             });
           }
         }
@@ -134,9 +140,12 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
             token: String(val.token ?? ""),
             amount: String(val.amount ?? "0"),
             fxRate: 0,
+            corridor: 0,
             timeoutLedger: Number(val.timeout_ledger ?? 0),
             status: String(val.status ?? "unknown"),
             createdAt: Number(val.created_at ?? 0),
+            approvedAt: 0,
+            settledAt: 0,
           });
         }
       }
