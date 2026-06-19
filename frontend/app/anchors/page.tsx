@@ -38,7 +38,7 @@ export default function AnchorsPage(): ReactNode {
   const [escrows, setEscrows] = useState<EscrowRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState<Record<string, number>>({});
-  const [feedback, setFeedback] = useState<{ total: number; averageRating: string; wouldUseAgain: number }>({ total: 0, averageRating: "0", wouldUseAgain: 0 });
+  const [feedback, setFeedback] = useState<{ total: number; averageRating: string; wouldUseAgain: number; topFeatures?: Array<{ feature: string; count: number }> }>({ total: 0, averageRating: "0", wouldUseAgain: 0 });
 
   const fetchEscrows = useCallback(async () => {
     try {
@@ -185,6 +185,19 @@ export default function AnchorsPage(): ReactNode {
           </div>
         </div>
 
+        {/* Top Requested Features */}
+        {feedback.topFeatures && feedback.topFeatures.length > 0 && (
+          <div className="border border-neutral-800 p-4 mb-8 text-[10px]">
+            <span className="uppercase tracking-[0.2em] text-neutral-500 font-bold">Most Requested: </span>
+            {feedback.topFeatures.map((f, i) => (
+              <span key={f.feature} className="text-neutral-400">
+                {i > 0 && " · "}
+                <span className="font-bold">{f.feature}</span> ({f.count})
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Feedback Form */}
         <div className="border border-neutral-800 p-6 mb-8">
           <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">Submit Feedback</h3>
@@ -193,31 +206,43 @@ export default function AnchorsPage(): ReactNode {
             const form = e.target as HTMLFormElement;
             const rating = parseInt((form.querySelector('[name=rating]') as HTMLSelectElement).value, 10);
             const confused = (form.querySelector('[name=confused]') as HTMLInputElement).value;
+            const requested = (form.querySelector('[name=requested]') as HTMLSelectElement).value;
             const wouldUse = (form.querySelector('[name=would_use]') as HTMLInputElement).checked;
             await fetch("/api/feedback", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ rating, confused, wouldUseAgain: wouldUse }),
+              body: JSON.stringify({ rating, confused, wouldUseAgain: wouldUse, requestedFeature: requested }),
             });
             alert("Feedback submitted. Thanks!");
             form.reset();
             fetchEscrows(); // refresh all data
-          }} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+          }} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
             <div>
-              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Rating (1-5)</label>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Rating</label>
               <select name="rating" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-full uppercase tracking-[0.2em]">
                 {[5,4,3,2,1].map(n => <option key={n} value={n}>★ {n}</option>)}
               </select>
             </div>
             <div className="md:col-span-2">
               <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">What confused you?</label>
-              <input name="confused" placeholder="e.g. settlement flow, wallet setup..." className="bg-transparent border-b border-neutral-800 focus:border-white outline-none py-2 text-xs text-white placeholder:text-neutral-700 w-full" />
+              <input name="confused" placeholder="e.g. settlement flow..." className="bg-transparent border-b border-neutral-800 focus:border-white outline-none py-2 text-xs text-white placeholder:text-neutral-700 w-full" />
             </div>
-            <div className="flex items-center gap-4">
+            <div>
+              <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Request Feature</label>
+              <select name="requested" className="bg-black border border-neutral-800 text-white text-xs px-3 py-2 w-full">
+                <option value="">—</option>
+                <option>Faster onboarding</option>
+                <option>More corridors</option>
+                <option>Mobile app</option>
+                <option>Dashboard improvements</option>
+                <option>API access</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-3">
               <label className="flex items-center gap-2 text-[10px] text-neutral-500 uppercase tracking-[0.2em]">
-                <input type="checkbox" name="would_use" defaultChecked className="accent-white" /> Use again?
+                <input type="checkbox" name="would_use" defaultChecked className="accent-white" /> Again?
               </label>
-              <button type="submit" className="bg-white text-black px-6 py-2 text-xs uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Send</button>
+              <button type="submit" className="bg-white text-black px-5 py-2 text-xs uppercase tracking-[0.2em] font-bold hover:bg-neutral-200 transition-colors">Send</button>
             </div>
           </form>
         </div>
@@ -230,6 +255,40 @@ export default function AnchorsPage(): ReactNode {
               Settlement Lifecycle ({escrows.length})
             </h3>
           </div>
+
+          {/* Lifecycle Flow Visualization */}
+          <div className="p-5 border-b border-neutral-800">
+            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-[10px] uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-2 border border-neutral-800 px-3 py-2">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <span className="text-amber-400 font-bold">Created</span>
+              </div>
+              <span className="text-neutral-700 text-lg">↓</span>
+              <div className="flex items-center gap-2 border border-neutral-800 px-3 py-2">
+                <span className="w-2 h-2 rounded-full bg-blue-400" />
+                <span className="text-blue-400 font-bold">Counterparty Approved</span>
+              </div>
+              <span className="text-neutral-700 text-lg">↓</span>
+              <div className="flex items-center gap-2 border border-neutral-800 px-3 py-2">
+                <span className="w-2 h-2 rounded-full bg-purple-400" />
+                <span className="text-purple-400 font-bold">Oracle Locked</span>
+              </div>
+              <span className="text-neutral-700 text-lg">↓</span>
+              <div className="flex items-center gap-2 border border-green-400 px-3 py-2">
+                <span className="w-2 h-2 rounded-full bg-green-400" />
+                <span className="text-green-400 font-bold">Settled</span>
+              </div>
+            </div>
+            {escrows.length > 0 && (
+              <div className="mt-3 grid grid-cols-4 gap-2 text-[10px] text-neutral-500">
+                <span>⊹ Ledger #{escrows[0]?.createdAt ?? "—"}</span>
+                <span>{escrows[0]?.approvedAt ? `⊹ Ledger #${escrows[0].approvedAt}` : "○ Pending"}</span>
+                <span>⊹ FX rate locked</span>
+                <span>{escrows[0]?.settledAt ? `⊹ Ledger #${escrows[0].settledAt}` : "○ Pending"}</span>
+              </div>
+            )}
+          </div>
+
           {loading && escrows.length === 0 ? (
             <div className="p-12 text-center text-xs text-neutral-600 uppercase">Loading...</div>
           ) : escrows.length === 0 ? (
@@ -345,6 +404,31 @@ export default function AnchorsPage(): ReactNode {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Polished Demo Corridor */}
+        <div className="border border-white/20 bg-white/5 p-6 mb-8">
+          <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400 mb-4">Demo Corridor · US → Philippines</h3>
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-2 text-center text-[10px]">
+            {[
+              { label: "US Anchor", sub: "100 XLM", color: "text-amber-400", border: "border-amber-400/30 bg-amber-400/5" },
+              { label: "Escrow", sub: "Locked", color: "text-neutral-400", border: "border-neutral-800" },
+              { label: "Oracle", sub: "1 XLM = 56.4 PHP", color: "text-purple-400", border: "border-purple-400/30 bg-purple-400/5" },
+              { label: "PH Anchor", sub: "Notified", color: "text-blue-400", border: "border-blue-400/30 bg-blue-400/5" },
+              { label: "Multi-sig", sub: "Approved", color: "text-green-400", border: "border-green-400/30 bg-green-400/5" },
+              { label: "Settled", sub: "5 seconds", color: "text-green-400", border: "border-green-400/30 bg-green-400/5" },
+              { label: "Audit + CSV", sub: "Exported", color: "text-neutral-400", border: "border-neutral-800" },
+            ].map((step, i) => (
+              <div key={i} className={`border ${step.border} p-3`}>
+                <div className={`font-bold uppercase tracking-[0.15em] ${step.color} mb-1`}>{step.label}</div>
+                <div className="text-neutral-500">{step.sub}</div>
+                {i < 6 && <div className="hidden md:block text-neutral-700 mt-1">↓</div>}
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-[10px] text-neutral-500 leading-relaxed">
+            One clean USD→PHP corridor. US Anchor creates settlement. Oracle locks FX rate. Philippines Anchor approves. Multi-sig executes. Settlement completes in ~5 seconds. Audit trail + CSV export generated.
+          </p>
         </div>
 
         {/* FX Route Discovery */}
