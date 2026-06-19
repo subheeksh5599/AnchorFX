@@ -33,6 +33,8 @@ const menuCards = [
     links: [
       { label: "Wallet", href: "/wallet", badge: "LIVE" },
       { label: "Smart Contract", href: "/contract", badge: "NEW" },
+      { label: "Settlement", href: "/anchors", badge: null },
+      { label: "Admin", href: "/admin", badge: null },
       { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme", badge: null },
     ],
   },
