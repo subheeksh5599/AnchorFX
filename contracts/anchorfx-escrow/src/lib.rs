@@ -165,6 +165,7 @@ impl AnchorFxEscrow {
     }
 
     /// Admin finalizes settlement. Requires counterparty approval first.
+    /// Applies the locked FX rate to compute the settled amount.
     pub fn settle(env: Env, escrow_id: u64) {
         let admin: Address = env.storage().instance().get(&ADMIN_KEY).unwrap();
         admin.require_auth();
@@ -176,12 +177,17 @@ impl AnchorFxEscrow {
             "Requires counterparty approval first"
         );
 
+        let fx_rate = escrow.fx_rate as i128;
+        let settled = escrow.amount
+            .checked_mul(fx_rate)
+            .and_then(|v| v.checked_div(100_000))
+            .unwrap_or_else(|| panic!("FX computation overflow"));
+
         soroban_sdk::token::Client::new(&env, &escrow.token)
-            .transfer(&env.current_contract_address(), &escrow.receiver, &escrow.amount);
+            .transfer(&env.current_contract_address(), &escrow.receiver, &settled);
 
         let receiver = escrow.receiver.clone();
-        let amount = escrow.amount;
-        let fx_rate = escrow.fx_rate;
+        let source_amount = escrow.amount;
 
         escrow.status = EscrowStatus::Settled;
         escrow.settled_at = env.ledger().sequence();
@@ -190,7 +196,7 @@ impl AnchorFxEscrow {
 
         env.events().publish(
             (symbol_short!("settled"),),
-            (escrow_id, receiver, amount, fx_rate, env.ledger().sequence()),
+            (escrow_id, receiver, source_amount, settled, fx_rate as u64, env.ledger().sequence()),
         );
     }
 
@@ -344,7 +350,7 @@ mod test {
         let oracle_id = env.register(oracle::WASM, ());
         let oracle_client = oracle::Client::new(&env, &oracle_id);
         oracle_client.init(&admin);
-        oracle_client.set_rate(&token, &105000);
+        oracle_client.set_rate(&token, &95000); // 0.95x — realistic FX spread
 
         let contract_id = env.register(AnchorFxEscrow, ());
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
@@ -356,7 +362,7 @@ mod test {
         let escrow = client.get_escrow(&id).unwrap();
         assert_eq!(escrow.sender, admin);
         assert_eq!(escrow.status, EscrowStatus::Created);
-        assert_eq!(escrow.fx_rate, 105000);
+        assert_eq!(escrow.fx_rate, 95000);
 
         client.counterparty_approve(&id);
         assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::CounterpartyApproved);
@@ -387,6 +393,38 @@ mod test {
         client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32, &1_u32);
         let r = client.try_settle(&1);
         assert!(r.is_err());
+    }
+
+    #[test]
+    fn test_fx_rate_applied_at_settlement() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let oracle_id = env.register(oracle::WASM, ());
+        let oracle_client = oracle::Client::new(&env, &oracle_id);
+        oracle_client.init(&admin);
+        oracle_client.set_rate(&token, &50000); // 0.5x rate — receiver gets half
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin, &oracle_id);
+
+        let deposit = 2000_i128;
+        client.create_escrow(&admin, &receiver, &token, &deposit, &100_u32, &1_u32);
+        client.counterparty_approve(&1);
+
+        let before = soroban_sdk::token::Client::new(&env, &token).balance(&receiver);
+        client.settle(&1);
+        let after = soroban_sdk::token::Client::new(&env, &token).balance(&receiver);
+
+        let received = after - before;
+        let expected = deposit * 50000 / 100000; // 2000 * 0.5 = 1000
+        assert_eq!(received, expected, "FX rate 0.5x should settle 1000 from 2000 deposit");
+        assert_eq!(client.get_escrow(&1).unwrap().status, EscrowStatus::Settled);
     }
 
     #[test]
