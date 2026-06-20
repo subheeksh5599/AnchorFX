@@ -116,9 +116,10 @@ export async function deployContract(
     }
 
     // Step 2: Create contract via RPC (no constructor args — call init separately)
-    onStatus({ status: "simulating" });
-    const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-    const adminAddress = Address.fromString(sourcePublicKey);
+      onStatus({ status: "simulating" });
+      const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+      const adminAddress = Address.fromString(sourcePublicKey);
+      const oracleAddress = Address.fromString(sourcePublicKey); // same key owns oracle — deploy oracle contract separately for production
 
     const createTx = new TransactionBuilder(account2, {
       fee: "100000",
@@ -174,7 +175,7 @@ export async function deployContract(
         fee: "100000",
         networkPassphrase: Networks.TESTNET,
       })
-        .addOperation(invoker.call("init", adminAddress.toScVal(), adminAddress.toScVal()))
+        .addOperation(invoker.call("init", adminAddress.toScVal(), oracleAddress.toScVal()))
         .setTimeout(30)
         .build();
 
