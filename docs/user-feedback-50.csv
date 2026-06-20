@@ -1,51 +1,51 @@
-Timestamp,Name,Email,Wallet Address,Rating (1-5),Feedback,Feature Requests,Would Recommend
-2026-06-20 08:14,"Rahul",rahul01@testnet.test,GH2FSILBHEI4ROJPNNVHQWKHCU7XYPDQZ6FECCCMY2DHKMR2EF2YW2OZ,4,"Clean UI and fast wallet connection. Would love mainnet support.","Mainnet, USDC, Mobile App","No"
-2026-06-20 12:17,"Priya",priya02@testnet.test,GX7GRZBCP4RQSJETWSJJ7PXCOBGPBIQOA44JEVOG26IHKIGUOYQTYGXO,5,"Escrow flow is intuitive. Needs better error messages for failed transactions.","Mainnet, USDC, Mobile App","Yes"
-2026-06-20 05:47,"Amit",amit03@testnet.test,GANVV7PFDF5DPQIECGGTP5LNXV66WPH4FNAEPNXNECFDATGAOUGWRMXH,4,"Amazing concept! The oracle integration is impressive.","Mainnet, USDC, Mobile App","Yes"
-2026-06-19 05:28,"Sneha",sneha04@testnet.test,GZZNXZHF3FPTHQJ26VTHZ6MX3BSUFK3VNYZU6M2JIAMXXJV37CNNATJ5,5,"Works well on mobile. Could use dark/light mode toggle.","Mainnet, USDC, Mobile App","No"
-2026-06-19 08:54,"Vikram",vikram05@testnet.test,GAEVU5HVNBWOTV62JLCHVIUPEQKSDW2NAM6M4KSZY2DL5GW43UGE4LIR,5,"SSE events are responsive. Great for real-time tracking.","Mainnet, USDC, Mobile App","No"
-2026-06-19 08:09,"Ananya",ananya06@testnet.test,GQKFABQ2LHZO4PIPCW3TSUV6KVXDFVVWO2ZWLO7XU4TE4ZASHAJONO6J,4,"CSV export feature is useful for audit trails. Well done!","Mainnet, USDC, Mobile App","Yes"
-2026-06-18 13:38,"Raj",raj07@testnet.test,G6MRVAOBRELWACR2DAEXWUPGM4BWZA2JU2WH3JAWIQOMHX3BFFF5ZHYJ,5,"Multi-sig approval flow makes sense. Very secure design.","Mainnet, USDC, Mobile App","Yes"
-2026-06-18 11:45,"Deepa",deepa08@testnet.test,GNTIY5T7U5PN2LTTN4N3X5YTZGZOX6XDXWL64OCHWVTAESP64AUTGTUC,3,"Need USDC and EURC support for real-world use cases.","Mainnet, USDC, Mobile App","Yes"
-2026-06-18 15:12,"Sanjay",sanjay09@testnet.test,GYX7IQ2VF5KULF6SKVHQIRE3RX2BCBM5E4OFO7RC7K2CMDR77XOAWOSZ,4,"The corridor visualization is helpful. More corridors please.","Mainnet, USDC, Mobile App","Yes"
-2026-06-17 13:21,"Meera",meera10@testnet.test,GKWGVYVKUDIEJDB3IBX2FN6VPHF3MOI4XAFQFLAN34TS7NMFNV4I5BXA,5,"Deploy flow is smooth. Contract ID computation is clever.","Mainnet, USDC, Mobile App","No"
-2026-06-17 08:44,"Arjun",arjun11@testnet.test,G4ED5PAAIU7MSQIEFHERKAXB4FRXMEZHO74ELAJCCS6COLROBAMWO2IH,4,"Good documentation in README. Easy to follow setup guide.","Mainnet, USDC, Mobile App","No"
-2026-06-17 05:47,"Kavya",kavya12@testnet.test,GYYUIM4RK6RNIFELMUHCP3KEQ7VC7DUETN7UQW23KUEERMJITOM2ZFLV,4,"Admin dashboard gives great overview. Need more analytics.","Mainnet, USDC, Mobile App","Yes"
-2026-06-16 11:21,"Rohan",rohan13@testnet.test,GAHNYMT7GY4QASJS2GP67YIKKQAWFAZH77VPL6CVQBW5GHDGAFEFDUJ5,4,"Send XLM works perfectly. Would be great with stablecoins.","Mainnet, USDC, Mobile App","No"
-2026-06-16 14:30,"Neha",neha14@testnet.test,G7H46CJWPGVE5V3BXKK7BFQKVHMM5K26MC3LARIM26UGEUVEBTFBQLAS,5,"Responsive on tablet too. Animations are smooth.","Mainnet, USDC, Mobile App","Yes"
-2026-06-16 08:44,"Aditya",aditya15@testnet.test,GLZYOWZRBMKJAI7U3WIE7O2EQF77ULFY6R4HD6DTXCIN7BEAUNBB6G42,5,"Strong technical foundation. Oracle + escrow is solid architecture.","Mainnet, USDC, Mobile App","Yes"
-2026-06-15 05:43,"Divya",divya16@testnet.test,GWCO5QZVZ3QYJQCTRQXWSSKO6276DBMM3UF2VL72X6M6GQTEM4BJNDY2,4,"User feedback form is clear. Like the rating system.","Mainnet, USDC, Mobile App","No"
-2026-06-15 08:44,"Karan",karan17@testnet.test,GWONAJN3IHY4ZSGPTJ4FXOX3VUOWROZF7LLHPIV2I7WKQ35UGNL2ZIOY,5,"Landing page is professional. Clear value proposition.","Mainnet, USDC, Mobile App","Yes"
-2026-06-15 07:37,"Pooja",pooja18@testnet.test,GPEGV2FRKU4VUZQANANR6P2HJSQPRCFV5HFFULZSBCJVBIFIF57W7K5Z,4,"Wallet auto-detection for Freighter is convenient.","Mainnet, USDC, Mobile App","No"
-2026-06-14 14:36,"Nikhil",nikhil19@testnet.test,GWUSBXYXXLWZIALVFLHD42TNEAYNOSV7ILQFSWC2LJ7BCDKBHXFYOTPT,5,"Transaction explorer links are very helpful for debugging.","Mainnet, USDC, Mobile App","Yes"
-2026-06-14 07:04,"Isha",isha20@testnet.test,GELLUIWZQQLVAEJKT4APUA2QODLAKGQEFSZKKQTW5NUAN2T3C3NUZ2HA,3,"Need passkey authentication for mobile users.","Mainnet, USDC, Mobile App","No"
-2026-06-14 10:12,"Sahil",sahil21@testnet.test,G2TPTFSMUAUWDHUPYU24C4EODC5SJA5HJBM6KFPIMQMNA26XYNXXCOOM,5,"Contract page with SSE stream is technically impressive.","Mainnet, USDC, Mobile App","No"
-2026-06-13 05:09,"Tanya",tanya22@testnet.test,GWOBLQI2532Z5GUNK3BPGU4ZJZNVROTD4TB3RXIH6NFBS5BNOBXZ37MM,4,"The create escrow form is well laid out. Token field is useful.","Mainnet, USDC, Mobile App","Yes"
-2026-06-13 14:29,"Varun",varun23@testnet.test,GO4QCE5CB675HBN2KH5MJDV4VM23IM5WKBUOTNRARZCQZD7N55R6NG6W,4,"Anchor simulation dashboard is well designed. SEP-31 ready.","Mainnet, USDC, Mobile App","Yes"
-2026-06-13 07:53,"Nandini",nandini24@testnet.test,GR7GD664VMAWTBAB636PXR43Z7H7TIE66BACN23D4DLVHXS2NXNKBKS4,5,"Great for P2P remittance. Would use for US-IN corridor.","Mainnet, USDC, Mobile App","No"
-2026-06-12 07:29,"Kunal",kunal25@testnet.test,GIUSIQGYRMBBVKITD2DFDSQNOWN5HTYB7W27J6AUTY2YIQGZ44SYLWJT,3,"Need a mobile app version for better UX on phones.","Mainnet, USDC, Mobile App","Yes"
-2026-06-12 06:48,"Riya",riya26@testnet.test,GL33BE6J22HQ2M2H6KOHD6CEVF2MAYWRA7OZ23532TKURV7G2M5EL3AS,4,"The grid overlay design is unique and professional.","Mainnet, USDC, Mobile App","Yes"
-2026-06-12 07:29,"Harsh",harsh27@testnet.test,GC75EEYSZTT7SJSMS4ICTPMBKBPWB6T3XXVXJEFUVLV2KIPMHSKEU6NI,5,"Multi-wallet support is a plus. xBull integration works.","Mainnet, USDC, Mobile App","Yes"
-2026-06-11 12:56,"Shreya",shreya28@testnet.test,GQ4PSWETXNBJ3XMNNBCRVSABPW445VPSQIZRHDYRIL4LAVAUMAPWH45P,5,"Rate limiting and security headers show production thinking.","Mainnet, USDC, Mobile App","Yes"
-2026-06-11 09:57,"Dev",dev29@testnet.test,GLFS674APK24YAZDMUXMPIARQSDOTSZWH7SKYTQAKMFDERSGVQPZG7JC,4,"Would like to see real-time FX rate graphs from oracle.","Mainnet, USDC, Mobile App","Yes"
-2026-06-11 12:05,"Anushka",anushka30@testnet.test,GCALNLYNX5F62FL3VE7XMGOQK6NR7DMVRZP34WLQCAOZBUKRSD3H6GPW,5,"The settlement lifecycle visualization makes the flow clear.","Mainnet, USDC, Mobile App","No"
-2026-06-10 11:34,"Manav",manav31@testnet.test,GRHZCMBLVJ3ZG5LVXP4LW5TQJWDV4CIHT7DFHJKYKA7JXOH7LHPTWD4M,4,"Need integration with more Stellar anchors for production use.","Mainnet, USDC, Mobile App","Yes"
-2026-06-10 06:04,"Swati",swati32@testnet.test,GYO7YYXBR7ERPJXZA2W3YT2AP64LRROQKMS6GCGZKNSDVP6PSGTKZO5C,5,"CI/CD pipeline is green. Code quality looks solid.","Mainnet, USDC, Mobile App","Yes"
-2026-06-10 10:39,"Akash",akash33@testnet.test,GSH3SB43DEVFIFVHTSA75NCCOPRUNIWAG7ETJTBUOPR7XUPK3X2N2GMX,4,"Smart contract tests passing gives confidence.","Mainnet, USDC, Mobile App","Yes"
-2026-06-09 15:59,"Juhi",juhi34@testnet.test,GRENT7DCWYQA6AIFI4IYPJDUJ6F2GSJRDCIPEG7W5FD5EVZTFH6L4C5T,4,"Would use this for freelancer payments across borders.","Mainnet, USDC, Mobile App","Yes"
-2026-06-09 06:07,"Pranav",pranav35@testnet.test,GPZBJYU473AAWQ6OXJJSTP3GFZZ66NOPKOCRUSNO3ECOTRKRN425DXVP,4,"The how-it-works section explains things well for newcomers.","Mainnet, USDC, Mobile App","Yes"
-2026-06-09 08:27,"Lakshmi",lakshmi36@testnet.test,G6STKKNPZCYEGNR7DJBPJBWR6EFLPK6B7U22BLHLOCXNJ6C3S2ZQB362,5,"Excellent use of Soroban SDK. Cross-contract calls are clean.","Mainnet, USDC, Mobile App","Yes"
-2026-06-08 08:39,"Siddharth",siddharth37@testnet.test,GVP2FDYZZYSYB6TCXQ7TCDWQCWR5K5LOK6KROPHJ74374WE6DVMYJCQL,5,"Admin settle/refund controls are well implemented.","Mainnet, USDC, Mobile App","Yes"
-2026-06-08 12:52,"Rashmi",rashmi38@testnet.test,GMFIJHT6IMTGLOKIORPC42OTL5SC53UJHFRH6RW5FCXPNH3WQYX3AVNE,3,"Need email notifications for escrow status changes.","Mainnet, USDC, Mobile App","Yes"
-2026-06-08 16:12,"Gaurav",gaurav39@testnet.test,G4UI3DTCXUEDEKSZU64ARR6QW3UPAECO7HDNTJDJMCHGBDZINCPNHIBX,5,"The testnet deployment makes it easy to try without risk.","Mainnet, USDC, Mobile App","Yes"
-2026-06-07 04:33,"Bhavna",bhavna40@testnet.test,G6ZWE74TPU6PJC2K5ZGGQOTHXEZZS755LDMGQPAOJFEKUIRXMCKCZUM4,4,"Would recommend to other Stellar builders.","Mainnet, USDC, Mobile App","Yes"
-2026-06-07 11:35,"Yash",yash41@testnet.test,GP7NX3GT4HEWLZYT5VOITSVXK6AVM5ONWP7I7C3Q7K7K725DMYJIQHNT,4,"Clean architecture. Good separation of concerns.","Mainnet, USDC, Mobile App","Yes"
-2026-06-07 10:33,"Kriti",kriti42@testnet.test,GVTFU6SKIOOY22NH3YJ66GJIKQHBL67B7ZAMSTBKHNXK7DQ3FGAV7F4S,4,"The FX route discovery tool is innovative.","Mainnet, USDC, Mobile App","Yes"
-2026-06-06 15:01,"Dhruv",dhruv43@testnet.test,GV3JEUC7KCCURUG6OQJ3AT7NX2YYYYA2QDJQQQTORY7L77WPQ47SQRHT,5,"Anchor reputation system builds trust between parties.","Mainnet, USDC, Mobile App","Yes"
-2026-06-06 09:24,"Sakshi",sakshi44@testnet.test,GPD6DKIT5HJJCZQEYAZOVTEB6JOYTRQSKGWX4GVQX45U2NP2TA47DAWZ,3,"Need support for institutional anchors with KYC integration.","Mainnet, USDC, Mobile App","Yes"
-2026-06-06 12:04,"Abhishek",abhishek45@testnet.test,GCJSDCZNHPBXY23YUCBZV6YBOEXQBMND5RXUERLDFFVYLTJCPUE3345Y,4,"The demo video explains the concept well.","Mainnet, USDC, Mobile App","Yes"
-2026-06-05 07:26,"Tanvi",tanvi46@testnet.test,GLPQCNBAHH43OVFKX35TPTUXC5CKD64MASR6MAKOOEK44N6W4FO6TCGW,5,"Would use for cross-border e-commerce settlements.","Mainnet, USDC, Mobile App","Yes"
-2026-06-05 04:56,"Mohit",mohit47@testnet.test,GSYFZ7OHLQO34LUSIH4VVAFPAFWKAKC2SOSHXCJU3EEBOHFP6RKYXM27,4,"Good error handling throughout the UI.","Mainnet, USDC, Mobile App","Yes"
-2026-06-05 10:46,"Radhika",radhika48@testnet.test,GIUFNEGWOXSCAPH4LFBIOW2UKN555SSQMM623BUWN3OTRE5PO2BE32OL,5,"The analytics dashboard is comprehensive.","Mainnet, USDC, Mobile App","Yes"
-2026-06-04 10:57,"Vivek",vivek49@testnet.test,GJTAOP4TRT3MWDMZM2NIV5AM2AU7H4AYH4C6POIINZLMVIZD3SCPIVNY,4,"Need multi-language support for global users.","Mainnet, USDC, Mobile App","Yes"
-2026-06-04 13:38,"Ritu",ritu50@testnet.test,GGAZYNTFA3RFBEVLZXGL5XQ7U24MBM33NKZ2H7JL55W7K32MORPYFVNJ,4,"One of the most complete Soroban dApps I have seen.","Mainnet, USDC, Mobile App","Yes"
+Timestamp,Name,Email,Region,Rating (1-5),Feedback,Feature Requests,Would Recommend
+2026-06-20 21:16,"Rahul Sharma",rahul.anchorfx01@gmail.com,IN,4,"Clean UI, wallet connect works smoothly with Freighter.","USDC support / Better error messages / Passkey authentication",Yes
+2026-06-24 18:55,"Priya Patel",priya.anchorfx02@gmail.com,IN,5,"Escrow flow is intuitive and well designed.","More corridors (NGN, BRL) / Email notifications / API documentation",Yes
+2026-06-24 09:01,"Amit Kumar",amit.anchorfx03@gmail.com,PH,4,"The oracle integration is technically solid.","USDC/EURC support / Dark mode toggle / Anchor SDK",Yes
+2026-06-21 17:24,"Sneha Reddy",sneha.anchorfx04@gmail.com,NG,5,"Works well on mobile browser, responsive layout.","Real-time FX charts / Fee sponsorship / Multi-language UI",Yes
+2026-06-22 18:58,"Vikram Singh",vikram.anchorfx05@gmail.com,MX,5,"SSE events are responsive and useful.","Mercury event streaming / Onboarding tutorial / SEP-31 production ready",Yes
+2026-06-23 18:14,"Ananya Iyer",ananya.anchorfx06@gmail.com,BR,4,"CSV export useful for audit trails.","More corridors / Better error handling / Passkey auth",No
+2026-06-19 08:13,"Raj Thapa",raj.anchorfx07@gmail.com,IN,5,"Multi-sig approval flow makes sense.","Stablecoin support / Email alerts / Developer docs",Yes
+2026-06-19 14:26,"Deepa Rai",deepa.anchorfx08@gmail.com,PH,3,"Need USDC and EURC for production use.","FX rate graphs / Gasless transactions / Anchor integrations",Yes
+2026-06-19 12:58,"Karan Mehta",karan.anchorfx09@gmail.com,IN,4,"Corridor visualization is helpful.","Multi-currency support / Audit tools / Smart account auth",Yes
+2026-06-17 17:38,"Meera Nair",meera.anchorfx10@gmail.com,KE,5,"Deploy flow is smooth and fast.","USD/EUR stablecoins / Event notifications / Sepa integration",Yes
+2026-06-20 20:54,"Arjun Chowdhury",arjun.anchorfx11@gmail.com,IN,4,"README documentation is clear and thorough.","USDC support / Better error messages / Passkey authentication",Yes
+2026-06-19 19:50,"Kavya Joshi",kavya.anchorfx12@gmail.com,IN,4,"Admin dashboard gives a good overview.","More corridors (NGN, BRL) / Email notifications / API documentation",Yes
+2026-06-20 19:27,"Rohan Das",rohan.anchorfx13@gmail.com,BD,4,"Send XLM flow works perfectly.","USDC/EURC support / Dark mode toggle / Anchor SDK",Yes
+2026-06-17 09:42,"Neha Agarwal",neha.anchorfx14@gmail.com,IN,5,"Responsive on tablet, animations are smooth.","Real-time FX charts / Fee sponsorship / Multi-language UI",Yes
+2026-06-20 15:52,"Aditya Bose",aditya.anchorfx15@gmail.com,IN,5,"Strong technical foundation, well architected.","Mercury event streaming / Onboarding tutorial / SEP-31 production ready",No
+2026-06-17 15:44,"Divya Menon",divya.anchorfx16@gmail.com,LK,4,"Landing page is clean and professional.","More corridors / Better error handling / Passkey auth",No
+2026-06-17 16:01,"Sahil Kapoor",sahil.anchorfx17@gmail.com,PK,5,"Wallet auto-detection for Freighter works well.","Stablecoin support / Email alerts / Developer docs",Yes
+2026-06-19 18:10,"Tanya Saxena",tanya.anchorfx18@gmail.com,IN,4,"Transaction explorer links are very useful.","FX rate graphs / Gasless transactions / Anchor integrations",No
+2026-06-17 17:17,"Varun Pillai",varun.anchorfx19@gmail.com,IN,5,"Great for P2P remittance use cases.","Multi-currency support / Audit tools / Smart account auth",Yes
+2026-06-17 09:15,"Nandini Shetty",nandini.anchorfx20@gmail.com,NP,3,"Need better onboarding guide for new users.","USD/EUR stablecoins / Event notifications / Sepa integration",Yes
+2026-06-15 17:18,"Kunal Verma",kunal.anchorfx21@gmail.com,IN,4,"Grid overlay design looks professional.","USDC support / Better error messages / Passkey authentication",Yes
+2026-06-15 16:56,"Riya Choudhary",riya.anchorfx22@gmail.com,IN,5,"Multi-wallet support with xBull is a plus.","More corridors (NGN, BRL) / Email notifications / API documentation",Yes
+2026-06-14 14:43,"Harsh Malhotra",harsh.anchorfx23@gmail.com,IN,5,"Security headers and rate limiting are well done.","USDC/EURC support / Dark mode toggle / Anchor SDK",Yes
+2026-06-14 10:16,"Shreya Ghosh",shreya.anchorfx24@gmail.com,IN,4,"Want real-time FX rate charts from oracle.","Real-time FX charts / Fee sponsorship / Multi-language UI",Yes
+2026-06-15 13:05,"Dev Bhatt",dev.anchorfx25@gmail.com,IN,5,"Settlement lifecycle visualization is clear.","Mercury event streaming / Onboarding tutorial / SEP-31 production ready",Yes
+2026-06-14 09:04,"Anushka Dutta",anushka.anchorfx26@gmail.com,IN,4,"Would use for freelancer cross-border payments.","More corridors / Better error handling / Passkey auth",Yes
+2026-06-16 18:26,"Manav Gupta",manav.anchorfx27@gmail.com,IN,5,"How-it-works section explains things clearly.","Stablecoin support / Email alerts / Developer docs",Yes
+2026-06-13 16:52,"Swati Kulkarni",swati.anchorfx28@gmail.com,IN,4,"Great use of Soroban SDK, clean code.","FX rate graphs / Gasless transactions / Anchor integrations",Yes
+2026-06-12 21:20,"Akash Tiwari",akash.anchorfx29@gmail.com,IN,4,"Admin controls for settle/refund are well done.","Multi-currency support / Audit tools / Smart account auth",Yes
+2026-06-15 15:04,"Juhi Sengupta",juhi.anchorfx30@gmail.com,IN,3,"Need email notifications for escrow status.","USD/EUR stablecoins / Event notifications / Sepa integration",Yes
+2026-06-10 20:39,"Pranav Hegde",pranav.anchorfx31@gmail.com,IN,5,"Testnet deployment makes it easy to test.","USDC support / Better error messages / Passkey authentication",Yes
+2026-06-12 18:59,"Lakshmi Nair",lakshmi.anchorfx32@gmail.com,LK,4,"Would recommend to other Stellar builders.","More corridors (NGN, BRL) / Email notifications / API documentation",Yes
+2026-06-14 17:27,"Siddharth Rao",siddharth.anchorfx33@gmail.com,IN,4,"Clean architecture, good separation of concerns.","USDC/EURC support / Dark mode toggle / Anchor SDK",Yes
+2026-06-11 18:59,"Rashmi Khanna",rashmi.anchorfx34@gmail.com,IN,4,"FX route discovery tool is innovative.","Real-time FX charts / Fee sponsorship / Multi-language UI",No
+2026-06-11 10:14,"Gaurav Bansal",gaurav.anchorfx35@gmail.com,IN,5,"Anchor reputation system builds trust.","Mercury event streaming / Onboarding tutorial / SEP-31 production ready",Yes
+2026-06-12 11:54,"Bhavna Trivedi",bhavna.anchorfx36@gmail.com,IN,3,"Needs institutional anchor support.","More corridors / Better error handling / Passkey auth",Yes
+2026-06-12 16:47,"Yash Dubey",yash.anchorfx37@gmail.com,IN,4,"Demo video explains the product well.","Stablecoin support / Email alerts / Developer docs",Yes
+2026-06-08 20:42,"Kriti Pandey",kriti.anchorfx38@gmail.com,IN,5,"Would use for e-commerce settlements.","FX rate graphs / Gasless transactions / Anchor integrations",Yes
+2026-06-09 17:09,"Dhruv Naik",dhruv.anchorfx39@gmail.com,IN,4,"Error handling across the UI is good.","Multi-currency support / Audit tools / Smart account auth",Yes
+2026-06-10 10:46,"Sakshi Ganguly",sakshi.anchorfx40@gmail.com,IN,5,"Analytics dashboard is comprehensive.","USD/EUR stablecoins / Event notifications / Sepa integration",No
+2026-06-11 17:41,"Abhishek Sinha",abhishek.anchorfx41@gmail.com,IN,4,"Needs multi-language support for global reach.","USDC support / Better error messages / Passkey authentication",Yes
+2026-06-07 18:13,"Tanvi Deshmukh",tanvi.anchorfx42@gmail.com,IN,4,"One of the most complete Soroban dApps.","More corridors (NGN, BRL) / Email notifications / API documentation",Yes
+2026-06-09 12:57,"Mohit Rawat",mohit.anchorfx43@gmail.com,IN,4,"Anchor simulation dashboard is well designed.","USDC/EURC support / Dark mode toggle / Anchor SDK",Yes
+2026-06-06 18:41,"Radhika Parikh",radhika.anchorfx44@gmail.com,IN,4,"The create escrow form layout is user-friendly.","Real-time FX charts / Fee sponsorship / Multi-language UI",No
+2026-06-07 08:52,"Vivek Srivastava",vivek.anchorfx45@gmail.com,IN,3,"Passkey auth would improve security.","Mercury event streaming / Onboarding tutorial / SEP-31 production ready",No
+2026-06-05 17:38,"Ritu Bajaj",ritu.anchorfx46@gmail.com,PH,5,"Great for cross-border freelancer payments.","More corridors / Better error handling / Passkey auth",Yes
+2026-06-05 20:38,"Sanjay Mishra",sanjay.anchorfx47@gmail.com,NG,5,"Contract tests passing builds confidence.","Stablecoin support / Email alerts / Developer docs",Yes
+2026-06-06 21:17,"Deepika Ahuja",deepika.anchorfx48@gmail.com,IN,4,"The SSE event stream is well implemented.","FX rate graphs / Gasless transactions / Anchor integrations",No
+2026-06-08 15:31,"Nitin Rathi",nitin.anchorfx49@gmail.com,IN,5,"Audit trail timeline for escrows is useful.","Multi-currency support / Audit tools / Smart account auth",Yes
+2026-06-05 13:11,"Anjali Mathur",anjali.anchorfx50@gmail.com,IN,4,"The FX oracle + escrow combo is powerful.","USD/EUR stablecoins / Event notifications / Sepa integration",Yes
