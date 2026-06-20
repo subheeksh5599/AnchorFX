@@ -1,12 +1,23 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Map};
+use soroban_sdk::{contract, contractimpl, contracttype, contracterror, symbol_short, panic_with_error, Address, Env, Map};
 
 #[contracttype]
 pub struct RateData {
     pub rate: u64,         // basis points
     pub updated_at: u32,
     pub expires_at: u32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[contracterror]
+pub enum Error {
+    AlreadyInitialized = 1,
+    NotInitialized = 2,
+    RateNotFound = 3,
+    RateExpired = 4,
+    NoRatesConfigured = 5,
+    InvalidRate = 6,
 }
 
 const ADMIN_KEY: soroban_sdk::Symbol = symbol_short!("ADMIN");
@@ -19,7 +30,7 @@ pub struct AnchorFxOracle;
 impl AnchorFxOracle {
     pub fn init(env: Env, admin: Address) {
         if let Some(_) = env.storage().instance().get::<_, Address>(&ADMIN_KEY) {
-            panic!("Already initialized");
+            panic_with_error!(&env, Error::AlreadyInitialized);
         }
         env.storage().instance().set(&ADMIN_KEY, &admin);
     }
