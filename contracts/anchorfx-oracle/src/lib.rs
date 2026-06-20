@@ -18,6 +18,9 @@ pub struct AnchorFxOracle;
 #[contractimpl]
 impl AnchorFxOracle {
     pub fn init(env: Env, admin: Address) {
+        if let Some(_) = env.storage().instance().get::<_, Address>(&ADMIN_KEY) {
+            panic!("Already initialized");
+        }
         env.storage().instance().set(&ADMIN_KEY, &admin);
     }
 
@@ -93,8 +96,9 @@ mod test {
         let admin = Address::generate(&env);
         let token = Address::generate(&env);
 
-        let contract_id = env.register(AnchorFxOracle, (&admin,));
+        let contract_id = env.register(AnchorFxOracle, ());
         let client = AnchorFxOracleClient::new(&env, &contract_id);
+        client.init(&admin);
 
         client.set_rate(&token, &105000);
         assert_eq!(client.get_rate(&token), 105000);
@@ -109,8 +113,9 @@ mod test {
         let admin = Address::generate(&env);
         let token = Address::generate(&env);
 
-        let contract_id = env.register(AnchorFxOracle, (&admin,));
+        let contract_id = env.register(AnchorFxOracle, ());
         let client = AnchorFxOracleClient::new(&env, &contract_id);
+        client.init(&admin);
 
         let result = client.try_get_rate(&token);
         assert!(result.is_err());

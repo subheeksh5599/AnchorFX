@@ -1,7 +1,7 @@
 const StellarSdk = require("@stellar/stellar-sdk");
 const { Server: RpcServer } = require("@stellar/stellar-sdk/rpc");
 
-const SECRET = "SAEKSJQXQKROJ7SJX2GODXFW45W4WBQWAVE3GPLZRDQJAKVMYTMJKODT";
+const SECRET = process.env.STELLAR_SECRET || (() => { throw new Error("Set STELLAR_SECRET env var"); })();
 const ESCROW_ID = "CBXJRCVLWK5GGBKVC5RAFCTCDCCRRXLBXDNVRVW7YUGPLFW3K3BVXC6Y";
 const SAC_ADDR = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 

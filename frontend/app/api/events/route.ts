@@ -101,15 +101,22 @@ export async function GET(request: Request) {
       const interval = setInterval(poll, 2000);
       await poll();
 
-      const close = () => {
+      // Auto-close after 5 minutes to prevent infinite connections
+      const maxTimeout = setTimeout(() => {
         clearInterval(interval);
+        controller.close();
+      }, 5 * 60 * 1000);
+
+      const cleanup = () => {
+        clearInterval(interval);
+        clearTimeout(maxTimeout);
         controller.close();
       };
 
-      request.signal.addEventListener("abort", close);
+      request.signal.addEventListener("abort", cleanup);
     },
     cancel() {
-      // client disconnected
+      // proper cleanup handled by abort signal listener above
     },
   });
 

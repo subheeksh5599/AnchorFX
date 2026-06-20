@@ -65,8 +65,11 @@ pub struct AnchorFxEscrow;
 
 #[contractimpl]
 impl AnchorFxEscrow {
-    /// Initialize: set admin and default oracle
+    /// Initialize: set admin and default oracle. Only callable once.
     pub fn init(env: Env, admin: Address, oracle: Address) {
+        if let Some(_) = env.storage().instance().get::<_, Address>(&ADMIN_KEY) {
+            panic!("Already initialized");
+        }
         env.storage().instance().set(&ADMIN_KEY, &admin);
         env.storage().instance().set(&ORACLE_KEY, &oracle);
     }
@@ -138,19 +141,17 @@ impl AnchorFxEscrow {
         counter
     }
 
-    /// Counterparty (receiver or their anchor) approves the settlement terms.
+    /// Counterparty (receiver) approves the settlement terms.
     /// Required before admin can settle (multi-signature flow).
     pub fn counterparty_approve(env: Env, escrow_id: u64) {
         let mut escrows = load_escrows(&env);
         let mut escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
         assert!(escrow.status == EscrowStatus::Created, "Escrow not in Created state");
 
-        // Either the receiver or the admin can approve for the counterparty
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY).unwrap();
-        let caller = if escrow.receiver == admin { admin.clone() } else { escrow.receiver.clone() };
-        caller.require_auth();
+        escrow.receiver.require_auth();
 
         let approved_at = env.ledger().sequence();
+        let receiver = escrow.receiver.clone();
 
         escrow.status = EscrowStatus::CounterpartyApproved;
         escrow.approved_at = approved_at;
@@ -159,12 +160,11 @@ impl AnchorFxEscrow {
 
         env.events().publish(
             (symbol_short!("approved"),),
-            (escrow_id, caller, approved_at),
+            (escrow_id, receiver, approved_at),
         );
     }
 
-    /// Multi-signature settle: requires counterparty approval first.
-    /// Admin still executes the final settlement.
+    /// Admin finalizes settlement. Requires counterparty approval first.
     pub fn settle(env: Env, escrow_id: u64) {
         let admin: Address = env.storage().instance().get(&ADMIN_KEY).unwrap();
         admin.require_auth();
@@ -172,8 +172,8 @@ impl AnchorFxEscrow {
         let mut escrows = load_escrows(&env);
         let mut escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
         assert!(
-            escrow.status == EscrowStatus::Created || escrow.status == EscrowStatus::CounterpartyApproved,
-            "Cannot settle in current state"
+            escrow.status == EscrowStatus::CounterpartyApproved,
+            "Requires counterparty approval first"
         );
 
         soroban_sdk::token::Client::new(&env, &escrow.token)
@@ -203,6 +203,10 @@ impl AnchorFxEscrow {
             escrow.status == EscrowStatus::Created || escrow.status == EscrowStatus::CounterpartyApproved,
             "Cannot refund in current state"
         );
+        assert!(
+            env.ledger().sequence() >= escrow.timeout_ledger,
+            "Timeout not reached"
+        );
 
         soroban_sdk::token::Client::new(&env, &escrow.token)
             .transfer(&env.current_contract_address(), &escrow.sender, &escrow.amount);
@@ -229,7 +233,10 @@ impl AnchorFxEscrow {
 
         let escrows = load_escrows(&env);
         let escrow = escrows.get(escrow_id).unwrap_or_else(|| panic!("Escrow not found"));
-        assert!(escrow.status == EscrowStatus::Created, "Already resolved");
+        assert!(
+            escrow.status == EscrowStatus::Created || escrow.status == EscrowStatus::CounterpartyApproved,
+            "Already resolved"
+        );
 
         soroban_sdk::token::Client::new(&env, &escrow.token)
             .transfer(&env.current_contract_address(), &escrow.sender, &escrow.amount);
@@ -262,8 +269,9 @@ impl AnchorFxEscrow {
     pub fn list_escrows(env: Env, start: u64, limit: u64) -> Vec<u64> {
         let count: u64 = env.storage().instance().get(&COUNTER_KEY).unwrap_or(0);
         let mut ids = Vec::new(&env);
-        let end = core::cmp::min(start + limit, count);
-        for id in start..end {
+        let begin = core::cmp::max(start, 1);
+        let end = core::cmp::min(begin + limit, count + 1);
+        for id in begin..end {
             ids.push_back(id);
         }
         ids
@@ -350,9 +358,35 @@ mod test {
         assert_eq!(escrow.status, EscrowStatus::Created);
         assert_eq!(escrow.fx_rate, 105000);
 
+        client.counterparty_approve(&id);
+        assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::CounterpartyApproved);
+
         client.settle(&id);
         assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::Settled);
         assert_eq!(client.escrow_count(), 1);
+    }
+
+    #[test]
+    fn test_settle_without_approval_fails() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let oracle_id = env.register(oracle::WASM, ());
+        let oracle_client = oracle::Client::new(&env, &oracle_id);
+        oracle_client.init(&admin);
+        oracle_client.set_rate(&token, &105000);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin, &oracle_id);
+
+        client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32, &1_u32);
+        let r = client.try_settle(&1);
+        assert!(r.is_err());
     }
 
     #[test]
@@ -408,6 +442,29 @@ mod test {
     }
 
     #[test]
+    fn test_refund_before_timeout_fails() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let receiver = Address::generate(&env);
+        let token = create_sac(&env, &admin);
+
+        let oracle_id = env.register(oracle::WASM, ());
+        let oracle_client = oracle::Client::new(&env, &oracle_id);
+        oracle_client.init(&admin);
+        oracle_client.set_rate(&token, &100000);
+
+        let contract_id = env.register(AnchorFxEscrow, ());
+        let client = AnchorFxEscrowClient::new(&env, &contract_id);
+        client.init(&admin, &oracle_id);
+
+        let id = client.create_escrow(&admin, &receiver, &token, &1000_i128, &100_u32, &1_u32);
+        let r = client.try_refund(&id);
+        assert!(r.is_err());
+    }
+
+    #[test]
     fn test_cannot_settle_twice() {
         let env = Env::default();
         env.mock_all_auths();
@@ -426,6 +483,7 @@ mod test {
         client.init(&admin, &oracle_id);
 
         let id = client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32, &1_u32);
+        client.counterparty_approve(&id);
         client.settle(&id);
         let r = client.try_settle(&id);
         assert!(r.is_err());

@@ -48,7 +48,6 @@ export interface HealthStatus {
   uptime: number;
   lastLedger: number;
   escrowCount: number;
-  error?: string;
 }
 
 // Cache for RPC queries (5s TTL)
@@ -219,7 +218,6 @@ export async function getHealth(contractId: string): Promise<HealthStatus> {
   let contractStatus: "active" | "not_found" | "error" = "error";
   let lastLedger = 0;
   let escrowCount = 0;
-  let error: string | undefined;
 
   try {
     const network = await rpc.getNetwork();
@@ -232,8 +230,8 @@ export async function getHealth(contractId: string): Promise<HealthStatus> {
     contractStatus = "active";
     lastLedger = escrows.reduce((max, e) => Math.max(max, e.createdAt), 0);
   } catch (e) {
-    error = e instanceof Error ? e.message : "Unknown error";
-    if (error.includes("contract") || error.includes("not found")) {
+    console.error("Health check error:", e);
+    if (String(e).includes("contract") || String(e).includes("not found")) {
       contractStatus = "not_found";
     }
   }
@@ -244,7 +242,6 @@ export async function getHealth(contractId: string): Promise<HealthStatus> {
     uptime: Date.now() - startTime,
     lastLedger,
     escrowCount,
-    error,
   };
 }
 
