@@ -51,6 +51,11 @@ const CORRIDOR_OPTIONS = [
   { value: 5, label: "EUR → IN" },
 ];
 
+const TOKEN_PRESETS = [
+  { addr: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC", label: "XLM (SAC)" },
+  { addr: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5", label: "USDC (Testnet)" },
+];
+
 export default function AnchorsPage(): ReactNode {
   const { wallet, balance } = useWallet();
   const [role, setRole] = useState<AnchorRole>("anchor_a");
@@ -361,6 +366,19 @@ export default function AnchorsPage(): ReactNode {
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Token (SAC)</label>
+                      <div className="flex gap-1 mb-2">
+                        {TOKEN_PRESETS.map((t) => (
+                          <button key={t.addr} type="button"
+                            onClick={() => setCreateForm((f) => ({ ...f, token: t.addr }))}
+                            className={`text-[10px] px-2 py-1 border transition-colors ${
+                              createForm.token === t.addr
+                                ? "border-white text-white bg-white/10"
+                                : "border-neutral-800 text-neutral-500 hover:text-white"
+                            }`}>
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
                       <input required name="token" value={createForm.token}
                         onChange={(e) => setCreateForm((f) => ({ ...f, token: e.target.value }))}
                         className="w-full bg-black border border-neutral-800 text-white text-xs px-3 py-2 font-mono" />
@@ -424,7 +442,8 @@ export default function AnchorsPage(): ReactNode {
                     <th className="text-left p-4 font-bold">ID</th>
                     <th className="text-left p-4 font-bold">Corridor</th>
                     <th className="text-left p-4 font-bold">Parties</th>
-                    <th className="text-right p-4 font-bold">Amount</th>
+                    <th className="text-right p-4 font-bold">Deposit</th>
+                    <th className="text-right p-4 font-bold">Settled</th>
                     <th className="text-right p-4 font-bold">FX Rate</th>
                     <th className="text-center p-4 font-bold">Status</th>
                     <th className="text-center p-4 font-bold">Actions</th>
@@ -442,7 +461,8 @@ export default function AnchorsPage(): ReactNode {
                           <div>R: {short(e.receiver)}</div>
                         </td>
                         <td className="p-4 text-right font-bold">{parseInt(e.amount, 10).toLocaleString()}</td>
-                        <td className="p-4 text-right text-neutral-500">{e.fxRate ? (e.fxRate / 100000).toFixed(4) : "—"}</td>
+                        <td className="p-4 text-right font-bold">{e.status === "Settled" ? Math.floor(parseInt(e.amount, 10) * e.fxRate / 100000).toLocaleString() : "—"}</td>
+                        <td className="p-4 text-right text-neutral-500">{e.fxRate ? (e.fxRate / 100000).toFixed(4) + "x" : "—"}</td>
                         <td className="p-4 text-center">
                           <span className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] font-bold ${statusColor(e.status)}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${statusBg(e.status)}`} />
