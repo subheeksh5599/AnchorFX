@@ -60,7 +60,7 @@ export const howItWorksConfig = {
     "Three-step atomic settlement between any two Stellar anchors. Built on Soroban smart contracts.",
   cta: {
     text: "Read the Spec",
-    href: "#",
+    href: "https://github.com/subheeksh5599/AnchorFX#readme",
   },
 } as const;
 
@@ -87,11 +87,11 @@ export const pricingConfig = {
   cta: {
     primary: {
       text: "View on GitHub",
-      href: "#",
+      href: "https://github.com/subheeksh5599/AnchorFX",
     },
     secondary: {
       text: "Read the Docs",
-      href: "#",
+      href: "https://github.com/subheeksh5599/AnchorFX#readme",
     },
   },
 } as const;
@@ -127,15 +127,15 @@ export const footerConfig = {
   links: {
     product: [
       { label: "Demo", href: "/wallet" },
-      { label: "Documentation", href: "#" },
-      { label: "Smart Contracts", href: "#" },
-      { label: "GitHub", href: "#" },
+      { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme" },
+      { label: "Smart Contracts", href: "https://github.com/subheeksh5599/AnchorFX/tree/main/contracts" },
+      { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX" },
     ],
     company: [
-      { label: "About", href: "#" },
-      { label: "Stellar", href: "#" },
-      { label: "Builder Program", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "About", href: "https://stellar.org/about" },
+      { label: "Stellar", href: "https://stellar.org" },
+      { label: "Builder Program", href: "https://stellar.org/community" },
+      { label: "Contact", href: "mailto:komasubheeksh@gmail.com" },
     ],
   },
   contact: {

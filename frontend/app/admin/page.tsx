@@ -3,7 +3,9 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Database, Heart, ArrowUpRight, RadioTower, Clock, Users } from "lucide-react";
+import { Database, Heart, ArrowUpRight, RadioTower, Clock, Users, ArrowRight, Ban } from "lucide-react";
+import { useWallet } from "@/components/wallet-provider";
+import { settleEscrow, cancelEscrow, type TxStatus } from "@/lib/contract-client";
 
 interface EscrowRecord {
   id: number;
@@ -11,6 +13,7 @@ interface EscrowRecord {
   receiver: string;
   amount: string;
   fxRate: number;
+  corridor: number;
   status: string;
   createdAt: number;
 }
@@ -41,10 +44,16 @@ function short(str: string, n = 8): string {
 const CONTRACT_ID = "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
 
 export default function AdminPage(): ReactNode {
+  const { wallet } = useWallet();
   const [escrows, setEscrows] = useState<EscrowRecord[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [health, setHealth] = useState<Health | null>(null);
   const [loading, setLoading] = useState(true);
+  const [txStatus, setTxStatus] = useState<TxStatus | null>(null);
+
+  const connected = wallet.connected;
+  const publicKey = wallet.publicKey;
+  const isAdmin = publicKey === "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF";
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -67,11 +76,30 @@ export default function AdminPage(): ReactNode {
     return () => clearInterval(interval);
   }, [fetchAll]);
 
+  const handleSettle = async (escrowId: number) => {
+    if (!wallet.walletType || !wallet.publicKey) return;
+    setTxStatus({ status: "building" });
+    const result = await settleEscrow(wallet.publicKey, wallet.walletType, CONTRACT_ID, escrowId, (s) => setTxStatus(s));
+    if (result.status === "success") {
+      setTimeout(() => { setTxStatus(null); fetchAll(); }, 2000);
+    }
+  };
+
+  const handleCancel = async (escrowId: number) => {
+    if (!wallet.walletType || !wallet.publicKey) return;
+    setTxStatus({ status: "building" });
+    const result = await cancelEscrow(wallet.publicKey, wallet.walletType, CONTRACT_ID, escrowId, (s) => setTxStatus(s));
+    if (result.status === "success") {
+      setTimeout(() => { setTxStatus(null); fetchAll(); }, 2000);
+    }
+  };
+
   const statusColor = (status: string) => {
     switch (status) {
       case "Created": return "text-amber-400";
+      case "CounterpartyApproved": return "text-blue-400";
       case "Settled": return "text-green-400";
-      case "Refunded": return "text-blue-400";
+      case "Refunded": return "text-red-400";
       case "Cancelled": return "text-neutral-500";
       default: return "text-neutral-400";
     }
@@ -87,7 +115,6 @@ export default function AdminPage(): ReactNode {
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-5 py-16">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -104,14 +131,51 @@ export default function AdminPage(): ReactNode {
           <div className="flex items-end gap-4">
             <Link href="/wallet" className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-red-400 transition-colors border-b border-neutral-800 hover:border-red-400 pb-1">Wallet</Link>
             <Link href="/contract" className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-red-400 transition-colors border-b border-neutral-800 hover:border-red-400 pb-1">Contract</Link>
+            <Link href="/anchors" className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-red-400 transition-colors border-b border-neutral-800 hover:border-red-400 pb-1">Anchors</Link>
           </div>
         </motion.div>
 
-        <hr className="border-neutral-800 mb-12" />
+        <hr className="border-neutral-800 mb-8" />
+
+        {/* Wallet + Admin Status */}
+        <div className="border border-neutral-800 p-4 mb-6 flex flex-wrap gap-6 items-center text-[11px]">
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${connected ? "bg-green-400" : "bg-red-400"}`} />
+            <span className="uppercase tracking-[0.2em] font-bold text-neutral-400">Wallet</span>
+            <span className={connected ? "text-green-400" : "text-red-400"}>
+              {connected ? "Connected" : "Disconnected"}
+            </span>
+          </div>
+          {isAdmin && connected && (
+            <span className="text-[10px] uppercase tracking-[0.2em] text-purple-400 border border-purple-400/30 px-2 py-0.5">Admin Privileges</span>
+          )}
+          {!connected && (
+            <Link href="/wallet" className="text-[10px] uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300 border-b border-amber-400/30 pb-0.5">Connect Wallet</Link>
+          )}
+        </div>
+
+        {/* TX Status */}
+        {txStatus && (
+          <div className={`border p-4 mb-6 flex items-center gap-3 text-xs ${
+            txStatus.status === "failed" ? "border-red-400/50 bg-red-400/5" :
+            txStatus.status === "success" ? "border-green-400/50 bg-green-400/5" :
+            "border-amber-400/50 bg-amber-400/5"
+          }`}>
+            <span className={`uppercase tracking-[0.2em] font-bold ${txStatus.status === "failed" ? "text-red-400" : txStatus.status === "success" ? "text-green-400" : "text-amber-400"}`}>
+              {txStatus.status}
+            </span>
+            {txStatus.hash && (
+              <a href={`https://stellar.expert/explorer/testnet/tx/${txStatus.hash}`} target="_blank" rel="noopener noreferrer"
+                className="text-neutral-500 hover:text-white font-mono">{short(txStatus.hash, 10)}</a>
+            )}
+            {txStatus.error && <span className="text-red-400">{txStatus.error}</span>}
+            <button onClick={() => setTxStatus(null)} className="ml-auto text-neutral-600 hover:text-white">✕</button>
+          </div>
+        )}
 
         {/* Status Bar */}
         {health && (
-          <div className="border border-neutral-800 p-4 mb-8 flex flex-wrap gap-6 items-center text-[11px]">
+          <div className="border border-neutral-800 p-4 mb-6 flex flex-wrap gap-6 items-center text-[11px]">
             <div className="flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${health.healthy ? "bg-green-400" : "bg-red-400"} animate-pulse`} />
               <span className="uppercase tracking-[0.2em] font-bold text-neutral-400">System</span>
@@ -143,7 +207,7 @@ export default function AdminPage(): ReactNode {
 
         {/* Analytics Grid */}
         {analytics && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="border border-neutral-800 p-5">
               <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Total Escrows</div>
               <div className="text-4xl font-black">{analytics.totalEscrows}</div>
@@ -210,21 +274,39 @@ export default function AdminPage(): ReactNode {
                     <th className="text-right p-4 font-bold">Amount</th>
                     <th className="text-right p-4 font-bold">FX Rate</th>
                     <th className="text-center p-4 font-bold">Status</th>
-                    <th className="text-right p-4 font-bold">Created</th>
+                    <th className="text-center p-4 font-bold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {escrows.map((e) => (
                     <tr key={e.id} className="border-b border-neutral-900 hover:bg-neutral-900/30 transition-colors">
                       <td className="p-4 text-neutral-400">#{e.id}</td>
-                      <td className="p-4 text-neutral-500 font-mono">{short(e.sender)}</td>
-                      <td className="p-4 text-neutral-500 font-mono">{short(e.receiver)}</td>
+                      <td className="p-4 text-neutral-500 font-mono text-[10px]">{short(e.sender)}</td>
+                      <td className="p-4 text-neutral-500 font-mono text-[10px]">{short(e.receiver)}</td>
                       <td className="p-4 text-right font-bold">{e.amount}</td>
                       <td className="p-4 text-right text-neutral-500">{e.fxRate ? (e.fxRate / 100000).toFixed(5) : "—"}</td>
                       <td className={`p-4 text-center uppercase tracking-[0.2em] font-bold ${statusColor(e.status)}`}>
                         {e.status}
                       </td>
-                      <td className="p-4 text-right text-neutral-600">#{e.createdAt}</td>
+                      <td className="p-4">
+                        <div className="flex items-center justify-center gap-1">
+                          {isAdmin && connected && (e.status === "Created" || e.status === "CounterpartyApproved") && (
+                            <button onClick={() => handleSettle(e.id)}
+                              className="text-[10px] uppercase tracking-[0.1em] text-green-400 hover:text-white border border-green-400/30 hover:border-green-400 px-2 py-1 transition-colors">
+                              <ArrowRight className="h-3 w-3 inline mr-1" />Settle
+                            </button>
+                          )}
+                          {isAdmin && connected && e.status === "Created" && (
+                            <button onClick={() => handleCancel(e.id)}
+                              className="text-[10px] uppercase tracking-[0.1em] text-neutral-500 hover:text-white border border-neutral-700 hover:border-neutral-500 px-2 py-1 transition-colors">
+                              <Ban className="h-3 w-3 inline mr-1" />Cancel
+                            </button>
+                          )}
+                          {(!isAdmin || !connected) && (
+                            <span className="text-[10px] text-neutral-700">—</span>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

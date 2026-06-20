@@ -375,9 +375,7 @@ export default function ContractPage(): ReactNode {
             Help improve AnchorFX. Share your experience, report issues, or suggest features.
           </p>
           <a
-            href="https://forms.gle/YOUR_FORM_ID"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:komasubheeksh@gmail.com"
             className="inline-block bg-white hover:bg-neutral-200 text-black font-bold uppercase tracking-[0.3em] text-xs py-3 px-6 transition-colors"
           >
             Submit Feedback
