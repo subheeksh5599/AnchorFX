@@ -317,44 +317,6 @@ $800B cross-border payments market. Target: 50+ Stellar anchors (SEP-24/31). Ear
 - $150K SCF: Mainnet deployment, 3 corridors, anchor incentives
 - Revenue: Protocol fees on settlement volume
 
-## Demo Story
-
-The complete AnchorFX walkthrough for demo videos and presentations:
-
-```
-1. Connect Freighter wallet (testnet XLM)
-2. Navigate to AnchorFX Settlement (/anchors)
-3. Select Anchor A (US) role
-4. Create settlement: USD → PHP, 1000 XLM
-      ↓
-5. Oracle locks FX rate: 1 USD = 56.4 PHP
-      ↓
-6. Switch to Anchor B (Philippines)
-7. View pending settlement in "Need Approval"
-8. Approve settlement (counterparty_approve)
-      ↓
-9. Admin executes multi-sig settle
-      ↓
-10. Settlement lifecycle updates:
-    Created → CounterpartyApproved → Settled
-      ↓
-11. Analytics update: escrows +1, settled +1
-      ↓
-12. Audit trail shows timeline with timestamps
-      ↓
-13. Export CSV for operations team
-      ↓
-14. Submit feedback: rate experience 5/5
-      ↓
-15. View anchor reputation: 98% success rate
-```
-
-### Key URLs for Demo
-- Settlement Dashboard: `https://anchorfx.vercel.app/anchors`
-- Admin Dashboard: `https://anchorfx.vercel.app/admin`
-- API: `https://anchorfx.vercel.app/api/escrows`
-- Export: `https://anchorfx.vercel.app/api/export?format=csv`
-
 ## License
 
 MIT
