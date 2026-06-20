@@ -12,9 +12,10 @@ import {
   refundEscrow,
   cancelEscrow,
   approveTokenTransfer,
-  NATIVE_XLM_SAC,
+  NATIVE_XLM_SAC as XLM_SAC,
   type TxStatus,
 } from "@/lib/contract-client";
+import { ADMIN_PUBLIC_KEY, CONTRACT_ID, USDC_TOKEN_ADDRESS } from "@/lib/env";
 
 type AnchorRole = "anchor_a" | "anchor_b";
 
@@ -33,8 +34,6 @@ interface EscrowRecord {
   settledAt: number;
 }
 
-const CONTRACT_ID = "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
-
 const CORRIDORS: Record<number, { from: string; to: string }> = {
   1: { from: "US", to: "PH" },
   2: { from: "US", to: "MX" },
@@ -52,8 +51,8 @@ const CORRIDOR_OPTIONS = [
 ];
 
 const TOKEN_PRESETS = [
-  { addr: "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC", label: "XLM (SAC)" },
-  { addr: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5", label: "USDC (Testnet)" },
+  { addr: XLM_SAC, label: "XLM (SAC)" },
+  { addr: USDC_TOKEN_ADDRESS, label: "USDC (Testnet)" },
 ];
 
 export default function AnchorsPage(): ReactNode {
@@ -68,7 +67,7 @@ export default function AnchorsPage(): ReactNode {
   // Create form state
   const [createForm, setCreateForm] = useState({
     receiver: "",
-    token: NATIVE_XLM_SAC,
+    token: XLM_SAC,
     amount: "100",
     timeout: "5000",
     corridor: 1,
@@ -93,7 +92,7 @@ export default function AnchorsPage(): ReactNode {
   const publicKey = wallet.publicKey;
 
   const myEscrows = escrows.filter((e) => e.sender === publicKey || e.receiver === publicKey);
-  const isAdmin = publicKey === "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF";
+  const isAdmin = publicKey === ADMIN_PUBLIC_KEY;
 
   const pendingForMe = escrows.filter((e) => {
     if (isAdmin) return e.status === "Created" || e.status === "CounterpartyApproved";

@@ -1,12 +1,15 @@
 import type { NextConfig } from "next";
 
+const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL ?? "https://soroban-testnet.stellar.org";
+const horizonUrl = process.env.NEXT_PUBLIC_HORIZON_URL ?? "https://horizon-testnet.stellar.org";
+
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self'",
-  "connect-src 'self' https://horizon-testnet.stellar.org https://soroban-testnet.stellar.org https://stellar.expert",
+  `connect-src 'self' ${horizonUrl} ${rpcUrl} https://stellar.expert`,
   "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",

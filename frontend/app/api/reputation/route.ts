@@ -2,7 +2,8 @@ import { getEscrows } from "@/lib/relay";
 import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
 import { validateContractId } from "@/lib/validation";
 
-const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? "CBXJRCVLWK5GGBKVC5RAFCTCDCCRRXLBXDNVRVW7YUGPLFW3K3BVXC6Y";
+import { CONTRACT_ID } from "@/lib/env";
+const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? CONTRACT_ID;
 
 interface AnchorRep {
   address: string;

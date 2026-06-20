@@ -13,10 +13,9 @@ import {
 } from "@stellar/stellar-sdk";
 import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
 import { signSorobanTx, type WalletType } from "./multi-wallet";
+import { RPC_URL, HORIZON_URL, XLM_SAC_ADDRESS, CONTRACT_ID } from "./env";
 
-const TESTNET_RPC = "https://soroban-testnet.stellar.org";
 const WASM_PATH = "/wasm/anchorfx_escrow.wasm";
-const NATIVE_XLM_SAC = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 
 interface TxStatus {
   status: "pending" | "building" | "simulating" | "signing" | "submitting" | "success" | "failed";
@@ -36,10 +35,10 @@ interface EscrowData {
   createdAt: number;
 }
 
-export type { TxStatus, EscrowData }; export { NATIVE_XLM_SAC };
+export type { TxStatus, EscrowData }; export { XLM_SAC_ADDRESS as NATIVE_XLM_SAC };
 
 export function createRpcServer(): RpcServer {
-  return new RpcServer(TESTNET_RPC, { allowHttp: false });
+  return new RpcServer(RPC_URL, { allowHttp: false });
 }
 
 async function sha256(data: Uint8Array): Promise<Buffer> {
@@ -63,7 +62,7 @@ export async function deployContract(
     const wasmBuffer = new Uint8Array(await wasmResponse.arrayBuffer());
     const wasmHash = await sha256(wasmBuffer);
 
-    const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+    const server = new Horizon.Server(HORIZON_URL);
     const sourceAccount = await server.loadAccount(sourcePublicKey);
 
     // Step 1: Upload WASM via RPC (simulate → assemble → wallet sign → send)

@@ -2,7 +2,7 @@
 // Rejects unexpected fields, enforces type/length/format constraints.
 
 const STELLAR_PUBLIC_KEY_RE = /^G[A-Z2-7]{55}$/;
-const SOROBAN_CONTRACT_ID_RE = /^C[A-Z0-9]{50,55}$/;
+const SOROBAN_CONTRACT_ID_RE = /^C[A-Z2-7]{50,55}$/;
 const MAX_AMOUNT_XLM = 10_000_000; // generous upper bound for testnet
 const MIN_AMOUNT_XLM = 0.0000001;
 const MAX_CONTRACT_ID_LEN = 64;
