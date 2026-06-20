@@ -29,17 +29,20 @@ export async function GET(request: Request) {
   const from = (url.searchParams.get("from") ?? "US").toUpperCase();
   const to = (url.searchParams.get("to") ?? "PH").toUpperCase();
   const amount = parseFloat(url.searchParams.get("amount") ?? "1000") || 1000;
+  if (amount <= 0 || !isFinite(amount)) {
+    return new Response(JSON.stringify({ error: "Invalid amount" }), { status: 400, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) } });
+  }
 
   const key = `${from}_${to}`;
   const route = ROUTES[key];
   if (!route) {
     return new Response(JSON.stringify({ error: `No route found for ${from}→${to}`, available: Object.keys(ROUTES).map(k => k.replace("_", "→")) }), {
-      status: 404, headers: { "Content-Type": "application/json" },
+      status: 404, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
     });
   }
 
-  const estimatedReceive = amount * route.rate * (1 - route.feePercent / 100);
-  const feeAmount = amount * route.rate * (route.feePercent / 100);
+  const estimatedReceive = amount * route.rate * (1 - route.feePercent);
+  const feeAmount = amount * route.rate * route.feePercent;
 
   return new Response(JSON.stringify({
     from: route.from, to: route.to, amount,

@@ -2,7 +2,8 @@ import { getEvents } from "@/lib/relay";
 import { validateContractId } from "@/lib/validation";
 import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
 
-const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? "CBXJRCVLWK5GGBKVC5RAFCTCDCCRRXLBXDNVRVW7YUGPLFW3K3BVXC6Y";
+import { CONTRACT_ID } from "@/lib/env";
+const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? CONTRACT_ID;
 
 export async function GET(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.api, "audit");

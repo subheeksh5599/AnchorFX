@@ -2,8 +2,7 @@
 // Handles escrow queries, event aggregation, and contract health
 import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
 import { Address, xdr, scValToNative } from "@stellar/stellar-sdk";
-
-const RPC_URL = "https://soroban-testnet.stellar.org";
+import { RPC_URL } from "./env";
 
 export function createRpc(): RpcServer {
   return new RpcServer(RPC_URL, { allowHttp: false });
@@ -113,7 +112,7 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
           }
         }
       } catch {
-        // BigInt serialization issue — fall through to legacy format
+        console.error("Failed to parse escrow entries from ledger");
       }
     }
 
@@ -152,6 +151,7 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
 
     escrowCache = { data: results, timestamp: Date.now() };
   } catch {
+    console.error("Failed to get ledger entries for escrows");
     if (escrowCache) return escrowCache.data;
     return [];
   }
@@ -193,7 +193,9 @@ export async function getAnalytics(contractId: string): Promise<AnalyticsSummary
     });
     lastLedger = events.latestLedger ?? 0;
     events24h = events.events.length;
-  } catch { /* ignore */ }
+  } catch {
+    console.error("Failed to get analytics events");
+  }
 
   const summary: AnalyticsSummary = {
     totalEscrows: escrows.length,

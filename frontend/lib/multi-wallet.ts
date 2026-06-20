@@ -14,6 +14,7 @@ import {
   Operation,
   Asset,
 } from "@stellar/stellar-sdk";
+import { HORIZON_URL } from "./env";
 
 export interface WalletState {
   connected: boolean;
@@ -125,7 +126,7 @@ export async function connectWallet(
 
 export async function getBalance(publicKey: string): Promise<string> {
   try {
-    const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+    const server = new Horizon.Server(HORIZON_URL);
     const account = await server.loadAccount(publicKey);
     const balances = account.balances;
     const xlm = balances.find((b) => b.asset_type === "native");
@@ -142,7 +143,7 @@ export async function sendXLM(
   walletType: WalletType
 ): Promise<{ success: boolean; hash?: string; error?: WalletError }> {
   try {
-    const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+    const server = new Horizon.Server(HORIZON_URL);
     const sourceAccount = await server.loadAccount(sourcePublicKey);
 
     const balance = sourceAccount.balances.find((b) => b.asset_type === "native");

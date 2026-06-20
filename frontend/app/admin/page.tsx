@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Database, Heart, ArrowUpRight, RadioTower, Clock, Users, ArrowRight, Ban } from "lucide-react";
 import { useWallet } from "@/components/wallet-provider";
 import { settleEscrow, cancelEscrow, type TxStatus } from "@/lib/contract-client";
+import { ADMIN_PUBLIC_KEY, CONTRACT_ID } from "@/lib/env";
 
 interface EscrowRecord {
   id: number;
@@ -41,8 +42,6 @@ function short(str: string, n = 8): string {
   return str.length > n * 2 ? `${str.slice(0, n)}...${str.slice(-4)}` : str;
 }
 
-const CONTRACT_ID = "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
-
 export default function AdminPage(): ReactNode {
   const { wallet } = useWallet();
   const [escrows, setEscrows] = useState<EscrowRecord[]>([]);
@@ -53,7 +52,7 @@ export default function AdminPage(): ReactNode {
 
   const connected = wallet.connected;
   const publicKey = wallet.publicKey;
-  const isAdmin = publicKey === "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF";
+  const isAdmin = publicKey === ADMIN_PUBLIC_KEY;
 
   const fetchAll = useCallback(async () => {
     setLoading(true);

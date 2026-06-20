@@ -34,14 +34,12 @@ export async function GET(request: Request) {
     .slice(0, 3)
     .map(([feature, count]) => ({ feature, count }));
 
-  return new Response(JSON.stringify({
-    total: feedbackEntries.length,
-    averageRating: avgRating,
-    wouldUseAgain,
-    topFeatures,
-    recent: feedbackEntries.slice(-5).reverse(),
-    all: feedbackEntries,
-  }), {
+    return new Response(JSON.stringify({
+      total: feedbackEntries.length,
+      averageRating: feedbackEntries.length > 0 ? (feedbackEntries.reduce((s, e) => s + e.rating, 0) / feedbackEntries.length).toFixed(1) : "0",
+      wouldUseAgain: feedbackEntries.filter(e => e.wouldUseAgain).length,
+      topFeatures: topFeatures.slice(0, 5),
+    }), {
     status: 200, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
   });
 }

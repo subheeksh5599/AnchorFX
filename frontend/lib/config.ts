@@ -3,14 +3,16 @@
  * Atomic cross-border settlement on Stellar
  */
 
+import { GITHUB_REPO, SITE_URL, CONTACT_EMAIL } from "./env";
+
 export const siteConfig = {
   name: "AnchorFX",
   tagline: "Atomic settlement for cross-border payments",
   description:
     "AnchorFX enables trustless, atomic FX settlement between regulated financial anchors on the Stellar network. Lock, swap, settle — in one transaction.",
-  url: "https://anchorfx.dev",
+  url: SITE_URL,
   social: {
-    github: "https://github.com/subheeksh5599/AnchorFX",
+    github: GITHUB_REPO,
   },
   nav: {
     cta: {
@@ -60,7 +62,7 @@ export const howItWorksConfig = {
     "Three-step atomic settlement between any two Stellar anchors. Built on Soroban smart contracts.",
   cta: {
     text: "Read the Spec",
-    href: "https://github.com/subheeksh5599/AnchorFX#readme",
+    href: `${GITHUB_REPO}#readme`,
   },
 } as const;
 
@@ -87,11 +89,11 @@ export const pricingConfig = {
   cta: {
     primary: {
       text: "View on GitHub",
-      href: "https://github.com/subheeksh5599/AnchorFX",
+      href: GITHUB_REPO,
     },
     secondary: {
       text: "Read the Docs",
-      href: "https://github.com/subheeksh5599/AnchorFX#readme",
+      href: `${GITHUB_REPO}#readme`,
     },
   },
 } as const;
@@ -102,7 +104,7 @@ export const faqConfig = {
     text: "Building on Stellar? We'd love to hear from you.",
     cta: {
       text: "Get in Touch",
-      href: "mailto:komasubheeksh@gmail.com",
+      href: `mailto:${CONTACT_EMAIL}`,
     },
   },
 } as const;
@@ -127,24 +129,24 @@ export const footerConfig = {
   links: {
     product: [
       { label: "Demo", href: "/wallet" },
-      { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme" },
-      { label: "Smart Contracts", href: "https://github.com/subheeksh5599/AnchorFX/tree/main/contracts" },
-      { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX" },
+      { label: "Documentation", href: `${GITHUB_REPO}#readme` },
+      { label: "Smart Contracts", href: `${GITHUB_REPO}/tree/main/contracts` },
+      { label: "GitHub", href: GITHUB_REPO },
     ],
     company: [
       { label: "About", href: "https://stellar.org/about" },
       { label: "Stellar", href: "https://stellar.org" },
       { label: "Builder Program", href: "https://stellar.org/community" },
-      { label: "Contact", href: "mailto:komasubheeksh@gmail.com" },
+      { label: "Contact", href: `mailto:${CONTACT_EMAIL}` },
     ],
   },
   contact: {
     location: "Stellar Testnet",
     address: "Stellar Journey to Mastery\nBuilder Track - Level 1",
     hours: "Open source. Build anytime.",
-    email: "komasubheeksh@gmail.com",
-  },
-  copyright: `Built on Stellar. AnchorFX ${new Date().getFullYear()}.`,
+      email: CONTACT_EMAIL,
+    },
+    copyright: `Built on Stellar. AnchorFX ${new Date().getFullYear()}.`,
 } as const;
 
 export const features = {

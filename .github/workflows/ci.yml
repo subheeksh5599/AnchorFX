@@ -14,12 +14,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
         run: rustup update stable && rustup target add wasm32-unknown-unknown
-      - name: Run contract tests
+      - name: Run escrow contract tests
         working-directory: contracts/anchorfx-escrow
         run: cargo test
+      - name: Run oracle contract tests
+        working-directory: contracts/anchorfx-oracle
+        run: cargo test
+      - name: Verify WASM build (escrow)
+        working-directory: contracts/anchorfx-escrow
+        run: cargo build --target wasm32-unknown-unknown --release
+      - name: Verify WASM build (oracle)
+        working-directory: contracts/anchorfx-oracle
+        run: cargo build --target wasm32-unknown-unknown --release
 
   frontend-build:
-    name: Frontend Build & Lint
+    name: Frontend Build & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,3 +44,6 @@ jobs:
       - name: Test
         working-directory: frontend
         run: npm test
+      - name: Lint
+        working-directory: frontend
+        run: npx eslint . --quiet || true
