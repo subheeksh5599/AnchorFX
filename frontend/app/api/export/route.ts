@@ -2,7 +2,7 @@ import { getEscrows } from "@/lib/relay";
 import { validateContractId } from "@/lib/validation";
 import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
 
-const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? "CBXJRCVLWK5GGBKVC5RAFCTCDCCRRXLBXDNVRVW7YUGPLFW3K3BVXC6Y";
+const DEFAULT_CONTRACT = process.env.CONTRACT_ID ?? "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
 
 const CORRIDORS: Record<number, { from: string; to: string }> = {
   1: { from: "US", to: "PH" }, 2: { from: "US", to: "MX" }, 3: { from: "EUR", to: "BR" },

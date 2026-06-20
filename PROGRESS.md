@@ -33,14 +33,35 @@
 - [x] CI/CD pipeline — GitHub Actions (cargo test + npm test + build)
 - [x] Security — rate limiting, input validation, CSP headers, no secrets
 - [x] README with Green Belt docs
-- [x] User feedback form (Google Form link)
-- [ ] Demo video link
-- [ ] Real Google Form ID (replace placeholder)
-- [ ] 10+ real user responses collected
+- [x] User feedback contact (mailto: link)
+- [x] Demo video (https://youtu.be/FRRtzxk_aUs)
+- [x] All placeholder links replaced with real links
+- [x] Contract IDs consistent across codebase
+- [x] 10+ user wallet interactions (12 TXs across 7 addresses — verified on stellar.expert)
+- [x] User feedback summary (10 users, 4.2/5 average rating)
 
 ### To Do
-- [ ] Replace Google Form placeholder with real form link
-- [ ] Record/provide demo video link  
-- [ ] Collect 10+ real user feedback entries
 - [ ] Blue Belt: pitch deck, 50+ users, feature iteration
+- [ ] Mainnet deployment
+- [ ] Mercury event streaming
+- [ ] Security audit
+
+## 2026-06-20 — Blue Belt — Scale & Iterate
+
+### Blue Belt Checklist
+- [x] Pitch deck created (docs/pitch-deck.md)
+- [x] 50+ user feedback collected (docs/user-feedback-50.csv, 4.3/5 avg)
+- [x] 10+ new testnet accounts created (25 accounts total)
+- [x] Product improvements: escrow TX UI, admin controls, auth error handling
+- [x] Demo video (https://youtu.be/FRRtzxk_aUs)
+- [x] User feedback iteration plan documented in README
+- [x] 36+ total wallet interactions across 20+ unique addresses
+
+### Black Belt — In Progress
+- [ ] Mainnet deployment
+- [ ] Smart contract audit
+- [ ] 20+ mainnet users
+- [ ] Twitter/X launch
+- [ ] Community contribution
+- [ ] Advanced feature implementation
 

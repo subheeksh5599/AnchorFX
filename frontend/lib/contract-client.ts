@@ -16,12 +16,14 @@ import { signSorobanTx, type WalletType } from "./multi-wallet";
 
 const TESTNET_RPC = "https://soroban-testnet.stellar.org";
 const WASM_PATH = "/wasm/anchorfx_escrow.wasm";
+const NATIVE_XLM_SAC = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
 
 interface TxStatus {
   status: "pending" | "building" | "simulating" | "signing" | "submitting" | "success" | "failed";
   hash?: string;
   error?: string;
   contractId?: string;
+  escrowId?: number;
 }
 
 interface EscrowData {
@@ -34,7 +36,7 @@ interface EscrowData {
   createdAt: number;
 }
 
-export type { TxStatus, EscrowData };
+export type { TxStatus, EscrowData }; export { NATIVE_XLM_SAC };
 
 export function createRpcServer(): RpcServer {
   return new RpcServer(TESTNET_RPC, { allowHttp: false });
@@ -324,4 +326,195 @@ export function subscribeContractEvents(
   });
 
   return () => source.close();
+}
+
+function scvI128(n: bigint): xdr.ScVal {
+  return xdr.ScVal.scvI128(new xdr.Int128Parts({ lo: n as unknown as xdr.Uint64, hi: BigInt(0) as unknown as xdr.Uint64 }));
+}
+
+function scvU64(n: number): xdr.ScVal {
+  return xdr.ScVal.scvU64(new xdr.Uint64(n));
+}
+
+function scvU32(n: number): xdr.ScVal {
+  return xdr.ScVal.scvU32(n);
+}
+
+async function loadAccount(pub: string): Promise<Account> {
+  const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+  const resp = await server.loadAccount(pub);
+  return new Account(resp.accountId(), resp.sequence);
+}
+
+async function pollTx(hash: string, rpc: RpcServer): Promise<void> {
+  for (let i = 0; i < 20; i++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const r2 = await rpc.getTransaction(hash);
+    if (r2.status === "SUCCESS") return;
+    if (r2.status === "FAILED") throw new Error("Transaction failed on-chain");
+  }
+  throw new Error("Transaction timed out");
+}
+
+async function invokeContract(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  fnName: string,
+  args: xdr.ScVal[],
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  try {
+    onStatus({ status: "building" });
+    const rpc = createRpcServer();
+    const contract = new Contract(contractId);
+    const account = await loadAccount(sourcePublicKey);
+
+    const tx = new TransactionBuilder(account, {
+      fee: "1000000",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(contract.call(fnName, ...args))
+      .setTimeout(60)
+      .build();
+
+    onStatus({ status: "simulating" });
+    const prep = await rpc.prepareTransaction(tx);
+
+    onStatus({ status: "signing" });
+    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.TESTNET);
+
+    onStatus({ status: "submitting" });
+    const submitted = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
+    const result = await rpc.sendTransaction(submitted);
+    if (result.status === "ERROR") {
+      const errStr = JSON.stringify(result.errorResult ?? "unknown");
+      if (errStr.includes("tx_bad_auth")) {
+        return { status: "failed", error: "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet." };
+      }
+      return { status: "failed", error: `Transaction failed: ${errStr}` };
+    }
+
+    onStatus({ status: "pending", hash: result.hash });
+    await pollTx(result.hash, rpc);
+
+    return { status: "success", hash: result.hash };
+  } catch (err: unknown) {
+    return { status: "failed", error: err instanceof Error ? err.message : "Transaction failed" };
+  }
+}
+
+export async function approveTokenTransfer(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  tokenAddress: string,
+  spenderContractId: string,
+  amount: bigint,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  try {
+    onStatus({ status: "building" });
+    const rpc = createRpcServer();
+    const latest = await rpc.getLatestLedger();
+    const expiry = latest.sequence + 2_000_000;
+    const tokenContract = new Contract(tokenAddress);
+    const senderAddr = Address.fromString(sourcePublicKey);
+    const spenderAddr = Address.fromString(spenderContractId);
+    const account = await loadAccount(sourcePublicKey);
+
+    const tx = new TransactionBuilder(account, {
+      fee: "1000000",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(tokenContract.call("approve", senderAddr.toScVal(), spenderAddr.toScVal(), scvI128(amount), scvU32(expiry)))
+      .setTimeout(60)
+      .build();
+
+    onStatus({ status: "simulating" });
+    const prep = await rpc.prepareTransaction(tx);
+
+    onStatus({ status: "signing" });
+    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.TESTNET);
+
+    onStatus({ status: "submitting" });
+    const result = await rpc.sendTransaction(TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET));
+    if (result.status === "ERROR") {
+      const errStr = JSON.stringify(result.errorResult ?? "unknown");
+      if (errStr.includes("tx_bad_auth")) {
+        return { status: "failed", error: "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet." };
+      }
+      return { status: "failed", error: `Token approval failed: ${errStr}` };
+    }
+
+    onStatus({ status: "pending", hash: result.hash });
+    await pollTx(result.hash, rpc);
+    return { status: "success", hash: result.hash };
+  } catch (err: unknown) {
+    return { status: "failed", error: err instanceof Error ? err.message : "Approval failed" };
+  }
+}
+
+export async function createEscrow(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  receiver: string,
+  token: string,
+  amount: bigint,
+  timeoutBlocks: number,
+  corridor: number,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  const senderAddr = Address.fromString(sourcePublicKey);
+  const receiverAddr = Address.fromString(receiver);
+  const tokenAddr = Address.fromString(token);
+
+  return invokeContract(sourcePublicKey, walletType, contractId, "create_escrow", [
+    senderAddr.toScVal(),
+    receiverAddr.toScVal(),
+    tokenAddr.toScVal(),
+    scvI128(amount),
+    scvU32(timeoutBlocks),
+    scvU32(corridor),
+  ], onStatus);
+}
+
+export async function counterpartyApprove(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  escrowId: number,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  return invokeContract(sourcePublicKey, walletType, contractId, "counterparty_approve", [scvU64(escrowId)], onStatus);
+}
+
+export async function settleEscrow(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  escrowId: number,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  return invokeContract(sourcePublicKey, walletType, contractId, "settle", [scvU64(escrowId)], onStatus);
+}
+
+export async function refundEscrow(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  escrowId: number,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  return invokeContract(sourcePublicKey, walletType, contractId, "refund", [scvU64(escrowId)], onStatus);
+}
+
+export async function cancelEscrow(
+  sourcePublicKey: string,
+  walletType: WalletType,
+  contractId: string,
+  escrowId: number,
+  onStatus: (s: TxStatus) => void,
+): Promise<TxStatus> {
+  return invokeContract(sourcePublicKey, walletType, contractId, "cancel", [scvU64(escrowId)], onStatus);
 }
