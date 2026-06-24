@@ -15,7 +15,11 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const contractId = url.searchParams.get("contract") ?? DEFAULT_CONTRACT;
-  const escrowId = parseInt(url.searchParams.get("id") ?? "1", 10);
+  const rawId = parseInt(url.searchParams.get("id") ?? "1", 10);
+  if (isNaN(rawId) || rawId < 0) {
+    return new Response(JSON.stringify({ error: "Invalid escrow ID" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  }
+  const escrowId = rawId;
 
   const validation = validateContractId(contractId);
   if (!validation.valid) {
@@ -27,7 +31,11 @@ export async function GET(request: Request) {
   // Filter events for this escrow and build timeline
   const timeline = events
     .filter((e) => {
-      if (typeof e.data === "string") return e.data.includes(String(escrowId));
+      if (typeof e.data === "string") {
+        // Match exact escrow ID as a word boundary, not as substring
+        const idStr = String(escrowId);
+        return new RegExp(`\\b${idStr}\\b`).test(e.data);
+      }
       return true;
     })
     .map((e) => ({

@@ -75,7 +75,7 @@ export default function WalletPage(): ReactNode {
   const balanceNum = Number.parseFloat(balance);
 
   return (
-    <main className="min-h-screen bg-black text-white font-mono">
+    <main id="main" className="min-h-screen bg-black text-white font-mono">
       {/* Grid overlay */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{

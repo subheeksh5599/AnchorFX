@@ -191,10 +191,9 @@ export async function deployContract(
 
       if (String(initResult.status) === "SUCCESS") {
         onStatus({ status: "success", hash: createResult.hash, contractId });
-        console.log("Contract initialized successfully");
       }
     } catch (initErr) {
-      console.warn("Init deferred — contract deployed, init failed:", initErr);
+      // Contract deployed successfully but init step failed — admin can call init separately
     }
 
     return { status: "success", hash: createResult.hash, contractId };

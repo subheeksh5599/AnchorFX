@@ -1,211 +1,94 @@
-# Minimal Landing Page Template
+# AnchorFX — Frontend
 
-A premium, production-ready Next.js 16+ landing page template with a clean, minimal design. Features WebGL shader effects, smooth animations, dark mode, and full accessibility.
+Atomic cross-border FX settlement on Stellar. Next.js 16 + React 19 + TypeScript.
 
-## ✨ Highlights
-
-- 🎨 **Minimal Design** - Clean, focused UI with bold typography
-- ✨ **WebGL Dither Cursor** - Unique shader-based cursor effect
-- 🌙 **Dark Mode** - Seamless light/dark theme switching
-- ⚡ **Blazing Fast** - Optimized for Core Web Vitals
-- 📱 **Fully Responsive** - Looks great on all devices
-- ♿ **Accessible** - WCAG 2.1 AA compliant
-- 🔧 **Easy to Customize** - Centralized configuration file
-
-## Features
-
-- ✅ **Next.js 16+** with App Router
-- ✅ **TypeScript** (strict mode)
-- ✅ **Tailwind CSS v4** with design tokens
-- ✅ **Smooth Scrolling** via Lenis
-- ✅ **WebGL Effects** via React Three Fiber
-- ✅ **Motion** via motion/react with reduced-motion support
-- ✅ **SEO Ready** - metadata, Open Graph, Twitter cards
-- ✅ **Accessibility** - skip links, focus rings, ARIA labels
-- ✅ **Edge Compatible** - deploy anywhere
-
-## 🚀 Quick Start
-
-### 1. Install dependencies
+## Quick Start
 
 ```bash
 npm install
-```
-
-### 2. Start development server
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000).
 
-### 3. Customize your site
+Requires [Freighter browser extension](https://freighter.app) set to Stellar Testnet.
 
-Edit `lib/config.ts` to update all text, links, and settings in one place.
+## Environment
 
-## 📁 Project Structure
+Copy `.env.example` to `.env.local` and configure:
 
 ```
+NEXT_PUBLIC_RPC_URL=https://soroban-testnet.stellar.org
+NEXT_PUBLIC_HORIZON_URL=https://horizon-testnet.stellar.org
+NEXT_PUBLIC_NETWORK=TESTNET
+NEXT_PUBLIC_ADMIN_PUBLIC_KEY=G...
+CONTRACT_ID=CB4U7NL...
+```
+
+## Project Structure
+
+```
+frontend/
 ├── app/
-│   ├── globals.css        # Design tokens & theme colors
-│   ├── layout.tsx         # Root layout with providers
-│   ├── page.tsx           # Landing page
-│   └── ...
+│   ├── page.tsx                 # Landing page
+│   ├── layout.tsx               # Root layout + providers
+│   ├── error.tsx                # Error boundary
+│   ├── loading.tsx              # Loading state
+│   ├── wallet/page.tsx          # Multi-wallet connect + send XLM
+│   ├── contract/page.tsx        # Deploy + read escrow + event stream
+│   ├── anchors/page.tsx         # Escrow lifecycle UI + FX discovery
+│   ├── admin/page.tsx           # Admin dashboard + analytics + health
+│   └── api/
+│       ├── events/route.ts      # SSE endpoint for contract event streaming
+│       ├── feedback/route.ts    # User feedback collection
+│       ├── fxroute/route.ts     # FX corridor route discovery
+│       ├── export/route.ts      # CSV/JSON escrow export
+│       ├── sep31/receive/route.ts  # SEP-31 receive endpoint
+│       ├── sep31/transaction/route.ts # SEP-31 transaction status
+│       ├── escrows/route.ts     # Escrow data relay
+│       ├── analytics/route.ts   # Usage analytics
+│       ├── audit/route.ts       # Escrow audit trail
+│       ├── health/route.ts      # System health check
+│       └── reputation/route.ts  # Anchor reputation scores
 ├── components/
-│   ├── hero.tsx           # Hero with dither cursor & rotating cards
-│   ├── features.tsx       # Feature grid with icons
-│   ├── stats.tsx          # Animated statistics counters
-│   ├── testimonials.tsx   # Horizontal scrolling testimonials
-│   ├── how-it-works.tsx   # Steps with animated cards
-│   ├── pricing.tsx        # 2-tier pricing comparison
-│   ├── faq.tsx            # Accordion FAQ section
-│   ├── final-cta.tsx      # Full-width CTA with dither effect
-│   ├── footer.tsx         # Footer with links & contact
-│   ├── dither-cursor.tsx  # WebGL shader cursor effect
-│   └── ...
+│   ├── wallet-provider.tsx      # React context for multi-wallet state
+│   ├── providers.tsx            # Theme + smooth scroll + wallet providers
+│   ├── header.tsx               # Navigation + mobile menu
+│   ├── footer.tsx               # Site footer
+│   ├── hero.tsx                 # Landing hero with CTA
+│   ├── features.tsx             # Feature grid on landing
+│   ├── how-it-works.tsx         # Escrow lifecycle explanation
+│   ├── testimonials.tsx         # User testimonials
+│   ├── pricing.tsx             # Pricing tiers
+│   ├── faq.tsx                  # FAQ accordion
+│   ├── skip-to-content.tsx      # Accessibility skip link
+│   ├── theme-toggle.tsx         # Dark/light mode toggle
+│   └── rotating-cards.tsx       # Animated feature cards
 ├── lib/
-│   ├── config.ts          # ⭐ EDIT THIS - All site config
-│   ├── metadata.ts        # SEO utilities
-│   ├── motion.tsx         # Motion components
-│   └── utils.ts           # Utility functions
-└── public/
-    └── site.webmanifest   # PWA manifest
+│   ├── multi-wallet.ts          # Freighter + xBull wallet adapter
+│   ├── contract-client.ts       # Contract deploy, invoke, SSE subscribe
+│   ├── relay.ts                 # RPC data relay for escrow + analytics
+│   ├── env.ts                   # Centralized environment config
+│   ├── validation.ts            # Stellar address + amount validation
+│   ├── rate-limit.ts            # Request rate limiting
+│   ├── metadata.ts              # Page metadata helpers
+│   └── config.ts                # Site configuration
+└── __tests__/
+    ├── rate-limit.test.ts       # Rate limit unit tests
+    └── validation.test.ts       # Validation unit tests
 ```
 
-## 🎨 Customization Guide
-
-### Step 1: Update Site Configuration
-
-Edit `lib/config.ts` - this is your **single source of truth** for all text content:
-
-```ts
-export const siteConfig = {
-  name: "Your Brand",
-  tagline: "Your Tagline",
-  description: "Your description",
-  // ...
-};
-
-export const heroConfig = {
-  headline: {
-    prefix: "Your",
-    accent: "Headline",
-    suffix: "Here",
-  },
-  // ...
-};
-```
-
-### Step 2: Update Theme Colors
-
-Edit `app/globals.css` to change your brand colors:
-
-```css
-:root {
-  --accent: #ffd900;        /* Your primary brand color */
-  --background: #fafafa;    /* Light mode background */
-  --foreground: #0a0a0a;    /* Light mode text */
-}
-
-.dark {
-  --background: #0a0a0a;    /* Dark mode background */
-  --foreground: #fafafa;    /* Dark mode text */
-}
-```
-
-### Step 3: Replace Assets
-
-| File | Purpose | Dimensions |
-|------|---------|------------|
-| `app/icon.svg` | Favicon | 32×32 |
-| `app/apple-icon.svg` | Apple touch icon | 180×180 |
-
-### Step 4: Toggle Features
-
-In `lib/config.ts`, enable/disable features:
-
-```ts
-export const features = {
-  smoothScroll: true,    // Lenis smooth scrolling
-  darkMode: true,        // Dark mode toggle
-  ditherCursor: true,    // WebGL cursor effect
-  statsSection: true,    // Stats/metrics section
-};
-```
-
-## 🎯 Section Components
-
-Each section is a standalone component you can customize or remove:
-
-| Component | Description |
-|-----------|-------------|
-| `Hero` | Full-height hero with animated headline & rotating cards |
-| `HowItWorks` | Three-step process with animated cards |
-| `Features` | Feature grid with Lucide icons |
-| `Stats` | Animated counter statistics |
-| `Testimonials` | Horizontal carousel with fade edge |
-| `Pricing` | Two-tier comparison layout |
-| `FAQ` | Accordion with smooth expand/collapse |
-| `FinalCTA` | Full-width CTA with dither cursor effect |
-| `Footer` | Links, contact info, social icons |
-
-## ✨ Special Features
-
-### WebGL Dither Cursor
-
-The template includes a unique WebGL shader-based cursor effect that creates a dithered trail following mouse movement. It's:
-- GPU-accelerated for smooth 60fps performance
-- Automatically disabled on mobile devices
-- Configurable colors, size, and intensity
-
-### Animated Statistics
-
-The Stats section features numbers that animate from 0 to their target value when scrolled into view, using spring physics for natural motion.
-
-### Smooth Scrolling
-
-Powered by Lenis for buttery-smooth scroll behavior with momentum and easing.
-
-## ♿ Accessibility Features
-
-- Skip-to-content link
-- Proper heading hierarchy (h1 → h2 → h3)
-- ARIA labels on all interactive elements
-- Keyboard navigation support
-- Focus visible rings
-- Reduced motion support
-- Screen reader announcements
-
-## 🚀 Deployment
-
-The template is Edge-compatible and works with:
-
-- **Vercel** (recommended)
-- **Netlify**
-- **Cloudflare Pages**
-- Any static hosting
-
-```bash
-npm run build
-```
-
-## 📜 Scripts
+## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Fix ESLint errors |
-| `npm run format` | Format with Prettier |
-| `npm run typecheck` | Run TypeScript checks |
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run test` | Run unit tests (vitest) |
+| `npm run format:check` | Check formatting (prettier) |
+| `npx eslint . --quiet` | Lint source files |
+| `npx tsc --noEmit` | Type check |
 
-## 📄 License
+## Testing
 
-This template is licensed for use in commercial projects. You may not resell or redistribute the template itself.
-
----
-
-Built with ❤️ using Next.js, Tailwind CSS, React Three Fiber, and Motion
+26 tests covering validation schema checks, rate limiting, Stellar address validation, and input sanitization. Contract integration tests run separately via `cargo test` in the contracts directory.

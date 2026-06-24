@@ -18,7 +18,7 @@ export const metadata: Metadata = createMetadata({
 
 export default function HomePage(): ReactNode {
   return (
-    <main id="main-content" className="flex-1">
+    <main id="main" className="flex-1">
       <Hero />
       <HowItWorks />
       <Features />
