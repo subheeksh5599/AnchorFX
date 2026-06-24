@@ -17,8 +17,6 @@ import {
 } from "@/lib/contract-client";
 import { ADMIN_PUBLIC_KEY, CONTRACT_ID, USDC_TOKEN_ADDRESS } from "@/lib/env";
 
-type AnchorRole = "anchor_a" | "anchor_b";
-
 interface EscrowRecord {
   id: number;
   sender: string;
@@ -57,7 +55,7 @@ const TOKEN_PRESETS = [
 
 export default function AnchorsPage(): ReactNode {
   const { wallet, balance } = useWallet();
-  const [role, setRole] = useState<AnchorRole>("anchor_a");
+  const [selectedCorridor, setSelectedCorridor] = useState<number>(0); // 0 = all corridors
   const [escrows, setEscrows] = useState<EscrowRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [txStatus, setTxStatus] = useState<TxStatus | null>(null);
@@ -76,9 +74,12 @@ export default function AnchorsPage(): ReactNode {
   const fetchEscrows = useCallback(async () => {
     try {
       const res = await fetch(`/api/escrows?contract=${CONTRACT_ID}`);
+      if (!res.ok) throw new Error(`Failed: ${res.status}`);
       const data = await res.json();
       setEscrows(data.escrows ?? []);
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("Failed to fetch escrows:", err);
+    }
     setLoading(false);
   }, []);
 
@@ -91,7 +92,11 @@ export default function AnchorsPage(): ReactNode {
   const connected = wallet.connected;
   const publicKey = wallet.publicKey;
 
-  const myEscrows = escrows.filter((e) => e.sender === publicKey || e.receiver === publicKey);
+  const displayEscrows = selectedCorridor === 0
+    ? escrows
+    : escrows.filter((e) => e.corridor === selectedCorridor);
+
+  const myEscrows = displayEscrows.filter((e) => e.sender === publicKey || e.receiver === publicKey);
   const isAdmin = publicKey === ADMIN_PUBLIC_KEY;
 
   const pendingForMe = escrows.filter((e) => {
@@ -138,7 +143,7 @@ export default function AnchorsPage(): ReactNode {
     setTxStatus({ status: "building" });
 
     const onStatus = (s: TxStatus) => setTxStatus(s);
-    let result: TxStatus;
+    let result: TxStatus | undefined;
 
     switch (action) {
       case "approve":
@@ -153,9 +158,12 @@ export default function AnchorsPage(): ReactNode {
       case "cancel":
         result = await cancelEscrow(wallet.publicKey, wallet.walletType, CONTRACT_ID, escrowId, onStatus);
         break;
+      default:
+        setTxStatus({ status: "failed", error: `Unknown action: ${action}` });
+        return;
     }
 
-    if (result.status === "success") {
+    if (result && result.status === "success") {
       setTimeout(() => { setTxStatus(null); fetchEscrows(); }, 2000);
     }
   };
@@ -226,7 +234,7 @@ export default function AnchorsPage(): ReactNode {
     connected && isAdmin && e.status === "Created";
 
   return (
-    <main className="min-h-screen bg-black text-white font-mono">
+    <main id="main" className="min-h-screen bg-black text-white font-mono">
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: "48px 48px" }} />
 
@@ -270,25 +278,42 @@ export default function AnchorsPage(): ReactNode {
           </div>
         </div>
 
-        {/* Role Selector */}
+        {/* Corridor Selector */}
         <div className="border border-neutral-800 p-5 mb-6">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-4">
             <Globe className="h-4 w-4 text-neutral-500" />
-            <span className="text-[10px] uppercase tracking-[0.3em] text-neutral-400">Select Role</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-neutral-400">Filter by Corridor</span>
           </div>
-          <div className="flex gap-3">
-            {(["anchor_a", "anchor_b"] as AnchorRole[]).map((r) => (
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedCorridor(0)}
+              className={`px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold transition-colors border ${
+                selectedCorridor === 0 ? "bg-white text-black border-white" : "border-neutral-800 text-neutral-400 hover:text-white"
+              }`}
+            >
+              All Corridors
+            </button>
+            {CORRIDOR_OPTIONS.map((c) => (
               <button
-                key={r}
-                onClick={() => setRole(r)}
-                className={`px-6 py-3 text-xs uppercase tracking-[0.2em] font-bold transition-colors border ${
-                  role === r ? "bg-white text-black border-white" : "border-neutral-800 text-neutral-400 hover:text-white"
+                key={c.value}
+                onClick={() => setSelectedCorridor(c.value)}
+                className={`px-4 py-2 text-[10px] uppercase tracking-[0.15em] font-bold transition-colors border ${
+                  selectedCorridor === c.value ? "bg-white text-black border-white" : "border-neutral-800 text-neutral-400 hover:text-white"
                 }`}
               >
-                {r === "anchor_a" ? "Anchor A · US" : "Anchor B · Philippines"}
+                {c.label}
               </button>
             ))}
           </div>
+          {selectedCorridor > 0 && CORRIDORS[selectedCorridor] && (
+            <div className="mt-3 text-[10px] uppercase tracking-[0.2em] text-neutral-600">
+              Showing {CORRIDORS[selectedCorridor].from} → {CORRIDORS[selectedCorridor].to} only · <button onClick={() => setSelectedCorridor(0)} className="text-neutral-500 hover:text-white border-b border-neutral-700 hover:border-white">clear</button>
+            </div>
+          )}
+          {selectedCorridor > 0 && displayEscrows.length === 0 && !loading && (
+            <div className="mt-4 text-xs text-amber-400">No escrows in this corridor yet.</div>
+          )}
+        </div>
         </div>
 
         {/* Stats */}
@@ -307,7 +332,7 @@ export default function AnchorsPage(): ReactNode {
           </div>
           <div className="border border-neutral-800 p-5">
             <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Total</div>
-            <div className="text-4xl font-black">{escrows.length}</div>
+            <div className="text-4xl font-black">{displayEscrows.length}</div>
           </div>
         </div>
 
@@ -386,7 +411,8 @@ export default function AnchorsPage(): ReactNode {
                       <label className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 block mb-1">Corridor</label>
                       <select name="corridor" value={createForm.corridor}
                         onChange={(e) => setCreateForm((f) => ({ ...f, corridor: parseInt(e.target.value, 10) }))}
-                        className="w-full bg-black border border-neutral-800 text-white text-xs px-3 py-2">
+                        className="w-full bg-black border border-neutral-800 text-white text-xs px-3 py-2"
+                      >
                         {CORRIDOR_OPTIONS.map((c) => (
                           <option key={c.value} value={c.value}>{c.label}</option>
                         ))}
@@ -425,14 +451,16 @@ export default function AnchorsPage(): ReactNode {
           <div className="p-5 border-b border-neutral-800 flex items-center gap-2">
             <Clock className="h-4 w-4 text-neutral-500" />
             <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-neutral-400">
-              All Escrows ({escrows.length})
+              {selectedCorridor === 0 ? "All Escrows" : `${CORRIDORS[selectedCorridor]?.from ?? ""} → ${CORRIDORS[selectedCorridor]?.to ?? ""}`} ({displayEscrows.length})
             </h3>
           </div>
 
           {loading && escrows.length === 0 ? (
             <div className="p-12 text-center text-xs text-neutral-600 uppercase">Loading...</div>
-          ) : escrows.length === 0 ? (
-            <div className="p-12 text-center text-xs text-neutral-600">No escrows yet. Create one above.</div>
+          ) : displayEscrows.length === 0 ? (
+            <div className="p-12 text-center text-xs text-neutral-600">
+              {selectedCorridor === 0 ? "No escrows yet. Create one above." : `No escrows in ${CORRIDORS[selectedCorridor]?.from ?? ""} → ${CORRIDORS[selectedCorridor]?.to ?? ""} corridor yet.`}
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
@@ -449,7 +477,7 @@ export default function AnchorsPage(): ReactNode {
                   </tr>
                 </thead>
                 <tbody>
-                  {escrows.map((e) => {
+                  {displayEscrows.map((e) => {
                     const c = CORRIDORS[e.corridor] ?? { from: "??", to: "??" };
                     return (
                       <tr key={e.id} className="border-b border-neutral-900 hover:bg-neutral-900/30">

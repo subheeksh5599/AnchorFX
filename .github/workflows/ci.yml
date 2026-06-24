@@ -44,6 +44,24 @@ jobs:
       - name: Test
         working-directory: frontend
         run: npm test
+      - name: TypeCheck (tsc)
+        working-directory: frontend
+        run: npx tsc --noEmit
+      - name: Format Check
+        working-directory: frontend
+        run: npx prettier --check "app/**/*.{ts,tsx}" "components/**/*.{ts,tsx}" "lib/**/*.ts"
       - name: Lint
         working-directory: frontend
-        run: npx eslint . --quiet || true
+        run: npx eslint . --quiet
+      - name: Security Audit (npm)
+        working-directory: frontend
+        run: npm audit --audit-level=high
+      - name: Check Rust formatting
+        run: cargo fmt --check
+        working-directory: contracts/anchorfx-escrow
+      - name: Clippy lint (escrow)
+        run: cargo clippy -- -D warnings
+        working-directory: contracts/anchorfx-escrow
+      - name: Clippy lint (oracle)
+        run: cargo clippy -- -D warnings
+        working-directory: contracts/anchorfx-oracle

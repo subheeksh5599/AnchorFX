@@ -92,7 +92,7 @@ export default function ContractPage(): ReactNode {
   const stopListening = useCallback(() => setListening(false), []);
 
   return (
-    <main className="min-h-screen bg-black text-white font-mono">
+    <main id="main" className="min-h-screen bg-black text-white font-mono">
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{
           backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,

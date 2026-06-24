@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Database, Heart, ArrowUpRight, RadioTower, Clock, Users, ArrowRight, Ban } from "lucide-react";
+import { Database, Heart, ArrowUpRight, RadioTower, Clock, Users, ArrowRight, Ban, X } from "lucide-react";
 import { useWallet } from "@/components/wallet-provider";
 import { settleEscrow, cancelEscrow, type TxStatus } from "@/lib/contract-client";
 import { ADMIN_PUBLIC_KEY, CONTRACT_ID } from "@/lib/env";
@@ -55,7 +55,6 @@ export default function AdminPage(): ReactNode {
   const isAdmin = publicKey === ADMIN_PUBLIC_KEY;
 
   const fetchAll = useCallback(async () => {
-    setLoading(true);
     try {
       const [escrowsRes, analyticsRes, healthRes] = await Promise.all([
         fetch(`/api/escrows?contract=${CONTRACT_ID}`).then((r) => r.json()),
@@ -65,7 +64,9 @@ export default function AdminPage(): ReactNode {
       setEscrows(escrowsRes.escrows ?? []);
       setAnalytics(analyticsRes);
       setHealth(healthRes);
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("Failed to fetch admin data:", err);
+    }
     setLoading(false);
   }, []);
 
@@ -105,7 +106,7 @@ export default function AdminPage(): ReactNode {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white font-mono">
+    <main id="main" className="min-h-screen bg-black text-white font-mono">
       <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.025]"
         style={{
           backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
@@ -168,7 +169,7 @@ export default function AdminPage(): ReactNode {
                 className="text-neutral-500 hover:text-white font-mono">{short(txStatus.hash, 10)}</a>
             )}
             {txStatus.error && <span className="text-red-400">{txStatus.error}</span>}
-            <button onClick={() => setTxStatus(null)} className="ml-auto text-neutral-600 hover:text-white">✕</button>
+            <button onClick={() => setTxStatus(null)} className="ml-auto text-neutral-600 hover:text-white"><X className="h-3 w-3" /></button>
           </div>
         )}
 

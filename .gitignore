@@ -2,8 +2,19 @@ node_modules/
 .next/
 target/
 test_snapshots/
-*.wasm
-*.lock
 *.tsbuildinfo
 .env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 dist/
+/coverage/
+.DS_Store
+*.log
+
+# Stellar contract build artifacts (tracked separately)
+contracts/**/target/
+
+# Allow Cargo.lock for reproducible WASM builds
+!.lock

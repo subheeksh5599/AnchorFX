@@ -28,7 +28,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const from = (url.searchParams.get("from") ?? "US").toUpperCase();
   const to = (url.searchParams.get("to") ?? "PH").toUpperCase();
-  const amount = parseFloat(url.searchParams.get("amount") ?? "1000") || 1000;
+  const amount = parseFloat(url.searchParams.get("amount") ?? "1000") ?? 1000;
   if (amount <= 0 || !isFinite(amount)) {
     return new Response(JSON.stringify({ error: "Invalid amount" }), { status: 400, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) } });
   }
