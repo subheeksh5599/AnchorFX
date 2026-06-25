@@ -164,7 +164,7 @@ AnchorFX is a multi-sig escrow system with embedded FX oracle on Stellar's Sorob
 
 Found a security issue? Please report it responsibly.
 
-- **Email**: security@anchorfx.dev (monitored by the maintainer)
+- **Email**: komasubheeksh@gmail.com (monitored by the maintainer)
 - **PGP Key**: Available on request
 - **Response Time**: Within 48 hours
 - **Disclosure Policy**: 90-day coordinated disclosure. We commit to:
