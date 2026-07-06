@@ -19,6 +19,10 @@ export async function GET(request: Request) {
     });
   }
 
+  const ratings = feedbackEntries.map((e) => e.rating);
+  const avgRating = ratings.length ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : "0";
+  const wouldUseAgain = feedbackEntries.filter((e) => e.wouldUseAgain).length;
+
   const featureCounts = new Map<string, number>();
   for (const e of feedbackEntries) {
     if (e.requestedFeature) {

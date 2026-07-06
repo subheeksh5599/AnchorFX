@@ -13,7 +13,7 @@ import {
 } from "@stellar/stellar-sdk";
 import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
 import { signSorobanTx, type WalletType } from "./multi-wallet";
-import { RPC_URL, HORIZON_URL, XLM_SAC_ADDRESS } from "./env";
+import { RPC_URL, HORIZON_URL, XLM_SAC_ADDRESS, CONTRACT_ID } from "./env";
 
 const WASM_PATH = "/wasm/anchorfx_escrow.wasm";
 
