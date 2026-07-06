@@ -314,7 +314,6 @@ export default function AnchorsPage(): ReactNode {
             <div className="mt-4 text-xs text-amber-400">No escrows in this corridor yet.</div>
           )}
         </div>
-        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
