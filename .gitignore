@@ -18,3 +18,4 @@ contracts/**/target/
 
 # Allow Cargo.lock for reproducible WASM builds
 !.lock
+.vercel
