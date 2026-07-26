@@ -36,8 +36,8 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 - [x] Mainnet contract deployment (oracle + escrow)
 - [ ] 20+ verified mainnet users (in progress — see below)
 - [x] Smart contract audit — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
-- [ ] Twitter/X launch post with demo
-- [ ] Community contribution (tutorial / blog / workshop)
+- [x] Twitter/X launch post with demo ([@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770))
+- [x] Community contribution — [dev.to blog](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
 - [x] 30+ meaningful commits
 - [ ] Advanced feature: fee sponsorship or multi-sig logic
 - [x] Full technical documentation
@@ -290,7 +290,7 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 - [ ] Tutorial on cross-contract calls with Soroban SDK v22
 - [ ] Open-source contribution to a Stellar ecosystem project
 
-**Link:** TBD
+**Link:** [dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
 
 ---
 
