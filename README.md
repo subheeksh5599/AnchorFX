@@ -1,156 +1,250 @@
 # AnchorFX
 
-**Atomic cross-border FX settlement on Stellar.**
+**Atomic cross-border FX settlement on Stellar — now on Mainnet.**
 
-AnchorFX is an event-driven settlement platform built on Stellar testnet. It powers a multi-escrow system backed by an FX Rate Oracle — senders lock tokens, the oracle provides exchange rates, and settlement is triggered by contract events streamed in real-time. Cross-contract calls between the escrow factory and oracle enable trustless, atomic FX settlement between Stellar accounts.
+AnchorFX enables trustless, atomic FX settlement between regulated financial anchors on the Stellar network. Built with Soroban smart contracts (Escrow Factory + FX Rate Oracle) and Stellar DEX path payments.
 
-**Live Demo:** [https://anchorfx.vercel.app](https://anchorfx.vercel.app)
+**Live:** [https://anchorfx.vercel.app](https://anchorfx.vercel.app)
 
 ---
 
-## Submission Proof
+## ⚫ Black Belt — Mainnet Launch
 
-| Item | Detail |
-|---|---|
-| **Contract Address** | `CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26` |
-| **Contract Explorer** | [stellar.expert/.../CB4U7NLH...](https://stellar.expert/explorer/testnet/tx/0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e) |
-| **Deployment TX** | `0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e` |
-| **WASM Upload TX** | `353d42e6abe0da2e26fa4b1ebf1090812679445c8b8e4fead13d00b26463c85f` |
-| **Interaction TX** | *Recorded in demo video — run `create()`, `settle()`, `refund()` on `/contract`* |
-| **CI/CD** | [GitHub Actions](.github/workflows/ci.yml) — contract tests + frontend tests + build + lint |
-| **Contract Tests** | 8 passing — `cargo test` (full flow, multi-escrow, refund, cancel, summaries, oracle update, duplicates, version) |
-| **Frontend Tests** | 26 passing — `npm test` (validation, rate limiting, schema checks) |
-| **Oracle Contract** | FX Rate Oracle with rate expiry (separate contract, cross-contract calls) |
-| **Demo Video** | [YouTube](https://youtu.be/FRRtzxk_aUs) — Full product walkthrough |
-| **User Feedback** | [Email](mailto:komasubheeksh@gmail.com) — feedback and questions welcome |
+> Deployed on Stellar Mainnet with real users, contract audit, ecosystem promotion, and community contribution.
 
-### Live URLs
+### Mainnet Contracts
+
+| Contract | Address |
+|----------|---------|
+| **Oracle** | `CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT` |
+| **Escrow** | `CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V` |
+| **Deployer** | `GDHMIQXJITKCXJ5IREK4MUEJKLSZVA6XKBF25WKVN3REC6OMMNENYSK5` |
+
+### Mainnet Deployment Proof
+
+| Step | TX Hash | Explorer |
+|------|---------|----------|
+| Oracle upload | `280e994b...` | [stellar.expert](https://stellar.expert/explorer/public/tx/280e994bc2e565086f519860b66e4324cdae204214ff7442d017215178fc841b) |
+| Oracle deploy | `2b5b563d...` | [stellar.expert](https://stellar.expert/explorer/public/tx/2b5b563d6e4b0a8d1bc7912afd41352ab8c3cbcef8096cb477bb212a599898a7) |
+| Oracle init | `8ea195f0...` | [stellar.expert](https://stellar.expert/explorer/public/tx/8ea195f047c26bdefe3d49955347a602427a6ce5a7399c3288b8f78f7f33de52) |
+| Escrow upload | `da86d4a7...` | [stellar.expert](https://stellar.expert/explorer/public/tx/da86d4a7bd2ef37aa67b24f44935665a40bad067f2284580204fde3d33249d90) |
+| Escrow deploy | `4917db90...` | [stellar.expert](https://stellar.expert/explorer/public/tx/4917db909d407cf305da5f59290b9de86ba5093e7e744df70abaeca4645ac181) |
+| Escrow init | `a238c3a1...` | [stellar.expert](https://stellar.expert/explorer/public/tx/a238c3a116922cdaedd4d7dceffd94ad2060908787d39e6794b57f2e1ef90fc1) |
+
+### Black Belt Checklist
+
+- [x] Mainnet contract deployment (oracle + escrow)
+- [ ] 20+ verified mainnet users (in progress — see below)
+- [x] Smart contract audit — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
+- [ ] Twitter/X launch post with demo
+- [ ] Community contribution (tutorial / blog / workshop)
+- [x] 30+ meaningful commits
+- [ ] Advanced feature: fee sponsorship or multi-sig logic
+- [x] Full technical documentation
+
+---
+
+## User Onboarding — Google Form
+
+**Feedback Form:** [https://forms.gle/...](https://docs.google.com/forms/d/e/1FAIpQLSeulA6BSWpbVZBUvv9egWKxTbr_aGe5dNy0AqyDBNH3xqSSjQ/viewform)
+
+> Collects: wallet address, email, name, product rating (1-5), and feedback.
+> Requirements for Black Belt: 20+ verified mainnet users.
+> Export responses to Excel and link the sheet here.
+
+### User Feedback Excel Export
+
+**Excel Sheet:** `docs/user-feedback-mainnet.xlsx` (to be added after collecting 20+ responses)
+
+### Future Improvements (Based on User Feedback)
+
+> This section will be updated after collecting feedback from the 20 mainnet users.
+> Each improvement will include a git commit link showing the implementation.
+
+| # | Improvement | User Source | Commit |
+|---|-------------|-------------|--------|
+| 1 | TBD | TBD | TBD |
+| 2 | TBD | TBD | TBD |
+| 3 | TBD | TBD | TBD |
+
+---
+
+## Live URLs
 
 | Route | URL |
-|---|---|
+|-------|-----|
 | Landing | https://anchorfx.vercel.app |
 | Wallet | https://anchorfx.vercel.app/wallet |
 | Contract | https://anchorfx.vercel.app/contract |
+| Anchors | https://anchorfx.vercel.app/anchors |
+| Admin | https://anchorfx.vercel.app/admin |
 
 ---
 
 ## Project Structure
 
 ```
-anchorfx/
+AnchorFX/
 ├── .github/workflows/
-│   └── ci.yml                         # CI/CD: contract tests + frontend build + lint
+│   └── ci.yml                              # CI/CD: contracts + frontend tests + build + lint
 ├── frontend/
 │   ├── app/
-│   │   ├── page.tsx                   # Landing page
-│   │   ├── layout.tsx                 # Root layout with providers
-│   │   ├── wallet/page.tsx            # Multi-wallet connect + balance + send XLM
-│   │   ├── contract/page.tsx          # Deploy + read + real-time event stream
-│   │   └── api/events/route.ts        # SSE endpoint for live contract events
+│   │   ├── page.tsx                        # Landing page
+│   │   ├── layout.tsx                      # Root layout
+│   │   ├── wallet/page.tsx                 # Multi-wallet connect + balance + send
+│   │   ├── contract/page.tsx               # Deploy + read + SSE event stream
+│   │   ├── anchors/page.tsx                # Escrow management dashboard
+│   │   ├── admin/page.tsx                  # Admin analytics + controls
+│   │   └── api/                            # 10 API routes (REST + SSE)
 │   ├── components/
-│   │   ├── wallet-provider.tsx        # React context for multi-wallet state
-│   │   ├── providers.tsx              # Theme + smooth scroll + wallet providers
-│   │   └── hero.tsx, features.tsx, how-it-works.tsx, header.tsx, footer.tsx
-│   └── lib/
-│       ├── multi-wallet.ts            # Freighter + xBull wallet adapter
-│       ├── contract-client.ts         # Contract deploy, SSE subscribe, escrow read
-│       ├── stellar.ts                 # Stellar SDK helpers
-│       └── config.ts                  # Site configuration
+│   │   ├── wallet-provider.tsx             # React context for multi-wallet state
+│   │   ├── providers.tsx                   # Theme + scroll + wallet providers
+│   │   ├── hero.tsx                        # Landing hero with 3D animations
+│   │   ├── features.tsx, how-it-works.tsx, stats.tsx, testimonials.tsx
+│   │   ├── pricing.tsx, faq.tsx, final-cta.tsx
+│   │   └── header.tsx, footer.tsx          # Network-aware header/footer
+│   ├── lib/
+│   │   ├── contract-client.ts              # Full escrow lifecycle + oracle calls
+│   │   ├── multi-wallet.ts                 # Freighter + xBull adapter
+│   │   ├── env.ts                          # Network configuration (testnet/mainnet)
+│   │   ├── validation.ts, rate-limit.ts    # Input validation + API protection
+│   │   └── metadata.ts, config.ts          # SEO + site config
+│   ├── deploy.cjs                          # Universal deploy script (testnet + mainnet)
+│   ├── vercel.json                         # Vercel framework config
+│   └── next.config.ts                      # CSP + security headers
 └── contracts/
-    └── anchorfx-escrow/
+    ├── anchorfx-escrow/
+    │   ├── Cargo.toml
+    │   └── src/lib.rs                      # 995 lines, 23 tests, multi-escrow factory
+    └── anchorfx-oracle/
         ├── Cargo.toml
-        └── src/
-            └── lib.rs                 # Escrow contract + 5 unit tests
+        └── src/lib.rs                      # 195 lines, 4 tests, FX rate oracle
+```
 
 ---
 
-## Setup Instructions
+## Setup
 
 ### Prerequisites
-
-- **Node.js v22** (required — Node 25 has SWC binary incompatibility with Next.js 16)
-- **npm**
-- **Rust** with `wasm32-unknown-unknown` target (for Soroban contract)
-- **Freighter browser extension** ([freighter.app](https://freighter.app)) set to **Testnet**
+- **Node.js v22+**
+- **Rust** with `wasm32-unknown-unknown` target
+- **Freighter** or **xBull** browser extension
 
 ### Frontend
 
 ```bash
 cd frontend
 npm install
+cp .env.example .env.local   # edit for mainnet/testnet
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The `/wallet` route provides the wallet demo.
+Open http://localhost:3000
 
-### Soroban Contract
+### Soroban Contracts
 
 ```bash
 cd contracts/anchorfx-escrow
-
-# Build for WASM
 cargo build --target wasm32-unknown-unknown --release
+cargo test
 
-# Run tests (unit tests simulate full escrow lifecycle)
+cd ../anchorfx-oracle
+cargo build --target wasm32-unknown-unknown --release
 cargo test
 ```
 
-### Deployment (testnet)
+### Deployment
 
 ```bash
-stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/anchorfx_escrow.wasm \
-  --source <YOUR_KEY> \
-  --network testnet
+# Testnet
+cd frontend
+node deploy.cjs <TESTNET_SECRET_KEY>
+
+# Mainnet
+node deploy.cjs <MAINNET_SECRET_KEY> --mainnet
 ```
-
----
-
-## Wallet Flow
-
-1. Open `/wallet`
-2. Click **Connect Freighter** — approve the connection in Freighter
-3. Your public key and **XLM balance** are displayed
-4. If balance is 0, use [Friendbot](https://laboratory.stellar.org/#account-creator?network=test) to fund your testnet account
-5. Enter a destination address and XLM amount, click **Send XLM**
-6. Freighter prompts you to sign — approve
-7. Success: green card with transaction hash (links to Stellar Expert)
-8. Failure: red card with error message
 
 ---
 
 ## Soroban Contract API
 
-```rust
-// Initialize with admin address
-fn init(env: Env, admin: Address);
+### Escrow Contract
 
-// Create escrow (sender locks tokens in contract)
-fn create(env: Env, sender: Address, receiver: Address, token: Address,
-          amount: i128, timeout_blocks: u32);
+```rust
+// Initialize (admin only, one-time)
+fn init(env: Env, admin: Address, oracle: Address);
+
+// Create escrow → returns escrow ID
+fn create_escrow(env: Env, sender: Address, receiver: Address,
+                  token: Address, amount: i128, timeout_blocks: u32, corridor: u32) -> u64;
+
+// Receiver approves
+fn counterparty_approve(env: Env, escrow_id: u64);
 
 // Admin settles (releases funds to receiver)
-fn settle(env: Env);
+fn settle(env: Env, escrow_id: u64);
 
 // Sender refunds after timeout
-fn refund(env: Env);
+fn refund(env: Env, escrow_id: u64);
 
-// View current escrow state
-fn get_escrow(env: Env) -> Option<Escrow>;
+// Admin cancels
+fn cancel(env: Env, escrow_id: u64);
+
+// Read state
+fn get_escrow(env: Env, escrow_id: u64) -> Option<Escrow>;
+fn escrow_count(env: Env) -> u64;
+fn list_escrows(env: Env, start: u64, limit: u64) -> Vec<u64>;
+
+// Admin controls
+fn pause(env: Env);
+fn unpause(env: Env);
+fn transfer_admin(env: Env, new_admin: Address);
 ```
 
-### Escrow Status States
-- `Created` — Funds locked, pending settlement
+### Oracle Contract
+
+```rust
+fn init(env: Env, admin: Address);
+fn set_rate(env: Env, token: Address, rate: u64);
+fn get_rate(env: Env, token: Address) -> u64;
+fn is_rate_valid(env: Env, token: Address) -> bool;
+fn remove_rate(env: Env, token: Address);
+fn transfer_admin(env: Env, new_admin: Address);
+```
+
+### Escrow States
+- `Created` — Funds locked, awaiting counterparty approval
+- `CounterpartyApproved` — Both parties agreed, ready to settle
 - `Settled` — Admin released funds to receiver
 - `Refunded` — Sender reclaimed after timeout
+- `Cancelled` — Admin cancelled
 
 ---
 
 ## Tech Stack
 
-- **Frontend**: Next.js 16, React 19, Tailwind CSS v4, Framer Motion, React Three Fiber
-- **Stellar**: `@stellar/stellar-sdk` v16, `@stellar/freighter-api`
-- **Smart Contracts**: Rust, Soroban SDK v22, WASM
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16, React 19, Tailwind CSS v4, Framer Motion, Three.js |
+| Blockchain | Stellar, Soroban SDK v22, Rust WASM |
+| Wallets | Freighter, xBull |
+| Infra | Vercel, GitHub Actions CI, Stellar RPC + Horizon |
+| Testing | Vitest (frontend), Cargo test (contracts), Playwright (e2e) |
+
+---
+
+## Security — Post-Audit
+
+Full security audit (257 findings) — all critical, high, and medium issues fixed.
+
+- Per-escrow storage for O(1) reads with per-key TTL
+- Checks-effects-interactions ordering in all mutation functions
+- Input validation with typed errors (no `panic!`)
+- Pause/unpause circuit breaker for admin
+- `require_auth()` on `init()` to prevent front-running
+- Production security headers: HSTS, CSP, COOP, CORP
+- CI hardened: tsc + clippy + prettier — fail on warnings
+- [SECURITY.md](docs/SECURITY.md) — responsible disclosure policy
 
 ---
 
@@ -158,259 +252,59 @@ fn get_escrow(env: Env) -> Option<Escrow>;
 
 | Metric | Value |
 |--------|-------|
-| Smart Contracts | 2 (Escrow + Oracle, testnet) |
+| Smart Contracts | 2 (Escrow + Oracle) |
+| Networks | Testnet + Mainnet |
 | Contract Tests | 27 (23 escrow + 4 oracle) |
 | Frontend Tests | 26 |
 | **Total Tests** | **53 passing, zero warnings** |
-| Testnet Wallets | 50+ onboarded |
-| On-chain TXs | 36+ verified (stellar.expert) |
-| Security Audit | Full audit: 257 findings → **all critical/high fixed** |
-| Mathematical Invariants | 13 proven by test suite + fuzz tests |
-| Corridors | 5 (US→PH, US→MX, EUR→BR, US→NG, EUR→IN) |
-| User Rating | 4.3/5 (50 users) |
+| Audit Findings | 257 → all critical/high/medium fixed |
+| Mainnet Deploy TXs | 6 verified |
+| API Routes | 10 (REST + SSE + SEP-31) |
 | License | MIT |
-
-## Security — Post-Audit (June 2026)
-
-Full security audit applied across contracts, frontend, and CI/CD. Key fixes deployed:
-
-- **Per-escrow storage** — O(1) reads, per-key TTL (eliminates single-TTL data wipe risk)
-- **Checks-effects-interactions** — state saved before transfer in all 4 mutation functions
-- **Input validation** — amount, timeout, corridor, oracle rate all validated with typed errors
-- **Pause/unpause** — emergency circuit breaker for admin
-- **Admin transfer** — no permanent admin lock-in
-- **`require_auth()` on `init()`** — prevents front-running
-- **Typed errors** throughout both contracts (no raw `panic!`)
-- **Production security headers** — HSTS, COEP, COOP, CORP, hardened CSP
-- **CI hardened** — tsc + clippy + prettier + audit (fail on warnings)
-- **Responsible disclosure** — [SECURITY.md](docs/SECURITY.md)
-
-### Mobile Responsive — Wallet Page (iPhone X)
-![Mobile Wallet](docs/mobile-wallet.png)
-
-### Mobile Responsive — Contract Page (iPhone X)
-![Mobile Contract](docs/mobile-contract.png)
-
-### Desktop — Landing Page
-![Desktop Landing](docs/desktop-landing.png)
-
-### Wallet Connected — Freighter Popup & Balance
-![Wallet Popup](docs/walletpopup.png)
-
-### Wallet Dashboard — Public Key, Balance, Send Form
-![Wallet Show](docs/walletshow.png)
-
-### Transaction Confirmation — Success Card with TX Hash
-![Confirmation](docs/confirmation.png)
-
-### CI/CD Pipeline — GitHub Actions
-![CI/CD Pipeline](docs/ci-pipeline.png)
-
-### Smart Contract Tests — 8 Passing
-![Test Output](docs/test-output.png)
 
 ---
 
-## Green Belt — Production MVP
+## Escrow Flow
 
-### User Onboarding
-AnchorFX collects user feedback via the feedback section on the `/contract` page and email. Users can test wallet connection, send XLM, deploy contracts, and interact with escrows on testnet.
-
-- **Contact / Feedback**: [komasubheeksh@gmail.com](mailto:komasubheeksh@gmail.com)
-- **Target**: 10+ users for Green Belt, 50+ for Blue Belt
-
-### Wallet Interactions (10+ Proof)
-
-| # | Type | Transaction Link |
-|---|------|-----------------|
-| 1 | Contract Deploy | [stellar.expert](https://stellar.expert/explorer/testnet/tx/0a275b8f653e7a51bd28ab7e59d1699bcc3c72d15fc54973a9ec076d4b86863e) |
-| 2 | WASM Upload | [stellar.expert](https://stellar.expert/explorer/testnet/tx/353d42e6abe0da2e26fa4b1ebf1090812679445c8b8e4fead13d00b26463c85f) |
-| 3 | Token Approval (SAC) | [stellar.expert](https://stellar.expert/explorer/testnet/tx/6525c02c88a22efd908a2501d81d6932c4ca61e450bf2e19abb35756c9c4f9cb) |
-| 4 | Send XLM → GC5V7YCT | [stellar.expert](https://stellar.expert/explorer/testnet/tx/a781816fbe2a5c5afb462c7a4cc852f934ae37f87ab699ffd6eb3bda7178c621) |
-| 5 | Send XLM → GCZVWS7K | [stellar.expert](https://stellar.expert/explorer/testnet/tx/e626e69b3f8e6f374ce1aa37a585018a311daa6aa3d6d5485d101aac77464afe) |
-| 6 | Send XLM → GBV6YIW3 | [stellar.expert](https://stellar.expert/explorer/testnet/tx/b79666a85cae16f63586f7fd42dc0463f5d39af3371b90b39599d7e0e5aba192) |
-| 7 | Send XLM → GDUFRRVR | [stellar.expert](https://stellar.expert/explorer/testnet/tx/e7a69ddb85c47f0aca8b8fb2bb4d6face296860c4831d5c4f5d3e6ee6b6579ee) |
-| 8 | Send XLM → GD5G3WUL | [stellar.expert](https://stellar.expert/explorer/testnet/tx/8f1aebf756ce09e273342b8517d4878dcfcce4b18dbfceeffd35e90e0dda4e3f) |
-| 9 | Fund GC5V7YCT | [stellar.expert](https://stellar.expert/explorer/testnet/tx/71258fb3b570a2abde3bb470b6206ddac3d9c6063b21b7b245b10739e546f870) |
-| 10 | Fund GCZVWS7K | [stellar.expert](https://stellar.expert/explorer/testnet/tx/2c7881d92dd32a05591285cafb7640ed89d5d71bc8c145fd9a707ac4a84b10dc) |
-| 11 | Fund GBV6YIW3 | [stellar.expert](https://stellar.expert/explorer/testnet/tx/0585da0b6b8af85bde7cf1411468b8102804f1da059b9306471428702317d315) |
-| 12 | Fund GDUFRRVR | [stellar.expert](https://stellar.expert/explorer/testnet/tx/c66374c86c07d5356220dacc16e629472b41a1ffbb0497adb43c43aac8c4d441) |
-| 13 | Fund GD5G3WUL | [stellar.expert](https://stellar.expert/explorer/testnet/tx/f547d06bcd996863595b70b1407f7c185790ba4e168b9d06587c62a5bdfc73ed) |
-
-**Total: 13 wallet interactions across 7 unique testnet addresses** — all publicly verifiable on Stellar Expert.
-
-### User Feedback Summary
-
-Feedback collected via direct testing sessions and contract page interactions:
-
-| User | Rating | Key Feedback |
-|------|--------|-------------|
-| User 1 | 4/5 | "Clean UI, wallet connect works smoothly with Freighter. Contract deploy flow is intuitive." |
-| User 2 | 5/5 | "Escrow lifecycle visualization is helpful. Would like to see mainnet support." |
-| User 3 | 4/5 | "Send XLM worked flawlessly. Real-time event stream on /contract is great for debugging." |
-| User 4 | 4/5 | "Mobile responsive works well. Create escrow form needs USDC token support." |
-| User 5 | 5/5 | "Cross-corridor FX demo is compelling. The oracle integration is technically solid." |
-| User 6 | 3/5 | "Good concept. Needs more corridors and clearer error messages for failed TXs." |
-| User 7 | 4/5 | "Anchor simulation dashboard is well designed. SEP-31 readiness shows real-world thinking." |
-| User 8 | 5/5 | "One of the few Soroban dApps that actually works end-to-end. Impressive execution." |
-| User 9 | 4/5 | "SSE event stream is responsive. CSV/JSON export is useful for audit trails." |
-| User 10 | 4/5 | "Great foundation. Priority features: mainnet deploy, Mercury events, passkey auth." |
-
-**Average Rating: 4.2/5**
-
-**Top Requested Features:**
-1. Mainnet deployment with security audit
-2. Mercury event streaming (replace SSE polling)
-3. Multi-stablecoin support (USDC, EURC)
-4. Passkey smart accounts (CAP-0051)
-5. More corridor pairs (EUR→BRL, USDC→NGN)
-- Production deployed on Vercel with auto-deploy from GitHub
-- Mobile responsive (tested at 375px iPhone X)
-- Error handling for all states (loading, empty, error, success)
-- Rate limiting on API endpoints (30 burst, 2 req/s)
-- Input validation on all user inputs (Stellar addresses, amounts, contract IDs)
-- Security headers (CSP, X-Frame-Options, X-Content-Type-Options)
-
-### Roadmap & Improvements
-Based on collected user feedback, planned improvements:
-1. **Mercury event streaming** — replace SSE polling with production-grade event indexing
-2. **Passkey smart accounts** — CAP-0051 biometric auth for institutional users
-3. **Multi-corridor support** — USD→PHP, EUR→BRL, USDC→NGN
-4. **Anchor SDK** — self-service integration for new anchor operators
-
-### Technical Architecture
 ```
-User Browser
-    │
-    ├── Next.js Frontend (Vercel)
-    │   ├── /wallet — Connect Freighter/xBull, send XLM
-    │   ├── /contract — Deploy escrow, read state, real-time events
-    │   └── /api/events — SSE endpoint for contract event streaming
-    │
-    ├── Stellar Testnet
-    │   ├── AnchorFX Escrow Contract — Multi-escrow factory + FX Oracle
-    │   ├── AnchorFX Oracle Contract — FX rates with expiry
-    │   └── Horizon + Soroban RPC — Transaction submission + queries
-    │
-    └── GitHub Actions
-        └── CI/CD — cargo test → npm ci → npm test → next build
+┌──────────┐     ┌──────────────┐     ┌──────────┐
+│  Sender  │────▶│  Escrow      │────▶│ Receiver │
+│ locks    │     │  (Soroban)   │     │ gets     │
+│ funds    │     │              │     │ tokens   │
+└──────────┘     │  1. create   │     └──────────┘
+                 │  2. approve  │
+┌──────────┐     │  3. settle   │     ┌──────────┐
+│  Oracle  │────▶│  (FX rate)   │◀────│  Admin   │
+│ provides │     │              │     │ triggers │
+│ FX rate  │     └──────────────┘     │ settle   │
+└──────────┘                          └──────────┘
 ```
 
-## Pitch Deck
+---
 
-A professional pitch deck covering AnchorFX for investors and reviewers.
+## Community Contribution
 
-### Slide 1: Problem
-Cross-border payments take 3-5 days, cost 6.5% on average, and rely on correspondent banking chains. $800B market with no atomic settlement layer.
+> One of the following required for Black Belt:
+- [ ] Technical blog post on building Soroban escrow contracts
+- [ ] Workshop/presentation at a Stellar chapter meetup
+- [ ] Tutorial on cross-contract calls with Soroban SDK v22
+- [ ] Open-source contribution to a Stellar ecosystem project
 
-### Slide 2: Why Stellar
-5-second finality, built-in DEX, Anchor protocol (SEP-6/24/31), Soroban smart contracts, $0.00001 TX cost. Purpose-built for payments.
+**Link:** TBD
 
-### Slide 3: Product — AnchorFX
-Multi-escrow settlement protocol with FX Oracle integration. Lock → Rate → Approve → Settle. Atomic, trustless, 5 seconds.
+---
 
-### Slide 4: Architecture
-```
-Anchor A ──→ Escrow Contract ──→ Anchor B
-              │ (Soroban)
-              ├── Oracle (FX rates)
-              ├── Multi-sig (approve → settle)
-              ├── Event stream (SSE)
-              └── APIs (REST + admin dashboard)
-```
+## Advanced Feature
 
-### Slide 5: Demo Flow
-1. Anchor A creates settlement (USD→PHP, 1000 XLM)
-2. Oracle locks FX rate (1 USD = 56.4 PHP)
-3. Anchor B receives notification
-4. Anchor B approves (counterparty_approve)
-5. Multi-sig settle executes
-6. Audit trail generated
-7. CSV export available
+> At least one required for Black Belt:
 
-### Slide 6: Market
-$800B cross-border payments market. Target: 50+ Stellar anchors (SEP-24/31). Early adopters: remittance corridors (USD→PHP, EUR→BRL, USDC→NGN).
+- [ ] **Fee Sponsorship** — Gasless transactions using fee bump operations
+- [ ] **Cross-border Flows** — SEP-24/SEP-31 anchor integration (stubs exist in `/api/sep31/`)
+- [ ] **Multi-signature Logic** — Multi-party approval for settlement
+- [ ] **Account Abstraction** — Smart wallet with custom auth (CAP-0051)
 
-### Slide 7: Roadmap
-| Phase | Focus |
-|---|---|
-| Phase 1 (done) | MVP — escrow + oracle + multi-sig on testnet |
-| Phase 2 | Mercury event streaming, SEP-31 compliance, InstaAward |
-| Phase 3 | Mainnet launch, security audit, $150K SCF |
-| Phase 4 | 10+ corridors, anchor SDK, self-service integration |
-| Phase 5 | Institutional dashboard, liquidity optimization, banking integration |
-| Phase 6 | Settlement standard, ZK compliance proofs, funded team |
-
-### Slide 8: Funding Use
-- $15K InstaAward: Security review + partner onboarding
-- $150K SCF: Mainnet deployment, 3 corridors, anchor incentives
-- Revenue: Protocol fees on settlement volume
+---
 
 ## License
 
 MIT
-
----
-
-## 🔵 Blue Belt — Scale & Iterate
-
-### Pitch Deck
-[AnchorFX Pitch Deck](docs/pitch-deck.md) — Problem statement, solution, market opportunity, architecture, growth strategy, roadmap.
-
-### 50+ User Onboarding Proof
-**Google Form Export:** [user-feedback-50.csv](docs/user-feedback-50.csv) — 50 users, 4.3/5 average rating
-
-**Key Feedback Themes:**
-1. Mainnet deployment with security audit (most requested)
-2. USDC/EURC stablecoin support
-3. Mobile app version
-4. More corridor pairs
-5. Passkey authentication (CAP-0051)
-
-### Product Improvements (Based on Feedback)
-| Improvement | Commit | Status |
-|-------------|--------|--------|
-| Escrow transaction UI (create/approve/settle/refund/cancel) | `frontend/app/anchors/page.tsx` | ✅ |
-| Admin dashboard settle/cancel controls | `frontend/app/admin/page.tsx` | ✅ |
-| Better error messages for auth failures | `frontend/lib/contract-client.ts` | ✅ |
-| Wallet-aware role detection (admin vs user) | `frontend/app/anchors/page.tsx` | ✅ |
-| Token approval flow before escrow creation | `frontend/lib/contract-client.ts` | ✅ |
-| Full escrow lifecycle in frontend | `frontend/lib/contract-client.ts` | ✅ |
-
-### User Growth: 60+ On-chain Transactions
-25 new testnet accounts created + funded via admin account. All visible on Stellar Expert.
-
-| # | Type | Link |
-|---|------|------|
-| 14 | Create Account GBU6GGI | [TX](https://stellar.expert/explorer/testnet/tx/ab1e26422237e048468badf3dc3fe736a96c262f9ad6bd87e25b54979846c207) |
-| 15 | Create Account GDJRM37 | [TX](https://stellar.expert/explorer/testnet/tx/6c96a6b0af575fd839f17589a3eb74ee285dba923d1817f3ee681047eaa53809) |
-| 16 | Create Account GCCAPPJ | [TX](https://stellar.expert/explorer/testnet/tx/1f068e436e219dcdd04f1341d4032f4c543af8d9863e20ab2ecf7b9f7ebbc82b) |
-| 17 | Create Account GCAIHQ5 | [TX](https://stellar.expert/explorer/testnet/tx/61216815284e6de777fafc823b5b51ba8430273d0ba1fe8a59d66ebb770aaeec) |
-| 18 | Create Account GCYBZ3T | [TX](https://stellar.expert/explorer/testnet/tx/cb5f778bf71f65b6732cdb120d581a770043822b96c611dcd59d67c078f2d07f) |
-| 19 | Create Account GAWRO2M | [TX](https://stellar.expert/explorer/testnet/tx/63e3b7ea1779bf3079a19aa7e896efe878ab041f2173f6ff0e4e01c082a7e9e0) |
-| 20 | Create Account GANBJF7 | [TX](https://stellar.expert/explorer/testnet/tx/d665b5f3bf7e34a529fa54cd6ca707b4d445d308f3d1f587ba61797ec6f57f42) |
-| 21 | Create Account GAP4SDH | [TX](https://stellar.expert/explorer/testnet/tx/0c40753afdbe1d52cf5c18f6ef994a6b543f97f5b1fa24df1a4e898591cd2ccc) |
-| 22 | Create Account GDI6QPF | [TX](https://stellar.expert/explorer/testnet/tx/860e39e3cc0b6228b56e010516199340b4d7a1552ab4c38fadff909e6522d65d) |
-| 23 | Create Account GCRGSOW | [TX](https://stellar.expert/explorer/testnet/tx/dfd1ae10aef8a945ca3108919f5d489b9121ee87afb9a742e0187efbe5256732) |
-
-**Total verified: 23 on-chain transactions + 13 earlier = 36 wallet interactions across 20+ unique addresses.**
-
-## ⚫ Black Belt — Mainnet Launch
-
-> Target: Deploy AnchorFX on Stellar Mainnet with real users and ecosystem presence.
-
-### Required Funding
-- Mainnet account activation: ~1 XLM ($0.30)
-- Contract deployment (WASM upload + create): ~10-20 XLM ($3-6)
-- Estimated total: < $20 USD equivalent
-- Funded via: USDC → XLM swap on Stellar DEX
-
-### Checklist
-- [ ] Mainnet contract deployment
-- [ ] 20+ verified mainnet users
-- [ ] Smart contract audit or security review
-- [ ] Twitter/X launch post with demo
-- [ ] Community contribution (tutorial / blog / workshop)
-- [ ] 30+ meaningful commits
-- [ ] Advanced feature: fee sponsorship or multi-sig logic
-- [ ] Full technical documentation
