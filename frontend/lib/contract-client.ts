@@ -362,6 +362,7 @@ async function invokeContract(
   fnName: string,
   args: xdr.ScVal[],
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
   try {
     onStatus({ status: "building" });
@@ -384,6 +385,16 @@ async function invokeContract(
     const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.PUBLIC);
 
     onStatus({ status: "submitting" });
+    
+    if (sponsored) {
+      // Fee sponsorship: submit via API, admin pays the fee
+      const { sponsoredSubmit } = await import("./sponsor");
+      const sponsorResult = await sponsoredSubmit(signedTxXdr);
+      onStatus({ status: "pending", hash: sponsorResult.hash });
+      await pollTx(sponsorResult.hash, rpc);
+      return { status: "success", hash: sponsorResult.hash };
+    }
+
     const submitted = TransactionBuilder.fromXDR(signedTxXdr, Networks.PUBLIC);
     const result = await rpc.sendTransaction(submitted);
     if (result.status === "ERROR") {
@@ -463,6 +474,7 @@ export async function createEscrow(
   timeoutBlocks: number,
   corridor: number,
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
   const senderAddr = Address.fromString(sourcePublicKey);
   const receiverAddr = Address.fromString(receiver);
@@ -475,7 +487,7 @@ export async function createEscrow(
     scvI128(amount),
     scvU32(timeoutBlocks),
     scvU32(corridor),
-  ], onStatus);
+  ], onStatus, sponsored);
 }
 
 export async function counterpartyApprove(
@@ -484,8 +496,9 @@ export async function counterpartyApprove(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "counterparty_approve", [scvU64(escrowId)], onStatus);
+  return invokeContract(sourcePublicKey, walletType, contractId, "counterparty_approve", [scvU64(escrowId)], onStatus, sponsored);
 }
 
 export async function settleEscrow(
@@ -494,8 +507,9 @@ export async function settleEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "settle", [scvU64(escrowId)], onStatus);
+  return invokeContract(sourcePublicKey, walletType, contractId, "settle", [scvU64(escrowId)], onStatus, sponsored);
 }
 
 export async function refundEscrow(
@@ -504,8 +518,9 @@ export async function refundEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "refund", [scvU64(escrowId)], onStatus);
+  return invokeContract(sourcePublicKey, walletType, contractId, "refund", [scvU64(escrowId)], onStatus, sponsored);
 }
 
 export async function cancelEscrow(
@@ -514,6 +529,7 @@ export async function cancelEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
+  sponsored = false,
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "cancel", [scvU64(escrowId)], onStatus);
+  return invokeContract(sourcePublicKey, walletType, contractId, "cancel", [scvU64(escrowId)], onStatus, sponsored);
 }
