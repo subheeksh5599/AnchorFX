@@ -71,7 +71,7 @@ export default function WalletPage(): ReactNode {
     [destination, amount, send],
   );
 
-  const isTestnet = wallet.network === "TESTNET";
+  const isMainnet = wallet.network === "PUBLIC";
   const balanceNum = Number.parseFloat(balance);
 
   return (
@@ -97,7 +97,7 @@ export default function WalletPage(): ReactNode {
               Wallet
             </h1>
             <div className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-              Stellar Testnet · Freighter · xBull
+              Stellar {isMainnet ? "Mainnet" : "Testnet"} · Freighter · xBull
             </div>
           </div>
           <div className="flex items-end">
@@ -144,7 +144,7 @@ export default function WalletPage(): ReactNode {
             <div className="text-[10rem] leading-none font-black text-neutral-900 mb-8 select-none">◆</div>
             <h2 className="text-lg uppercase tracking-[0.3em] font-bold mb-6">Connect Wallet</h2>
             <p className="text-neutral-500 text-xs max-w-md mx-auto mb-10 leading-relaxed tracking-wide">
-              Choose a Stellar wallet to interact with AnchorFX on testnet.
+              Choose a Stellar wallet to interact with AnchorFX on mainnet.
               Install{" "}
               <a href="https://freighter.app" target="_blank" rel="noopener noreferrer" className="text-white hover:text-red-400 underline underline-offset-4">
                 Freighter
@@ -195,7 +195,7 @@ export default function WalletPage(): ReactNode {
               </div>
               <div>
                 <div className="text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-1">Network</div>
-                <div className={`text-sm uppercase tracking-wider ${isTestnet ? "text-amber-400" : "text-green-400"}`}>
+                <div className={`text-sm uppercase tracking-wider ${isMainnet ? "text-green-400" : "text-amber-400"}`}>
                   {wallet.network ?? "Unknown"}
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function WalletPage(): ReactNode {
                 </span>
                 <span className="text-lg font-bold uppercase text-neutral-600">XLM</span>
               </div>
-              {isTestnet && balanceNum === 0 && (
+              {!isMainnet && balanceNum === 0 && (
                 <a
                   href="https://laboratory.stellar.org/#account-creator?network=test"
                   target="_blank"
@@ -250,6 +250,11 @@ export default function WalletPage(): ReactNode {
                 >
                   Fund with Friendbot <ArrowUpRight className="h-3 w-3" />
                 </a>
+              )}
+              {isMainnet && balanceNum === 0 && (
+                <p className="mt-4 text-xs text-neutral-500 uppercase tracking-[0.2em]">
+                  Fund this account with XLM on mainnet to interact
+                </p>
               )}
             </div>
 
@@ -314,7 +319,7 @@ export default function WalletPage(): ReactNode {
                   </p>
                   {txResult.success && txResult.hash ? (
                     <a
-                      href={`https://stellar.expert/explorer/testnet/tx/${txResult.hash}`}
+                      href={`https://stellar.expert/explorer/public/tx/${txResult.hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs"

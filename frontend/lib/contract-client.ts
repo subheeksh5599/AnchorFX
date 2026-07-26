@@ -71,7 +71,7 @@ export async function deployContract(
 
     const uploadTx = new TransactionBuilder(sourceAccount, {
       fee: "1000000",
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(Operation.uploadContractWasm({ wasm: wasmBuffer }))
       .setTimeout(60)
@@ -89,12 +89,12 @@ export async function deployContract(
     const { signedTxXdr: uploadXdr } = await signSorobanTx(
       walletType,
       uploadPrep.toXDR(),
-      Networks.TESTNET
+      Networks.PUBLIC
     );
 
     onStatus({ status: "submitting" });
     const uploadResult = await rpc.sendTransaction(
-      TransactionBuilder.fromXDR(uploadXdr, Networks.TESTNET)
+      TransactionBuilder.fromXDR(uploadXdr, Networks.PUBLIC)
     );
     if (uploadResult.status === "ERROR") {
       return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
@@ -122,7 +122,7 @@ export async function deployContract(
 
     const createTx = new TransactionBuilder(account2, {
       fee: "100000",
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(
         Operation.createCustomContract({
@@ -140,12 +140,12 @@ export async function deployContract(
     const { signedTxXdr: createXdr } = await signSorobanTx(
       walletType,
       createPrep.toXDR(),
-      Networks.TESTNET
+      Networks.PUBLIC
     );
 
     onStatus({ status: "submitting" });
     const createResult = await rpc.sendTransaction(
-      TransactionBuilder.fromXDR(createXdr, Networks.TESTNET)
+      TransactionBuilder.fromXDR(createXdr, Networks.PUBLIC)
     );
 
     if (createResult.status === "ERROR") {
@@ -172,7 +172,7 @@ export async function deployContract(
       const invoker = new Contract(contractId);
       const initTx = new TransactionBuilder(account3, {
         fee: "100000",
-        networkPassphrase: Networks.TESTNET,
+        networkPassphrase: Networks.PUBLIC,
       })
         .addOperation(invoker.call("init", adminAddress.toScVal(), oracleAddress.toScVal()))
         .setTimeout(30)
@@ -182,11 +182,11 @@ export async function deployContract(
       const { signedTxXdr: initXdr } = await signSorobanTx(
         walletType,
         initPrep.toXDR(),
-        Networks.TESTNET
+        Networks.PUBLIC
       );
 
       const initResult = await rpc.sendTransaction(
-        TransactionBuilder.fromXDR(initXdr, Networks.TESTNET)
+        TransactionBuilder.fromXDR(initXdr, Networks.PUBLIC)
       );
 
       if (String(initResult.status) === "SUCCESS") {
@@ -220,7 +220,7 @@ export async function getEscrowFromContract(
 
     const tx = new TransactionBuilder(fakeAccount, {
       fee: "100",
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(contract.call("get_escrow", xdr.ScVal.scvU64(new xdr.Uint64(escrowId))))
       .setTimeout(30)
@@ -340,7 +340,7 @@ function scvU32(n: number): xdr.ScVal {
 }
 
 async function loadAccount(pub: string): Promise<Account> {
-  const server = new Horizon.Server("https://horizon-testnet.stellar.org");
+  const server = new Horizon.Server(HORIZON_URL);
   const resp = await server.loadAccount(pub);
   return new Account(resp.accountId(), resp.sequence);
 }
@@ -371,7 +371,7 @@ async function invokeContract(
 
     const tx = new TransactionBuilder(account, {
       fee: "1000000",
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(contract.call(fnName, ...args))
       .setTimeout(60)
@@ -381,10 +381,10 @@ async function invokeContract(
     const prep = await rpc.prepareTransaction(tx);
 
     onStatus({ status: "signing" });
-    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.TESTNET);
+    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.PUBLIC);
 
     onStatus({ status: "submitting" });
-    const submitted = TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET);
+    const submitted = TransactionBuilder.fromXDR(signedTxXdr, Networks.PUBLIC);
     const result = await rpc.sendTransaction(submitted);
     if (result.status === "ERROR") {
       const errStr = JSON.stringify(result.errorResult ?? "unknown");
@@ -423,7 +423,7 @@ export async function approveTokenTransfer(
 
     const tx = new TransactionBuilder(account, {
       fee: "1000000",
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(tokenContract.call("approve", senderAddr.toScVal(), spenderAddr.toScVal(), scvI128(amount), scvU32(expiry)))
       .setTimeout(60)
@@ -433,10 +433,10 @@ export async function approveTokenTransfer(
     const prep = await rpc.prepareTransaction(tx);
 
     onStatus({ status: "signing" });
-    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.TESTNET);
+    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.PUBLIC);
 
     onStatus({ status: "submitting" });
-    const result = await rpc.sendTransaction(TransactionBuilder.fromXDR(signedTxXdr, Networks.TESTNET));
+    const result = await rpc.sendTransaction(TransactionBuilder.fromXDR(signedTxXdr, Networks.PUBLIC));
     if (result.status === "ERROR") {
       const errStr = JSON.stringify(result.errorResult ?? "unknown");
       if (errStr.includes("tx_bad_auth")) {

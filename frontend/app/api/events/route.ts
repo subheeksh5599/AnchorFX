@@ -2,9 +2,9 @@ import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
 import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
 import { validateContractId } from "@/lib/validation";
 
-const RPC_URL = "https://soroban-testnet.stellar.org";
-// Contract ID default — use env var in production, testnet fallback for development
-const DEPLOYED_CONTRACT = process.env.CONTRACT_ID ?? "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26";
+const RPC_URL = "https://mainnet.sorobanrpc.com";
+// Contract ID default — set CONTRACT_ID env var for production
+const DEPLOYED_CONTRACT = process.env.CONTRACT_ID ?? "";
 
 interface ContractEvent {
   type: string;

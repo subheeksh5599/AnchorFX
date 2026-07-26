@@ -3,6 +3,7 @@
 import { ChevronRightIcon } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { NETWORK } from "@/lib/env";
 import type { ReactNode } from "react";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
@@ -116,11 +117,11 @@ export function Footer(): ReactNode {
           <div className="flex flex-col justify-between gap-8 lg:items-end lg:text-right">
             <motion.div className="space-y-6" {...fadeInUp} transition={{ ...fadeInUp.transition, delay: 0.1 }}>
               <div>
-                  <h4 className="mb-1 font-semibold">Stellar Testnet</h4>
+                  <h4 className="mb-1 font-semibold">Stellar {NETWORK === "PUBLIC" ? "Mainnet" : "Testnet"}</h4>
                 <p className="text-black/70">
                   Stellar Journey to Mastery
                   <br />
-                  Builder Track - Level 1
+                  Builder Track
                   <br />
                   Open source. Build anytime.
                 </p>

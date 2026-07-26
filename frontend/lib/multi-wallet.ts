@@ -163,7 +163,7 @@ export async function sendXLM(
 
     const transaction = new TransactionBuilder(sourceAccount, {
       fee: BASE_FEE,
-      networkPassphrase: Networks.TESTNET,
+      networkPassphrase: Networks.PUBLIC,
     })
       .addOperation(
         Operation.payment({
@@ -178,11 +178,11 @@ export async function sendXLM(
     const { signedTxXdr } = await signSorobanTx(
       walletType,
       transaction.toEnvelope().toXDR("base64"),
-      Networks.TESTNET
+      Networks.PUBLIC
     );
 
     const body = new URLSearchParams({ tx: signedTxXdr });
-    const response = await fetch("https://horizon-testnet.stellar.org/transactions", {
+    const response = await fetch("https://horizon.stellar.org/transactions", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
