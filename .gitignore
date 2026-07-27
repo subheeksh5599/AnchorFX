@@ -25,3 +25,4 @@ contracts/**/target/
 run-20-users.cjs
 run-rest.cjs
 simulate-users.cjs
+20-user-profiles.txt
