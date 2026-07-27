@@ -34,7 +34,7 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 ### Black Belt Checklist
 
 - [x] Mainnet contract deployment (oracle + escrow)
-- [ ] 20+ verified mainnet users (3 complete, 17 in progress — see [proof](frontend/20-users-mainnet-proof.txt))
+- [ ] 20+ verified mainnet users (5 complete, 15 pending — mainnet RPC congestion, see [proof](frontend/20-users-mainnet-proof.txt))
 - [x] Smart contract audit — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
 - [x] Twitter/X launch post with demo ([@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770))
 - [x] Community contribution — [dev.to blog](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)

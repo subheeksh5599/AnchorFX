@@ -1,5 +1,5 @@
-AnchorFX — 20 Mainnet Users (IN PROGRESS — 3 of 20 complete)
-============================================================
+AnchorFX — 20 Mainnet Users (5 of 20 complete)
+================================================
 
 Escrow: CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V
 Oracle: CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT
@@ -14,4 +14,10 @@ User 2 (GDSQS3LXP...):
 User 3 (GAWBA6GL...):
   Create: https://stellar.expert/explorer/public/tx/1eedfe37eb7a19b50fb66b3e712321f721b76b2c62dc3ef6788437e44c799c2a
 
-Users 4-20: PENDING (mainnet RPC congestion — txs submit but don't confirm)
+User 4 (GAMNRQ6...):
+  Create: https://stellar.expert/explorer/public/tx/3bfd01e96421754d02a76f43922fc0669869a12ddd1d8315e45b048d5ae60a5c
+
+User 5 (GCD7YP4...):
+  Create: https://stellar.expert/explorer/public/tx/b89d4e744a64848ca9e0b8d6eb8eee43bafe7fb7fc6f8fa68835dc241a0940f7
+
+Users 6-20: PENDING (mainnet Soroban RPC congestion — txs submit but don't confirm)
