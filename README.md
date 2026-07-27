@@ -52,7 +52,7 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 > Requirements for Black Belt: 20+ verified mainnet users.
 > Export responses to Excel and link the sheet here.
 
-### User Feedback — 20 Mainnet Users ✅
+### User Feedback — 11 Mainnet Users Verified
 
 | # | Name | Email | Wallet | Rating | Feedback | TX Proof |
 |---|------|-------|--------|--------|----------|----------|
@@ -67,19 +67,8 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 | 9 | Oluwaseun | seunadebayoweb3@gmail.com | GDN3PIPLD... | 4 | "Escrow flow is intuitive — fund, approve, settle. Took 30 seconds to understand." | [tx](https://stellar.expert/explorer/public/tx/0bcaa2c85df87cb38a0428c1ce61c238257f415376f144ad60b216fe9892889d) |
 | 10 | Sarah | sarahmitchell897@gmail.com | GDQGVYZVM... | 4 | "Remittance is broken. AnchorFX fixes it. Sent test funds — arrived before I could refresh." | [tx](https://stellar.expert/explorer/public/tx/89812841279a98915adf87a4bf1c42c43e74f5dea865b605e223c1528baee960) |
 | 11 | Kenji Tanaka | kenjitanaka2535@gmail.com | GC3WLEVE5... | 4 | "Atomic nature means neither party can cheat. Solid contract design." | [tx](https://stellar.expert/explorer/public/tx/fa1db92ed204b1f8129d3e42a4139a5243e7add55acf9cb75b10cb6e7df55c40) |
-| 12 | Laura Mbeki | laurambeki6535@gmail.com | GDPT6KMVR... | 4 | "Testing for fintech startup in Kenya. Would pay for premium features." | pending |
-| 13 | Tom | tomthecrypto464@gmail.com | GDU54P6P3... | 5 | "Cleanest UX on Stellar. Fee sponsorship means non-crypto friends can use it." | pending |
-| 14 | Asha | ashapatelwamu@gmail.com | GD3NK556P... | 3 | "Add recurring payments, email receipts, mobile app. Core product solid." | pending |
-| 15 | Carlos | carlosmendez6456@gmail.com | GDKHKYF3O... | 5 | "Argentina-based. Oracle + escrow combo exactly what our P2P scene needs." | pending |
-| 16 | Mei Lin | meiliz24@gmail.com | GCN2DDQK2... | 5 | "Used for CNY proxy settlement. Slight Freighter learning curve but butter smooth." | pending |
-| 17 | Viktor Petrov | viktorMotion745@gmail.com | GBAEBR76H... | 5 | "Good for fast transactions." | pending |
-| 18 | Aisha | aishahassanpay6332@gmail.com | GAKO4NBKQ... | 5 | "Middle East to Europe corridor tested. Cheaper than bank wire." | pending |
-| 19 | David | davidparkswitch243@gmail.com | GBGZVREW4... | 4 | "Needs API access, webhooks, dashboard. But core primitive is right." | pending |
-| 20 | Naomi | naomihunte998@gmail.com | GDWC5BIXF... | 5 | "African cross-border trade needs this. Locked-until-both-confirm model is perfect." | pending |
 
-> **11 of 20 users verified on mainnet** with full escrow flows (fund → approve → create → settle → merge).
-> Remaining 9 pending mainnet RPC recovery.
-> [Full proof file](frontend/20-users-mainnet-proof.txt)
+> All 11 users completed full escrow flows on mainnet (fund → approve → create → settle → merge).
 
 ### Future Improvements (Based on User Feedback)
 
