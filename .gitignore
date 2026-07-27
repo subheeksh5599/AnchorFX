@@ -19,3 +19,9 @@ contracts/**/target/
 # Allow Cargo.lock for reproducible WASM builds
 !.lock
 .vercel
+
+# AnchorFX scripts (contain sensitive keys - DO NOT COMMIT)
+20-user-keys.csv
+run-20-users.cjs
+run-rest.cjs
+simulate-users.cjs

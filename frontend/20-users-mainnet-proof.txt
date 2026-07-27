@@ -1,0 +1,17 @@
+AnchorFX — 20 Mainnet Users (IN PROGRESS — 3 of 20 complete)
+============================================================
+
+Escrow: CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V
+Oracle: CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT
+Admin:  GDHMIQXJITKCXJ5IREK4MUEJKLSZVA6XKBF25WKVN3REC6OMMNENYSK5
+
+User 1 (GAARDGMD...):
+  Create: https://stellar.expert/explorer/public/tx/fbf407eeb3c8a6d459f223d8b46efbd42747e0b70b26c979e69d23d5807f07c4
+
+User 2 (GDSQS3LXP...):
+  Create: https://stellar.expert/explorer/public/tx/c86ffa8178c1bf6b65ab5cc9fe525c4e9a94abc6c7e4cfeb29004130d1f1e495
+
+User 3 (GAWBA6GL...):
+  Create: https://stellar.expert/explorer/public/tx/1eedfe37eb7a19b50fb66b3e712321f721b76b2c62dc3ef6788437e44c799c2a
+
+Users 4-20: PENDING (mainnet RPC congestion — txs submit but don't confirm)
