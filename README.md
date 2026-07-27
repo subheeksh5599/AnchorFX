@@ -282,15 +282,10 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 
 ---
 
-## Community Contribution
+## Community Contribution ✅
 
-> One of the following required for Black Belt:
-- [ ] Technical blog post on building Soroban escrow contracts
-- [ ] Workshop/presentation at a Stellar chapter meetup
-- [ ] Tutorial on cross-contract calls with Soroban SDK v22
-- [ ] Open-source contribution to a Stellar ecosystem project
-
-**Link:** [dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
+- [x] **Technical blog**: "Building Atomic Cross-Border Settlement on Stellar"
+- **Link:** [dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
 
 ---
 
