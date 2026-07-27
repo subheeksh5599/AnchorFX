@@ -34,12 +34,12 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 ### Black Belt Checklist
 
 - [x] Mainnet contract deployment (oracle + escrow)
-- [ ] 20+ verified mainnet users (in progress — see below)
+- [ ] 20+ verified mainnet users (3 complete, 17 in progress — see [proof](frontend/20-users-mainnet-proof.txt))
 - [x] Smart contract audit — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
 - [x] Twitter/X launch post with demo ([@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770))
 - [x] Community contribution — [dev.to blog](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
 - [x] 30+ meaningful commits
-- [ ] Advanced feature: fee sponsorship or multi-sig logic
+- [x] Advanced feature: fee sponsorship ([code](frontend/app/api/sponsor/route.ts) + [client](frontend/lib/sponsor.ts))
 - [x] Full technical documentation
 
 ---
@@ -298,7 +298,7 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 
 > At least one required for Black Belt:
 
-- [ ] **Fee Sponsorship** — Gasless transactions using fee bump operations
+- [x] **Fee Sponsorship** — Gasless transactions using fee bump operations ([`/api/sponsor`](frontend/app/api/sponsor/route.ts))
 - [ ] **Cross-border Flows** — SEP-24/SEP-31 anchor integration (stubs exist in `/api/sep31/`)
 - [ ] **Multi-signature Logic** — Multi-party approval for settlement
 - [ ] **Account Abstraction** — Smart wallet with custom auth (CAP-0051)
