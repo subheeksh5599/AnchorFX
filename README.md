@@ -31,16 +31,50 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 | Escrow deploy | `4917db90...` | [stellar.expert](https://stellar.expert/explorer/public/tx/4917db909d407cf305da5f59290b9de86ba5093e7e744df70abaeca4645ac181) |
 | Escrow init | `a238c3a1...` | [stellar.expert](https://stellar.expert/explorer/public/tx/a238c3a116922cdaedd4d7dceffd94ad2060908787d39e6794b57f2e1ef90fc1) |
 
-### Black Belt Checklist
+## ⚫ Level 6 — Black Belt Submission Checklist
 
-- [x] Mainnet contract deployment (oracle + escrow)
-- [x] 20+ verified mainnet users (see [user feedback](#user-feedback--11-mainnet-users-verified) + [excel](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
+### Mainnet Deployment
+- [x] Smart contracts deployed on Stellar Mainnet
+  - Oracle: `CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT`
+  - Escrow: `CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V`
+- [x] Public production-ready application: [anchorfx.vercel.app](https://anchorfx.vercel.app)
+
+### Real Adoption
+- [x] 20+ verified mainnet users ([feedback table](#user-feedback--20-mainnet-users-verified))
+- [x] Real on-chain transaction activity ([explorer proof](frontend/20-users-mainnet-proof.txt))
+- [x] Google Form for user details ([responses excel](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
+
+### Security
 - [x] Smart contract audit — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
-- [x] Twitter/X launch post with demo ([@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770))
-- [x] Community contribution — [dev.to blog](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
-- [x] 30+ meaningful commits
-- [x] Advanced feature: fee sponsorship ([code](frontend/app/api/sponsor/route.ts) + [client](frontend/lib/sponsor.ts))
-- [x] Full technical documentation
+
+### Product Marketing
+- [x] Product launch post/thread on X: [@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770)
+- [x] Demo / showcase video: [@Tenki_ai](https://x.com/Tenki_ai/status/2081994208098050080)
+- [x] Stellar ecosystem tagged
+
+### Ecosystem Contribution
+- [x] Technical blog: [Building Atomic Cross-Border Settlement on Stellar](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
+
+### Technical Standards
+- [x] 30+ meaningful commits ([view history](https://github.com/subheeksh5599/AnchorFX/commits/main))
+- [x] Full documentation and production setup (this README + [docs/](docs/))
+
+### Advanced Feature
+- [x] Fee Sponsorship — gasless transactions via fee bump ([`/api/sponsor`](frontend/app/api/sponsor/route.ts))
+
+### Submission Links
+| Item | Link |
+|------|------|
+| Public GitHub repository | [github.com/subheeksh5599/AnchorFX](https://github.com/subheeksh5599/AnchorFX) |
+| Live mainnet application | [anchorfx.vercel.app](https://anchorfx.vercel.app) |
+| Mainnet escrow contract | [stellar.expert](https://stellar.expert/explorer/public/contract/CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V) |
+| Mainnet oracle contract | [stellar.expert](https://stellar.expert/explorer/public/contract/CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT) |
+| Proof of 20+ users | [explorer links](frontend/20-users-mainnet-proof.txt) |
+| Security audit | [SECURITY.md](docs/SECURITY.md) |
+| X launch post | [@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770) |
+| Demo video | [@Tenki_ai](https://x.com/Tenki_ai/status/2081994208098050080) |
+| Technical blog | [dev.to](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io) |
+| User feedback | [Excel sheet](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing) |
 
 ---
 
