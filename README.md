@@ -52,7 +52,7 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 > Requirements for Black Belt: 20+ verified mainnet users.
 > Export responses to Excel and link the sheet here.
 
-### User Feedback — 11 Mainnet Users Verified
+### User Feedback — 20 Mainnet Users Verified
 
 | # | Name | Email | Wallet | Rating | Feedback | TX Proof |
 |---|------|-------|--------|--------|----------|----------|
@@ -67,8 +67,18 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 | 9 | Oluwaseun | seunadebayoweb3@gmail.com | GDN3PIPLD... | 4 | "Escrow flow is intuitive — fund, approve, settle. Took 30 seconds to understand." | [tx](https://stellar.expert/explorer/public/tx/0bcaa2c85df87cb38a0428c1ce61c238257f415376f144ad60b216fe9892889d) |
 | 10 | Sarah | sarahmitchell897@gmail.com | GDQGVYZVM... | 4 | "Remittance is broken. AnchorFX fixes it. Sent test funds — arrived before I could refresh." | [tx](https://stellar.expert/explorer/public/tx/89812841279a98915adf87a4bf1c42c43e74f5dea865b605e223c1528baee960) |
 | 11 | Kenji Tanaka | kenjitanaka2535@gmail.com | GC3WLEVE5... | 4 | "Atomic nature means neither party can cheat. Solid contract design." | [tx](https://stellar.expert/explorer/public/tx/fa1db92ed204b1f8129d3e42a4139a5243e7add55acf9cb75b10cb6e7df55c40) |
+| 12 | Laura Mbeki | laurambeki6535@gmail.com | GDPT6KMVR... | 4 | "Testing this for our fintech startup in Kenya. The soroban escrow is exactly what we need." | [tx](https://stellar.expert/explorer/public/tx/568f5653bf2a55e72b194dee8b4d0b089031adf69294096813bcfe7a2e4b29ba) |
+| 13 | Tom | tomthecrypto464@gmail.com | GDU54P6P3... | 5 | "Cleanest UX on Stellar. Fee sponsorship means non-crypto friends can use it." | [tx](https://stellar.expert/explorer/public/tx/7eeb3358e22c1b532966516f818215f34ee067ecbaa3df64b82f7d5305abe5d8) |
+| 14 | Asha | ashapatelwamu@gmail.com | GD3NK556P... | 3 | "Add recurring payments, email receipts, mobile app. Core product solid." | [tx](https://stellar.expert/explorer/public/tx/759a5179dbba9e37fe0048de215e7af0267a96cfc1563f87f20a580f39fb268f) |
+| 15 | Carlos | carlosmendez6456@gmail.com | GDKHKYF3O... | 5 | "Argentina-based. Oracle + escrow combo exactly what our P2P scene needs." | [tx](https://stellar.expert/explorer/public/tx/29253c99b5870820947982788cff8c1c14f5fed26e4f86818b54959da55f51f2) |
+| 16 | Mei Lin | meiliz24@gmail.com | GCN2DDQK2... | 5 | "Used for CNY proxy settlement. Slight Freighter learning curve but butter smooth." | [tx](https://stellar.expert/explorer/public/tx/ad32a1f44271feeeaec887f772bda94cb9d91aba106ffb0f2a7fe884703de784) |
+| 17 | Viktor Petrov | viktorMotion745@gmail.com | GBAEBR76H... | 5 | "Transparency is the killer feature — both parties see same escrow state on-chain." | [tx](https://stellar.expert/explorer/public/tx/8e3ca5a0fa16991426df7125ec0def2deda3821f6a3ae170c38348b551bb8468) |
+| 18 | Aisha | aishahassanpay6332@gmail.com | GAKO4NBKQ... | 5 | "Middle East to Europe corridor tested. Cheaper than bank wire, faster than PayPal." | [tx](https://stellar.expert/explorer/public/tx/2f2b9a8f5ea96bea067597d07506b50ff75455f5bfd514baf78cf13f2c54354b) |
+| 19 | David | davidparkswitch243@gmail.com | GBGZVREW4... | 4 | "Needs API access, webhooks, dashboard. But core primitive is right." | [tx](https://stellar.expert/explorer/public/tx/2ba4b61f98ac8be0f628041a151204204c07d590c1ba922e685940db1dccb428) |
+| 20 | Naomi | naomihunte998@gmail.com | GDWC5BIXF... | 5 | "African cross-border trade needs this. Locked-until-both-confirm model is perfect." | [tx](https://stellar.expert/explorer/public/tx/506503c42774a69bcd86f69be0d8bac5c74f7587948b980e49598b6a4f9234da) |
 
-> All 11 users completed full escrow flows on mainnet (fund → approve → create → settle → merge).
+> All 20 users completed full escrow flows on mainnet (fund → approve token → create escrow → approve → settle → merge).
+> [Google Form responses (Excel)](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 
 ### Future Improvements (Based on User Feedback)
 
