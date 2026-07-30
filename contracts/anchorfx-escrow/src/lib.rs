@@ -123,7 +123,12 @@ impl AnchorFxEscrow {
     /// caller to invoke `init` is the admin.
     pub fn init(env: Env, admin: Address, oracle: Address) {
         admin.require_auth();
-        if env.storage().instance().get::<_, Address>(&ADMIN_KEY).is_some() {
+        if env
+            .storage()
+            .instance()
+            .get::<_, Address>(&ADMIN_KEY)
+            .is_some()
+        {
             panic_with_error!(&env, Error::AlreadyInitialized);
         }
         env.storage().instance().set(&ADMIN_KEY, &admin);
