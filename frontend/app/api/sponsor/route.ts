@@ -38,7 +38,9 @@ export async function POST(req: Request) {
 
     feeBumpTx.sign(adminKp);
 
-    const result = await rpc.sendTransaction(feeBumpTx as Parameters<typeof rpc.sendTransaction>[0]);
+    const result = await rpc.sendTransaction(
+      feeBumpTx as Parameters<typeof rpc.sendTransaction>[0]
+    );
 
     if (result.status === "ERROR") {
       return Response.json(
