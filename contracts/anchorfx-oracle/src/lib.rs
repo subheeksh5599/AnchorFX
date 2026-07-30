@@ -1,6 +1,9 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, contracttype, contracterror, symbol_short, panic_with_error, Address, Env, Map};
+use soroban_sdk::{
+    contract, contracterror, contractimpl, contracttype, panic_with_error, symbol_short, Address,
+    Env, Map,
+};
 
 #[contracttype]
 pub struct RateData {
@@ -44,7 +47,10 @@ impl AnchorFxOracle {
 
     /// Set exchange rate for a token (admin only)
     pub fn set_rate(env: Env, token: Address, rate: u64) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
 
@@ -59,53 +65,73 @@ impl AnchorFxOracle {
             expires_at: now + RATE_EXPIRY_LEDGERS,
         };
 
-        let mut rates: Map<Address, RateData> = env.storage().persistent()
+        let mut rates: Map<Address, RateData> = env
+            .storage()
+            .persistent()
             .get(&RATES_KEY)
             .unwrap_or_else(|| Map::new(&env));
         rates.set(token.clone(), data);
         env.storage().persistent().set(&RATES_KEY, &rates);
-        env.storage().persistent().extend_ttl(&RATES_KEY, RATES_TTL_THRESHOLD, RATES_TTL_EXTEND);
+        env.storage()
+            .persistent()
+            .extend_ttl(&RATES_KEY, RATES_TTL_THRESHOLD, RATES_TTL_EXTEND);
 
-        env.events().publish((symbol_short!("rate_set"),), (token, rate));
+        env.events()
+            .publish((symbol_short!("rate_set"),), (token, rate));
     }
 
     /// Remove a rate entry for a token (admin only)
     pub fn remove_rate(env: Env, token: Address) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
 
-        let mut rates: Map<Address, RateData> = env.storage().persistent()
+        let mut rates: Map<Address, RateData> = env
+            .storage()
+            .persistent()
             .get(&RATES_KEY)
             .unwrap_or_else(|| Map::new(&env));
         rates.remove(token.clone());
         env.storage().persistent().set(&RATES_KEY, &rates);
-        env.storage().persistent().extend_ttl(&RATES_KEY, RATES_TTL_THRESHOLD, RATES_TTL_EXTEND);
+        env.storage()
+            .persistent()
+            .extend_ttl(&RATES_KEY, RATES_TTL_THRESHOLD, RATES_TTL_EXTEND);
 
         env.events().publish((symbol_short!("rate_rem"),), token);
     }
 
     /// Transfer admin authority (current admin only)
     pub fn transfer_admin(env: Env, new_admin: Address) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         env.storage().instance().set(&ADMIN_KEY, &new_admin);
-        env.events().publish((symbol_short!("admin_xfr"),), (admin, new_admin));
+        env.events()
+            .publish((symbol_short!("admin_xfr"),), (admin, new_admin));
     }
 
     /// Get current rate for a token (reverts if stale)
     pub fn get_rate(env: Env, token: Address) -> u64 {
-        let rates: Map<Address, RateData> = env.storage().persistent()
+        let rates: Map<Address, RateData> = env
+            .storage()
+            .persistent()
             .get(&RATES_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NoRatesConfigured));
 
-        let data = rates.get(token.clone())
+        let data = rates
+            .get(token.clone())
             .unwrap_or_else(|| panic_with_error!(&env, Error::RateNotFound));
 
         let now = env.ledger().sequence();
         if now > data.expires_at {
-            env.events().publish((symbol_short!("rate_exp"),), (token, data.rate, now));
+            env.events()
+                .publish((symbol_short!("rate_exp"),), (token, data.rate, now));
             panic_with_error!(&env, Error::RateExpired);
         }
 
@@ -126,11 +152,15 @@ impl AnchorFxOracle {
     }
 
     pub fn admin(env: Env) -> Address {
-        env.storage().instance().get(&ADMIN_KEY)
+        env.storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized))
     }
 
-    pub fn version() -> u32 { 2 }
+    pub fn version() -> u32 {
+        2
+    }
 }
 
 #[cfg(test)]

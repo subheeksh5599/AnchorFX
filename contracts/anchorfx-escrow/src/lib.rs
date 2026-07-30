@@ -1,6 +1,9 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, contracttype, contracterror, symbol_short, panic_with_error, Address, Env, Map, Vec};
+use soroban_sdk::{
+    contract, contracterror, contractimpl, contracttype, panic_with_error, symbol_short, Address,
+    Env, Map, Vec,
+};
 
 // ── Constants ────────────────────────────────────────────────────────
 const FX_RATE_DENOMINATOR: i128 = 100_000;
@@ -75,9 +78,7 @@ const ESCROW_PREFIX: soroban_sdk::Symbol = symbol_short!("ESCROW_");
 // ── Oracle Interface (cross-contract) ─────────────────────────────
 
 mod oracle {
-    soroban_sdk::contractimport!(
-        file = "../../contracts/anchorfx-escrow/src/oracle.wasm"
-    );
+    soroban_sdk::contractimport!(file = "../../contracts/anchorfx-escrow/src/oracle.wasm");
 }
 
 // ── Per-Escrow Storage Helpers ────────────────────────────────────
@@ -94,7 +95,9 @@ fn get_escrow(env: &Env, id: u64) -> Option<Escrow> {
 fn set_escrow(env: &Env, id: u64, escrow: &Escrow) {
     let key = escrow_key(id);
     env.storage().persistent().set(&key, escrow);
-    env.storage().persistent().extend_ttl(&key, ESCROW_TTL_THRESHOLD, ESCROW_TTL_EXTEND);
+    env.storage()
+        .persistent()
+        .extend_ttl(&key, ESCROW_TTL_THRESHOLD, ESCROW_TTL_EXTEND);
 }
 
 fn del_escrow(_env: &Env, _id: u64) {
@@ -104,8 +107,7 @@ fn del_escrow(_env: &Env, _id: u64) {
 /// Validate and transfer tokens from `from` to `to` with amount `amount`.
 /// Returns Ok(()) on success or Err with TransferFailed.
 fn safe_transfer(env: &Env, token: &Address, from: &Address, to: &Address, amount: &i128) {
-    soroban_sdk::token::Client::new(env, token)
-        .transfer(from, to, amount);
+    soroban_sdk::token::Client::new(env, token).transfer(from, to, amount);
 }
 
 // ── Contract ──────────────────────────────────────────────────────
@@ -126,27 +128,37 @@ impl AnchorFxEscrow {
         env.storage().instance().set(&ADMIN_KEY, &admin);
         env.storage().instance().set(&ORACLE_KEY, &oracle);
         env.storage().instance().set(&PAUSED_KEY, &false);
-        env.events().publish((symbol_short!("init"),), (admin, oracle));
+        env.events()
+            .publish((symbol_short!("init"),), (admin, oracle));
     }
 
     /// Retrieve admin address
     pub fn admin(env: Env) -> Address {
-        env.storage().instance().get(&ADMIN_KEY)
+        env.storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized))
     }
 
     /// Transfer admin authority to a new address (current admin only)
     pub fn transfer_admin(env: Env, new_admin: Address) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         env.storage().instance().set(&ADMIN_KEY, &new_admin);
-        env.events().publish((symbol_short!("admin_xfr"),), (admin, new_admin));
+        env.events()
+            .publish((symbol_short!("admin_xfr"),), (admin, new_admin));
     }
 
     /// Update the FX rate oracle address (admin only)
     pub fn set_oracle(env: Env, oracle: Address) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         let old_oracle: Address = env.storage().instance().get(&ORACLE_KEY).unwrap();
@@ -159,7 +171,10 @@ impl AnchorFxEscrow {
 
     /// Pause all escrow operations (admin only)
     pub fn pause(env: Env) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         env.storage().instance().set(&PAUSED_KEY, &true);
@@ -168,7 +183,10 @@ impl AnchorFxEscrow {
 
     /// Resume escrow operations (admin only)
     pub fn unpause(env: Env) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         env.storage().instance().set(&PAUSED_KEY, &false);
@@ -215,7 +233,10 @@ impl AnchorFxEscrow {
         let mut counter: u64 = env.storage().instance().get(&COUNTER_KEY).unwrap_or(0);
         counter += 1;
 
-        let oracle_addr: Address = env.storage().instance().get(&ORACLE_KEY)
+        let oracle_addr: Address = env
+            .storage()
+            .instance()
+            .get(&ORACLE_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         let oracle_client = oracle::Client::new(&env, &oracle_addr);
         let fx_rate = oracle_client.get_rate(&token);
@@ -223,7 +244,10 @@ impl AnchorFxEscrow {
             panic_with_error!(&env, Error::InvalidRate);
         }
 
-        let timeout_ledger = env.ledger().sequence().checked_add(timeout_blocks)
+        let timeout_ledger = env
+            .ledger()
+            .sequence()
+            .checked_add(timeout_blocks)
             .unwrap_or_else(|| panic_with_error!(&env, Error::InvalidTimeout));
 
         let escrow = Escrow {
@@ -248,7 +272,13 @@ impl AnchorFxEscrow {
         env.storage().instance().set(&COUNTER_KEY, &counter);
 
         // Transfer tokens into contract
-        safe_transfer(&env, &token, &sender, &env.current_contract_address(), &amount);
+        safe_transfer(
+            &env,
+            &token,
+            &sender,
+            &env.current_contract_address(),
+            &amount,
+        );
 
         env.events().publish(
             (symbol_short!("created"),),
@@ -284,7 +314,10 @@ impl AnchorFxEscrow {
 
     /// Admin finalizes settlement. Applies locked FX rate.
     pub fn settle(env: Env, escrow_id: u64) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
         Self::check_not_paused(&env);
@@ -297,7 +330,8 @@ impl AnchorFxEscrow {
         }
 
         let fx_rate = escrow.fx_rate as i128;
-        let settled = escrow.amount
+        let settled = escrow
+            .amount
             .checked_mul(fx_rate)
             .and_then(|v| v.checked_div(FX_RATE_DENOMINATOR))
             .unwrap_or_else(|| panic_with_error!(&env, Error::FxComputationOverflow));
@@ -310,11 +344,24 @@ impl AnchorFxEscrow {
         escrow.settled_at = env.ledger().sequence();
         set_escrow(&env, escrow_id, &escrow);
 
-        safe_transfer(&env, &escrow.token, &env.current_contract_address(), &receiver, &settled);
+        safe_transfer(
+            &env,
+            &escrow.token,
+            &env.current_contract_address(),
+            &receiver,
+            &settled,
+        );
 
         env.events().publish(
             (symbol_short!("settled"),),
-            (escrow_id, receiver, source_amount, settled, fx_rate as u64, env.ledger().sequence()),
+            (
+                escrow_id,
+                receiver,
+                source_amount,
+                settled,
+                fx_rate as u64,
+                env.ledger().sequence(),
+            ),
         );
     }
 
@@ -325,7 +372,9 @@ impl AnchorFxEscrow {
 
         escrow.sender.require_auth();
 
-        if escrow.status != EscrowStatus::Created && escrow.status != EscrowStatus::CounterpartyApproved {
+        if escrow.status != EscrowStatus::Created
+            && escrow.status != EscrowStatus::CounterpartyApproved
+        {
             panic_with_error!(&env, Error::NotInRefundableState);
         }
         if env.ledger().sequence() < escrow.timeout_ledger {
@@ -339,24 +388,33 @@ impl AnchorFxEscrow {
         escrow.status = EscrowStatus::Refunded;
         set_escrow(&env, escrow_id, &escrow);
 
-        safe_transfer(&env, &escrow.token, &env.current_contract_address(), &sender, &amount);
-
-        env.events().publish(
-            (symbol_short!("refunded"),),
-            (escrow_id, sender, amount),
+        safe_transfer(
+            &env,
+            &escrow.token,
+            &env.current_contract_address(),
+            &sender,
+            &amount,
         );
+
+        env.events()
+            .publish((symbol_short!("refunded"),), (escrow_id, sender, amount));
     }
 
     /// Admin cancels an escrow (refunds to sender)
     pub fn cancel(env: Env, escrow_id: u64) {
-        let admin: Address = env.storage().instance().get(&ADMIN_KEY)
+        let admin: Address = env
+            .storage()
+            .instance()
+            .get(&ADMIN_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized));
         admin.require_auth();
 
         let mut escrow = get_escrow(&env, escrow_id)
             .unwrap_or_else(|| panic_with_error!(&env, Error::EscrowNotFound));
 
-        if escrow.status != EscrowStatus::Created && escrow.status != EscrowStatus::CounterpartyApproved {
+        if escrow.status != EscrowStatus::Created
+            && escrow.status != EscrowStatus::CounterpartyApproved
+        {
             panic_with_error!(&env, Error::AlreadyResolved);
         }
 
@@ -368,7 +426,13 @@ impl AnchorFxEscrow {
         escrow.cancelled_by = Some(admin.clone());
         set_escrow(&env, escrow_id, &escrow);
 
-        safe_transfer(&env, &escrow.token, &env.current_contract_address(), &sender, &amount);
+        safe_transfer(
+            &env,
+            &escrow.token,
+            &env.current_contract_address(),
+            &sender,
+            &amount,
+        );
 
         env.events().publish(
             (symbol_short!("cancelled"),),
@@ -393,7 +457,10 @@ impl AnchorFxEscrow {
             return ids;
         }
         let begin = core::cmp::max(start, 1);
-        let end = core::cmp::min(begin.saturating_add(core::cmp::min(limit, 1000)), count.saturating_add(1));
+        let end = core::cmp::min(
+            begin.saturating_add(core::cmp::min(limit, 1000)),
+            count.saturating_add(1),
+        );
         for id in begin..end {
             ids.push_back(id);
         }
@@ -412,11 +479,15 @@ impl AnchorFxEscrow {
     }
 
     pub fn get_oracle(env: Env) -> Address {
-        env.storage().instance().get(&ORACLE_KEY)
+        env.storage()
+            .instance()
+            .get(&ORACLE_KEY)
             .unwrap_or_else(|| panic_with_error!(&env, Error::NotInitialized))
     }
 
-    pub fn version() -> u32 { CONTRACT_VERSION }
+    pub fn version() -> u32 {
+        CONTRACT_VERSION
+    }
 }
 
 // ── Tests ──────────────────────────────────────────────────────────
@@ -424,7 +495,10 @@ impl AnchorFxEscrow {
 #[cfg(test)]
 mod test {
     use super::*;
-    use soroban_sdk::{testutils::{Address as _, Ledger}, Address, Env};
+    use soroban_sdk::{
+        testutils::{Address as _, Ledger},
+        Address, Env,
+    };
 
     fn create_sac(env: &Env, admin: &Address) -> Address {
         let sac = env.register_stellar_asset_contract_v2(admin.clone());
@@ -498,10 +572,16 @@ mod test {
         assert_eq!(escrow.fx_rate, 95000);
 
         client.counterparty_approve(&id);
-        assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::CounterpartyApproved);
+        assert_eq!(
+            client.get_escrow(&id).unwrap().status,
+            EscrowStatus::CounterpartyApproved
+        );
 
         client.settle(&id);
-        assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::Settled);
+        assert_eq!(
+            client.get_escrow(&id).unwrap().status,
+            EscrowStatus::Settled
+        );
         assert_eq!(client.escrow_count(), 1);
     }
 
@@ -546,7 +626,10 @@ mod test {
         let after = soroban_sdk::token::Client::new(&env, &token).balance(&receiver);
         let received = after - before;
         let expected = deposit * 50000 / FX_RATE_DENOMINATOR;
-        assert_eq!(received, expected, "FX rate 0.5x should settle 1000 from 2000 deposit");
+        assert_eq!(
+            received, expected,
+            "FX rate 0.5x should settle 1000 from 2000 deposit"
+        );
         assert_eq!(client.get_escrow(&1).unwrap().status, EscrowStatus::Settled);
     }
 
@@ -587,9 +670,13 @@ mod test {
         let client = AnchorFxEscrowClient::new(&env, &contract_id);
         client.init(&admin, &oracle_id);
         let id = client.create_escrow(&admin, &receiver, &token, &2000_i128, &5_u32, &1_u32);
-        env.ledger().set_sequence_number(env.ledger().sequence() + 10);
+        env.ledger()
+            .set_sequence_number(env.ledger().sequence() + 10);
         client.refund(&id);
-        assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::Refunded);
+        assert_eq!(
+            client.get_escrow(&id).unwrap().status,
+            EscrowStatus::Refunded
+        );
     }
 
     #[test]
@@ -648,7 +735,10 @@ mod test {
         client.init(&admin, &oracle_id);
         let id = client.create_escrow(&admin, &receiver, &token, &750_i128, &100_u32, &1_u32);
         client.cancel(&id);
-        assert_eq!(client.get_escrow(&id).unwrap().status, EscrowStatus::Cancelled);
+        assert_eq!(
+            client.get_escrow(&id).unwrap().status,
+            EscrowStatus::Cancelled
+        );
     }
 
     #[test]
@@ -754,10 +844,21 @@ mod test {
         client.init(&admin, &oracle_id);
         for n in 1..=5 {
             let before = client.escrow_count();
-            let id = client.create_escrow(&admin, &receiver, &token, &(n * 1000_i128), &100_u32, &(n as u32));
+            let id = client.create_escrow(
+                &admin,
+                &receiver,
+                &token,
+                &(n * 1000_i128),
+                &100_u32,
+                &(n as u32),
+            );
             let after = client.escrow_count();
             assert_eq!(id, n as u64, "IDs must be sequential starting at 1");
-            assert_eq!(after, before + 1, "Counter must increase by exactly 1 per create");
+            assert_eq!(
+                after,
+                before + 1,
+                "Counter must increase by exactly 1 per create"
+            );
         }
     }
 
@@ -782,8 +883,13 @@ mod test {
         client.settle(&1);
         let after = soroban_sdk::token::Client::new(&env, &token).balance(&receiver);
         let expected = deposit * 95000 / FX_RATE_DENOMINATOR;
-        assert_eq!(after - before, expected,
-            "Invariant violated: receiver should receive deposit x fx_rate ({} x 0.95 = {})", deposit, expected);
+        assert_eq!(
+            after - before,
+            expected,
+            "Invariant violated: receiver should receive deposit x fx_rate ({} x 0.95 = {})",
+            deposit,
+            expected
+        );
         assert_eq!(client.get_escrow(&1).unwrap().status, EscrowStatus::Settled);
     }
 
@@ -806,7 +912,10 @@ mod test {
         client.settle(&1);
         for _ in 0..3 {
             let r = client.try_settle(&1);
-            assert!(r.is_err(), "Invariant violated: double-settle must always fail");
+            assert!(
+                r.is_err(),
+                "Invariant violated: double-settle must always fail"
+            );
         }
     }
 
@@ -826,11 +935,17 @@ mod test {
         client.init(&admin, &oracle_id);
         client.create_escrow(&admin, &receiver, &token, &500_i128, &100_u32, &1_u32);
         client.cancel(&1);
-        assert_eq!(client.get_escrow(&1).unwrap().status, EscrowStatus::Cancelled);
+        assert_eq!(
+            client.get_escrow(&1).unwrap().status,
+            EscrowStatus::Cancelled
+        );
         assert!(client.try_settle(&1).is_err());
         assert!(client.try_refund(&1).is_err());
         assert!(client.try_cancel(&1).is_err());
-        assert_eq!(client.get_escrow(&1).unwrap().status, EscrowStatus::Cancelled);
+        assert_eq!(
+            client.get_escrow(&1).unwrap().status,
+            EscrowStatus::Cancelled
+        );
     }
 
     #[test]
@@ -879,9 +994,15 @@ mod test {
         let c3 = client.escrow_count();
         client.cancel(&2);
         let c4 = client.escrow_count();
-        assert!(c0 <= c1 && c1 <= c2 && c2 <= c3 && c3 <= c4,
+        assert!(
+            c0 <= c1 && c1 <= c2 && c2 <= c3 && c3 <= c4,
             "Invariant violated: escrow_count() decreased ({} -> {} -> {} -> {} -> {})",
-            c0, c1, c2, c3, c4);
+            c0,
+            c1,
+            c2,
+            c3,
+            c4
+        );
     }
 
     #[test]
@@ -901,7 +1022,11 @@ mod test {
         for corridor in 1..=5_u32 {
             let id = client.create_escrow(&admin, &receiver, &token, &50_i128, &100_u32, &corridor);
             let escrow = client.get_escrow(&id).unwrap();
-            assert_eq!(escrow.corridor, corridor, "Property violated: corridor {} not preserved", corridor);
+            assert_eq!(
+                escrow.corridor, corridor,
+                "Property violated: corridor {} not preserved",
+                corridor
+            );
             assert_eq!(escrow.status, EscrowStatus::Created);
         }
     }
@@ -932,27 +1057,43 @@ mod test {
                     let amount = ((step as i128 + 1) * 1000) % 100000 + 100;
                     let timeout = (step as u32 * 10) % 5000 + 100;
                     let corridor = ((step % 5) + 1) as u32;
-                    let id = client.create_escrow(&admin, &receiver, &token, &amount, &timeout, &corridor);
+                    let id = client
+                        .create_escrow(&admin, &receiver, &token, &amount, &timeout, &corridor);
                     expected_count += 1;
                     escrow_ids.push_back(id);
                     let e = client.get_escrow(&id).unwrap();
                     assert_eq!(e.sender, admin, "Fuzz: sender mismatch");
-                    assert_eq!(e.status, EscrowStatus::Created, "Fuzz: new escrow not Created");
-                    assert_eq!(client.escrow_count(), expected_count, "Fuzz: counter mismatch");
+                    assert_eq!(
+                        e.status,
+                        EscrowStatus::Created,
+                        "Fuzz: new escrow not Created"
+                    );
+                    assert_eq!(
+                        client.escrow_count(),
+                        expected_count,
+                        "Fuzz: counter mismatch"
+                    );
                 }
                 1 | 2 => {
                     let mut found: Option<u64> = None;
                     for i in 0..escrow_ids.len() {
                         let id = escrow_ids.get(i).unwrap();
                         if let Some(e) = client.get_escrow(&id) {
-                            if e.status == EscrowStatus::Created { found = Some(id); break; }
+                            if e.status == EscrowStatus::Created {
+                                found = Some(id);
+                                break;
+                            }
                         }
                     }
                     if let Some(id) = found {
                         client.counterparty_approve(&id);
                         client.settle(&id);
                         let settled = client.get_escrow(&id).unwrap();
-                        assert_eq!(settled.status, EscrowStatus::Settled, "Fuzz: settle didn't transition");
+                        assert_eq!(
+                            settled.status,
+                            EscrowStatus::Settled,
+                            "Fuzz: settle didn't transition"
+                        );
                         assert!(client.try_settle(&id).is_err());
                         assert!(client.try_refund(&id).is_err());
                         assert!(client.try_cancel(&id).is_err());
@@ -963,20 +1104,38 @@ mod test {
                     for i in 0..escrow_ids.len() {
                         let id = escrow_ids.get(i).unwrap();
                         if let Some(e) = client.get_escrow(&id) {
-                            if e.status == EscrowStatus::Created { found = Some(id); break; }
+                            if e.status == EscrowStatus::Created {
+                                found = Some(id);
+                                break;
+                            }
                         }
                     }
                     if let Some(id) = found {
                         client.cancel(&id);
                         let cancelled = client.get_escrow(&id).unwrap();
-                        assert_eq!(cancelled.status, EscrowStatus::Cancelled, "Fuzz: cancel didn't transition");
-                        assert!(client.try_settle(&id).is_err(), "Fuzz: cancelled escrow accepted settle");
-                        assert!(client.try_cancel(&id).is_err(), "Fuzz: cancelled escrow accepted cancel");
+                        assert_eq!(
+                            cancelled.status,
+                            EscrowStatus::Cancelled,
+                            "Fuzz: cancel didn't transition"
+                        );
+                        assert!(
+                            client.try_settle(&id).is_err(),
+                            "Fuzz: cancelled escrow accepted settle"
+                        );
+                        assert!(
+                            client.try_cancel(&id).is_err(),
+                            "Fuzz: cancelled escrow accepted cancel"
+                        );
                     }
                 }
                 4 => {
                     let current = client.escrow_count();
-                    assert!(current >= expected_count, "Fuzz: counter decreased from {} to {}", expected_count, current);
+                    assert!(
+                        current >= expected_count,
+                        "Fuzz: counter decreased from {} to {}",
+                        expected_count,
+                        current
+                    );
                 }
                 _ => {}
             }
@@ -986,10 +1145,17 @@ mod test {
             let id = list.get(i).unwrap();
             let e = client.get_escrow(&id).unwrap();
             match e.status {
-                EscrowStatus::Created | EscrowStatus::CounterpartyApproved |
-                EscrowStatus::Settled | EscrowStatus::Refunded | EscrowStatus::Cancelled => {}
+                EscrowStatus::Created
+                | EscrowStatus::CounterpartyApproved
+                | EscrowStatus::Settled
+                | EscrowStatus::Refunded
+                | EscrowStatus::Cancelled => {}
             }
         }
-        assert_eq!(client.escrow_count(), expected_count, "Fuzz: final counter mismatch");
+        assert_eq!(
+            client.escrow_count(),
+            expected_count,
+            "Fuzz: final counter mismatch"
+        );
     }
 }
