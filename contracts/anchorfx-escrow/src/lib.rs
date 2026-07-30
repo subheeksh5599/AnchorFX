@@ -100,6 +100,7 @@ fn set_escrow(env: &Env, id: u64, escrow: &Escrow) {
         .extend_ttl(&key, ESCROW_TTL_THRESHOLD, ESCROW_TTL_EXTEND);
 }
 
+#[allow(dead_code)]
 fn del_escrow(_env: &Env, _id: u64) {
     // Reserved for future use — escrow data cleanup after settlement
 }
@@ -122,7 +123,7 @@ impl AnchorFxEscrow {
     /// caller to invoke `init` is the admin.
     pub fn init(env: Env, admin: Address, oracle: Address) {
         admin.require_auth();
-        if let Some(_) = env.storage().instance().get::<_, Address>(&ADMIN_KEY) {
+        if env.storage().instance().get::<_, Address>(&ADMIN_KEY).is_some() {
             panic_with_error!(&env, Error::AlreadyInitialized);
         }
         env.storage().instance().set(&ADMIN_KEY, &admin);
