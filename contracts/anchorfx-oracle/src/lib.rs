@@ -38,7 +38,12 @@ pub struct AnchorFxOracle;
 impl AnchorFxOracle {
     pub fn init(env: Env, admin: Address) {
         admin.require_auth();
-        if let Some(_) = env.storage().instance().get::<_, Address>(&ADMIN_KEY) {
+        if env
+            .storage()
+            .instance()
+            .get::<_, Address>(&ADMIN_KEY)
+            .is_some()
+        {
             panic_with_error!(&env, Error::AlreadyInitialized);
         }
         env.storage().instance().set(&ADMIN_KEY, &admin);
