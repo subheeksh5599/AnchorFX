@@ -17,7 +17,8 @@ export interface ValidationResult {
 
 interface SchemaField {
   name: string;
-  type: "stellarAddress" | "contractId" | "stellarSecret" | "xlmAmount" | "string";
+  type:
+    "stellarAddress" | "contractId" | "stellarSecret" | "xlmAmount" | "string";
   required?: boolean;
   maxLength?: number;
   min?: number;
@@ -26,44 +27,72 @@ interface SchemaField {
 
 // OWASP: Validate Stellar public key format (G-address, base32, 56 chars)
 export function validateStellarAddress(input: unknown): ValidationResult {
-  if (typeof input !== "string") return { valid: false, error: "Address must be a string" };
+  if (typeof input !== "string")
+    return { valid: false, error: "Address must be a string" };
   const trimmed = input.trim();
-  if (trimmed.length === 0) return { valid: false, error: "Address is required" };
+  if (trimmed.length === 0)
+    return { valid: false, error: "Address is required" };
   if (trimmed.length > MAX_ADDRESS_LEN)
-    return { valid: false, error: `Address too long (max ${MAX_ADDRESS_LEN} chars)` };
+    return {
+      valid: false,
+      error: `Address too long (max ${MAX_ADDRESS_LEN} chars)`,
+    };
   if (!STELLAR_PUBLIC_KEY_RE.test(trimmed))
-    return { valid: false, error: "Invalid Stellar address format (must start with G, 56 chars, base32)" };
+    return {
+      valid: false,
+      error:
+        "Invalid Stellar address format (must start with G, 56 chars, base32)",
+    };
   return { valid: true, sanitized: trimmed };
 }
 
 // OWASP: Validate Soroban contract ID format (C-address, hex)
 export function validateContractId(input: unknown): ValidationResult {
-  if (typeof input !== "string") return { valid: false, error: "Contract ID must be a string" };
+  if (typeof input !== "string")
+    return { valid: false, error: "Contract ID must be a string" };
   const trimmed = input.trim();
-  if (trimmed.length === 0) return { valid: false, error: "Contract ID is required" };
+  if (trimmed.length === 0)
+    return { valid: false, error: "Contract ID is required" };
   if (trimmed.length > MAX_CONTRACT_ID_LEN)
-    return { valid: false, error: `Contract ID too long (max ${MAX_CONTRACT_ID_LEN} chars)` };
+    return {
+      valid: false,
+      error: `Contract ID too long (max ${MAX_CONTRACT_ID_LEN} chars)`,
+    };
   if (!SOROBAN_CONTRACT_ID_RE.test(trimmed))
-    return { valid: false, error: "Invalid Soroban contract ID format (must start with C, 56 chars)" };
+    return {
+      valid: false,
+      error: "Invalid Soroban contract ID format (must start with C, 56 chars)",
+    };
   return { valid: true, sanitized: trimmed };
 }
 
 // OWASP: Validate XLM amount — numeric, within bounds, sensible precision
 export function validateXlmAmount(input: unknown): ValidationResult {
-  if (input === undefined || input === null) return { valid: false, error: "Amount is required" };
+  if (input === undefined || input === null)
+    return { valid: false, error: "Amount is required" };
   const str = typeof input === "string" ? input : String(input);
   const trimmed = str.trim();
-  if (trimmed.length === 0) return { valid: false, error: "Amount is required" };
+  if (trimmed.length === 0)
+    return { valid: false, error: "Amount is required" };
   if (trimmed.length > MAX_AMOUNT_STR_LEN)
-    return { valid: false, error: `Amount too long (max ${MAX_AMOUNT_STR_LEN} chars)` };
+    return {
+      valid: false,
+      error: `Amount too long (max ${MAX_AMOUNT_STR_LEN} chars)`,
+    };
 
   const num = Number.parseFloat(trimmed);
   if (Number.isNaN(num) || !Number.isFinite(num))
     return { valid: false, error: "Amount must be a valid number" };
   if (num < MIN_AMOUNT_XLM)
-    return { valid: false, error: `Amount must be at least ${MIN_AMOUNT_XLM} XLM` };
+    return {
+      valid: false,
+      error: `Amount must be at least ${MIN_AMOUNT_XLM} XLM`,
+    };
   if (num > MAX_AMOUNT_XLM)
-    return { valid: false, error: `Amount exceeds maximum allowed (${MAX_AMOUNT_XLM} XLM)` };
+    return {
+      valid: false,
+      error: `Amount exceeds maximum allowed (${MAX_AMOUNT_XLM} XLM)`,
+    };
 
   // reject scientific notation and non-numeric characters
   if (!/^\d+(\.\d+)?$/.test(trimmed))
@@ -75,9 +104,10 @@ export function validateXlmAmount(input: unknown): ValidationResult {
 // OWASP: Validate a generic string field
 export function validateString(
   input: unknown,
-  maxLength: number = 256,
+  maxLength: number = 256
 ): ValidationResult {
-  if (typeof input !== "string") return { valid: false, error: "Must be a string" };
+  if (typeof input !== "string")
+    return { valid: false, error: "Must be a string" };
   const trimmed = input.trim();
   if (trimmed.length === 0) return { valid: false, error: "Field is required" };
   if (trimmed.length > maxLength)
@@ -88,13 +118,21 @@ export function validateString(
 // OWASP: Strict schema validation — rejects unexpected fields
 export function validateSchema(
   data: unknown,
-  schema: SchemaField[],
-): { valid: boolean; errors: Record<string, string>; sanitized: Record<string, string> } {
+  schema: SchemaField[]
+): {
+  valid: boolean;
+  errors: Record<string, string>;
+  sanitized: Record<string, string>;
+} {
   const errors: Record<string, string> = {};
   const sanitized: Record<string, string> = {};
 
   if (typeof data !== "object" || data === null || Array.isArray(data)) {
-    return { valid: false, errors: { _root: "Request body must be a JSON object" }, sanitized: {} };
+    return {
+      valid: false,
+      errors: { _root: "Request body must be a JSON object" },
+      sanitized: {},
+    };
   }
 
   const obj = data as Record<string, unknown>;
@@ -110,7 +148,12 @@ export function validateSchema(
   for (const field of schema) {
     const val = obj[field.name];
 
-    if (field.required && (val === undefined || val === null || (typeof val === "string" && val.trim() === ""))) {
+    if (
+      field.required &&
+      (val === undefined ||
+        val === null ||
+        (typeof val === "string" && val.trim() === ""))
+    ) {
       errors[field.name] = `${field.name} is required`;
       continue;
     }

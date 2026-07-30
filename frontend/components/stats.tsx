@@ -116,7 +116,9 @@ export function Stats(): ReactNode {
           ref={headerRef}
           className="mb-12 text-center md:mb-20"
           initial={{ opacity: 0, y: 20 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, ease: easeOut }}
         >
           <h2 className="text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">

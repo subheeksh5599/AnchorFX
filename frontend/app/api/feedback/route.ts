@@ -15,14 +15,21 @@ export async function GET(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.api, "feedback");
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
-      status: 429, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
   const featureCounts = new Map<string, number>();
   for (const e of feedbackEntries) {
     if (e.requestedFeature) {
-      featureCounts.set(e.requestedFeature, (featureCounts.get(e.requestedFeature) ?? 0) + 1);
+      featureCounts.set(
+        e.requestedFeature,
+        (featureCounts.get(e.requestedFeature) ?? 0) + 1
+      );
     }
   }
   const topFeatures = Array.from(featureCounts.entries())
@@ -30,32 +37,57 @@ export async function GET(request: Request) {
     .slice(0, 3)
     .map(([feature, count]) => ({ feature, count }));
 
-    return new Response(JSON.stringify({
+  return new Response(
+    JSON.stringify({
       total: feedbackEntries.length,
-      averageRating: feedbackEntries.length > 0 ? (feedbackEntries.reduce((s, e) => s + e.rating, 0) / feedbackEntries.length).toFixed(1) : "0",
-      wouldUseAgain: feedbackEntries.filter(e => e.wouldUseAgain).length,
+      averageRating:
+        feedbackEntries.length > 0
+          ? (
+              feedbackEntries.reduce((s, e) => s + e.rating, 0) /
+              feedbackEntries.length
+            ).toFixed(1)
+          : "0",
+      wouldUseAgain: feedbackEntries.filter((e) => e.wouldUseAgain).length,
       topFeatures: topFeatures.slice(0, 5),
-    }), {
-    status: 200, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    }
+  );
 }
 
 export async function POST(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.wallet, "feedback_write");
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
-      status: 429, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
   let body: Record<string, unknown> = {};
-  try { body = await request.json(); } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400, headers: { "Content-Type": "application/json" } });
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid JSON" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const rating = parseInt(String(body.rating ?? "0"), 10);
   if (rating < 1 || rating > 5 || isNaN(rating)) {
-    return new Response(JSON.stringify({ error: "Rating must be 1-5" }), { status: 400, headers: { "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: "Rating must be 1-5" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const entry: FeedbackEntry = {
@@ -69,11 +101,18 @@ export async function POST(request: Request) {
 
   feedbackEntries.push(entry);
 
-  return new Response(JSON.stringify({
-    success: true,
-    entry,
-    total: feedbackEntries.length,
-  }), {
-    status: 200, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+  return new Response(
+    JSON.stringify({
+      success: true,
+      entry,
+      total: feedbackEntries.length,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    }
+  );
 }

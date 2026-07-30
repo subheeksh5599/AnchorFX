@@ -51,8 +51,8 @@ function PlanCard({ plan }: { plan: Plan }): ReactNode {
     <motion.div
       className={`rounded-2xl p-6 md:p-8 ${
         plan.highlighted
-          ? "border-accent bg-background border-2 transition-[border-color,box-shadow] duration-300 hover:border-accent/80 hover:shadow-lg hover:shadow-accent/10"
-          : "bg-background transition-[background-color] duration-300 hover:bg-background/80"
+          ? "border-accent bg-background hover:border-accent/80 hover:shadow-accent/10 border-2 transition-[border-color,box-shadow] duration-300 hover:shadow-lg"
+          : "bg-background hover:bg-background/80 transition-[background-color] duration-300"
       }`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -133,16 +133,16 @@ export function Pricing(): ReactNode {
         >
           <Link
             href="/wallet"
-            className="group inline-flex w-full items-center justify-center gap-3 rounded-md bg-accent py-3 pl-5 pr-3 font-medium text-black transition-all duration-500 ease-out hover:rounded-[50px] hover:shadow-lg hover:shadow-accent/20 sm:w-auto"
+            className="group bg-accent hover:shadow-accent/20 inline-flex w-full items-center justify-center gap-3 rounded-md py-3 pr-3 pl-5 font-medium text-black transition-all duration-500 ease-out hover:rounded-[50px] hover:shadow-lg sm:w-auto"
           >
             <span>Try the Demo</span>
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-all duration-300 group-hover:scale-110">
-              <ChevronRightIcon className="h-4 w-4 relative left-px" />
+              <ChevronRightIcon className="relative left-px h-4 w-4" />
             </span>
           </Link>
           <Link
             href="/wallet"
-            className="text-muted-foreground text-sm transition-colors hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground text-sm transition-colors"
           >
             Connect Freighter Wallet
           </Link>

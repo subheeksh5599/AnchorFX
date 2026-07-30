@@ -56,8 +56,15 @@ let analyticsCache: { data: AnalyticsSummary; timestamp: number } | null = null;
 const CACHE_TTL = 5000;
 
 // Query the escrow contract for escrow count and individual escrows
-export async function getEscrows(contractId: string, forceRefresh = false): Promise<EscrowRecord[]> {
-  if (escrowCache && !forceRefresh && Date.now() - escrowCache.timestamp < CACHE_TTL) {
+export async function getEscrows(
+  contractId: string,
+  forceRefresh = false
+): Promise<EscrowRecord[]> {
+  if (
+    escrowCache &&
+    !forceRefresh &&
+    Date.now() - escrowCache.timestamp < CACHE_TTL
+  ) {
     return escrowCache.data;
   }
 
@@ -77,18 +84,23 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
     const escrowsResult = await rpc.getLedgerEntries(escrowsKey);
     if (escrowsResult.entries?.length) {
       try {
-        const raw = scValToNative(escrowsResult.entries[0]!.val.contractData().val());
+        const raw = scValToNative(
+          escrowsResult.entries[0]!.val.contractData().val()
+        );
         if (raw && typeof raw === "object") {
           // Soroban Map returns as object with BigInt keys for u64
           // Handle both array (from older SDK) and object (Map) formats
           const entries = Array.isArray(raw)
             ? (raw as Array<{ key: unknown; val: Record<string, unknown> }>)
-            : Object.entries(raw as Record<string, Record<string, unknown>>).map(([k, v]) => ({ key: k, val: v }));
+            : Object.entries(
+                raw as Record<string, Record<string, unknown>>
+              ).map(([k, v]) => ({ key: k, val: v }));
 
           for (const entry of entries) {
             let id: number;
             if (typeof entry.key === "bigint") id = Number(entry.key);
-            else if (typeof entry.key === "string" && /^\d+$/.test(entry.key)) id = parseInt(entry.key, 10);
+            else if (typeof entry.key === "string" && /^\d+$/.test(entry.key))
+              id = parseInt(entry.key, 10);
             else if (typeof entry.key === "number") id = entry.key;
             else continue;
 
@@ -128,7 +140,9 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
 
       const legacyResult = await rpc.getLedgerEntries(legacyKey);
       if (legacyResult.entries?.length) {
-        const raw = scValToNative(legacyResult.entries[0]!.val.contractData().val());
+        const raw = scValToNative(
+          legacyResult.entries[0]!.val.contractData().val()
+        );
         if (raw && typeof raw === "object") {
           const val = raw as Record<string, unknown>;
           results.push({
@@ -159,7 +173,9 @@ export async function getEscrows(contractId: string, forceRefresh = false): Prom
   return results;
 }
 
-export async function getAnalytics(contractId: string): Promise<AnalyticsSummary> {
+export async function getAnalytics(
+  contractId: string
+): Promise<AnalyticsSummary> {
   if (analyticsCache && Date.now() - analyticsCache.timestamp < CACHE_TTL) {
     return analyticsCache.data;
   }
@@ -176,10 +192,18 @@ export async function getAnalytics(contractId: string): Promise<AnalyticsSummary
   for (const e of escrows) {
     totalVolume += parseInt(e.amount, 10) || 0;
     switch (e.status) {
-      case "Created": activeCount++; break;
-      case "Settled": settledCount++; break;
-      case "Refunded": refundedCount++; break;
-      case "Cancelled": cancelledCount++; break;
+      case "Created":
+        activeCount++;
+        break;
+      case "Settled":
+        settledCount++;
+        break;
+      case "Refunded":
+        refundedCount++;
+        break;
+      case "Cancelled":
+        cancelledCount++;
+        break;
     }
   }
 
@@ -277,7 +301,9 @@ export async function getEvents(contractId: string): Promise<EventRecord[]> {
     if (response.cursor) {
       eventCursors.set(contractId, response.cursor);
     }
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 
   return events;
 }

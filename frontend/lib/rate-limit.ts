@@ -79,7 +79,7 @@ function simpleHash(str: string): string {
 export function rateLimit(
   request: Request,
   config: RateLimitConfig,
-  endpoint: string = "default",
+  endpoint: string = "default"
 ): RateLimitResult {
   cleanup();
 

@@ -144,9 +144,9 @@ export const footerConfig = {
     location: "Stellar Testnet",
     address: "Stellar Journey to Mastery\nBuilder Track - Level 1",
     hours: "Open source. Build anytime.",
-      email: CONTACT_EMAIL,
-    },
-    copyright: `Built on Stellar. AnchorFX ${new Date().getFullYear()}.`,
+    email: CONTACT_EMAIL,
+  },
+  copyright: `Built on Stellar. AnchorFX ${new Date().getFullYear()}.`,
 } as const;
 
 export const features = {

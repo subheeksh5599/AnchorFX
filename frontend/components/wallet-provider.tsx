@@ -28,7 +28,10 @@ interface WalletContextValue {
   connect: (type: WalletType) => Promise<void>;
   disconnect: () => void;
   refreshBalance: () => Promise<void>;
-  send: (destination: string, amount: string) => Promise<{
+  send: (
+    destination: string,
+    amount: string
+  ) => Promise<{
     success: boolean;
     hash?: string;
     error?: WalletError;
@@ -100,23 +103,49 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const send = useCallback(
     async (destination: string, amount: string) => {
       if (!wallet.publicKey || !wallet.walletType) {
-        return { success: false, error: { type: "WALLET_NOT_FOUND" as const, wallet: "freighter" as const, message: "Wallet not connected" } };
+        return {
+          success: false,
+          error: {
+            type: "WALLET_NOT_FOUND" as const,
+            wallet: "freighter" as const,
+            message: "Wallet not connected",
+          },
+        };
       }
-      const result = await sendXLM(wallet.publicKey, destination, amount, wallet.walletType);
+      const result = await sendXLM(
+        wallet.publicKey,
+        destination,
+        amount,
+        wallet.walletType
+      );
       if (result.success) {
         await refreshBalance();
       }
       if (result.error) {
         setError(result.error);
       }
-      return { success: result.success, hash: result.hash, error: result.error };
+      return {
+        success: result.success,
+        hash: result.hash,
+        error: result.error,
+      };
     },
-    [wallet.publicKey, wallet.walletType, refreshBalance],
+    [wallet.publicKey, wallet.walletType, refreshBalance]
   );
 
   return (
     <WalletContext.Provider
-      value={{ wallet, balance, loading, error, availableWallets, connect, disconnect, refreshBalance, send }}
+      value={{
+        wallet,
+        balance,
+        loading,
+        error,
+        availableWallets,
+        connect,
+        disconnect,
+        refreshBalance,
+        send,
+      }}
     >
       {children}
     </WalletContext.Provider>

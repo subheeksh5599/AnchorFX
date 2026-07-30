@@ -48,7 +48,7 @@ function FeatureCard({
 }): ReactNode {
   return (
     <motion.div
-      className="bg-muted grid grid-cols-1 gap-2 overflow-hidden rounded-2xl p-2 md:grid-cols-2 transition-colors duration-300 hover:bg-muted/80"
+      className="bg-muted hover:bg-muted/80 grid grid-cols-1 gap-2 overflow-hidden rounded-2xl p-2 transition-colors duration-300 md:grid-cols-2"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.01 }}
@@ -60,7 +60,7 @@ function FeatureCard({
       }}
     >
       <div className="px-4 py-12 md:py-20 lg:py-28">
-        <span className="text-muted-foreground bg-foreground/5 mb-4 block w-fit rounded-md px-2 py-1 text-sm font-medium transition-colors duration-300 group-hover:bg-foreground/10">
+        <span className="text-muted-foreground bg-foreground/5 group-hover:bg-foreground/10 mb-4 block w-fit rounded-md px-2 py-1 text-sm font-medium transition-colors duration-300">
           {feature.number}
         </span>
         <h3 className="mb-4 text-2xl font-medium tracking-tight md:text-3xl">
@@ -100,12 +100,12 @@ export function Features(): ReactNode {
             Built on Stellar primitives
           </h2>
           <p className="text-muted-foreground mb-6 max-w-sm text-base md:mb-8 md:text-lg">
-            AnchorFX combines Soroban smart contracts with Stellar&apos;s built-in
-            DEX and Anchor protocol for a composable settlement layer.
+            AnchorFX combines Soroban smart contracts with Stellar&apos;s
+            built-in DEX and Anchor protocol for a composable settlement layer.
           </p>
           <Link
             href="/wallet"
-            className="bg-foreground group inline-flex w-full items-center justify-center gap-3 rounded-md py-3 pr-3 pl-5 font-medium text-background transition-all duration-500 ease-out hover:rounded-[50px] sm:w-auto"
+            className="bg-foreground group text-background inline-flex w-full items-center justify-center gap-3 rounded-md py-3 pr-3 pl-5 font-medium transition-all duration-500 ease-out hover:rounded-[50px] sm:w-auto"
           >
             <span>Launch Demo</span>
             <span className="bg-background text-foreground flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110">

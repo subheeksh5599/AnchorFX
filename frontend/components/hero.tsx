@@ -106,11 +106,9 @@ export function Hero(): ReactNode {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-dvh flex-col items-center justify-start overflow-hidden px-4 sm:px-6 pt-24 sm:pt-40 lg:pt-64"
+      className="relative flex min-h-dvh flex-col items-center justify-start overflow-hidden px-4 pt-24 sm:px-6 sm:pt-40 lg:pt-64"
     >
-      {!isMobile && shouldRender && (
-        <DitherCursor opacity={opacity} />
-      )}
+      {!isMobile && shouldRender && <DitherCursor opacity={opacity} />}
       <div ref={headlineRef} className="relative z-10 mx-auto md:text-center">
         <h1 className="mb-8 text-5xl font-medium tracking-tighter md:text-8xl lg:text-8xl">
           {headlineText.split("").map((char, index) => (
@@ -157,7 +155,7 @@ export function Hero(): ReactNode {
 
       {/* Carousel */}
       <div
-        className="relative -mx-4 sm:-mx-6 mt-2 h-72 w-screen overflow-hidden sm:h-100 md:h-137.5 lg:h-150 xl:h-175"
+        className="relative -mx-4 mt-2 h-72 w-screen overflow-hidden sm:-mx-6 sm:h-100 md:h-137.5 lg:h-150 xl:h-175"
         style={{
           maskImage:
             "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
@@ -165,7 +163,7 @@ export function Hero(): ReactNode {
             "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
         }}
       >
-        <div className="absolute left-1/2 top-12 sm:top-25 md:top-30 lg:top-35 xl:top-40 -translate-x-1/2">
+        <div className="absolute top-12 left-1/2 -translate-x-1/2 sm:top-25 md:top-30 lg:top-35 xl:top-40">
           <div className="origin-top scale-[0.45] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.7] xl:scale-100">
             <RotatingCards
               cards={carouselCards}
@@ -195,15 +193,15 @@ export function Hero(): ReactNode {
           Turn Cross-Border Payments <br />
           Into Atomic Settlement
         </h2>
-          <motion.a
-            href="/wallet"
-            className="bg-accent group mt-8 inline-flex w-full items-center justify-center gap-3 rounded-md py-3 pl-5 pr-3 font-medium text-black shadow-lg shadow-accent/25 transition-all duration-500 ease-out hover:rounded-[50px] hover:shadow-xl hover:shadow-accent/40 sm:w-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease: easeOut, delay: 0.2 }}
-          >
-            <span>Launch Demo</span>
+        <motion.a
+          href="/wallet"
+          className="bg-accent group shadow-accent/25 hover:shadow-accent/40 mt-8 inline-flex w-full items-center justify-center gap-3 rounded-md py-3 pr-3 pl-5 font-medium text-black shadow-lg transition-all duration-500 ease-out hover:rounded-[50px] hover:shadow-xl sm:w-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, ease: easeOut, delay: 0.2 }}
+        >
+          <span>Launch Demo</span>
           <span className="bg-background text-foreground flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110">
             <ChevronRightIcon className="relative left-px h-4 w-4" />
           </span>

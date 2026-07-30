@@ -94,7 +94,7 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
   // Track cards reference for preloading
   const cardsRef = useRef(cards);
   const hasImages = cards.some((card) => card.image);
-  
+
   // Reset loaded when cards change
   if (cardsRef.current !== cards) {
     cardsRef.current = cards;
@@ -192,7 +192,7 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
       const angle = Math.atan2(clientY - centerY, clientX - centerX);
       return (angle * 180) / Math.PI;
     },
-    [],
+    []
   );
 
   const handleDragStart = useCallback(
@@ -201,22 +201,22 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
       const clientX =
         "clientX" in event
           ? event.clientX
-          : (event as TouchEvent).touches[0]?.clientX ?? 0;
+          : ((event as TouchEvent).touches[0]?.clientX ?? 0);
       const clientY =
         "clientY" in event
           ? event.clientY
-          : (event as TouchEvent).touches[0]?.clientY ?? 0;
+          : ((event as TouchEvent).touches[0]?.clientY ?? 0);
 
       dragStartAngleRef.current = getAngleFromPointer(clientX, clientY);
       dragStartRotationRef.current = rotationRef.current;
     },
-    [getAngleFromPointer],
+    [getAngleFromPointer]
   );
 
   const handleDrag = useCallback(
     (
       _event: MouseEvent | TouchEvent | PointerEvent,
-      info: { point: { x: number; y: number } },
+      info: { point: { x: number; y: number } }
     ) => {
       if (!isDragging) return;
 
@@ -227,7 +227,7 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
       rotationRef.current = newRotation;
       rotation.set(newRotation);
     },
-    [isDragging, getAngleFromPointer, rotation],
+    [isDragging, getAngleFromPointer, rotation]
   );
 
   const handleDragEnd = useCallback(() => {
@@ -258,7 +258,7 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
         onCardClick(card, index);
       }
     },
-    [onCardClick],
+    [onCardClick]
   );
 
   const containerWidth = radius * 2 + cardWidth;
@@ -269,7 +269,10 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn("relative flex shrink-0 items-center justify-center", className)}
+      className={cn(
+        "relative flex shrink-0 items-center justify-center",
+        className
+      )}
       style={{
         width: `${containerWidth}px`,
         height: `${containerHeight}px`,
@@ -296,7 +299,7 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
       )}
       <motion.div
         key={cards.length}
-        className="relative w-full h-full"
+        className="relative h-full w-full"
         style={{
           rotate: smoothRotation,
           willChange: "transform",
@@ -309,64 +312,63 @@ const RotatingCards: React.FC<RotatingCardsProps> = ({
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
       >
-        {isMounted && cards.map((card, index) => {
-          const position = cardPositions[index];
-          if (!position) return null;
+        {isMounted &&
+          cards.map((card, index) => {
+            const position = cardPositions[index];
+            if (!position) return null;
 
-          return (
-            <motion.div
-              key={`${card.id}-${cards.length}`}
-              className={cn(
-                "absolute rounded-xl shadow-lg overflow-hidden cursor-pointer",
-                "border border-foreground/10",
-                "bg-background text-foreground",
-                cardClassName,
-              )}
-              style={{
-                width: `${cardWidth}px`,
-                height: `${cardHeight}px`,
-                left: "50%",
-                top: "50%",
-                x: position.x,
-                y: position.y,
-                marginLeft: `-${cardWidth / 2}px`,
-                marginTop: `-${cardHeight / 2}px`,
-                background:
-                  card.background ||
-                  (card.image
-                    ? `url(${card.image}) center/cover`
-                    : undefined),
-                willChange: "transform",
-                rotate: position.angle + 90,
-              }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: loaded ? 1 : 0,
-                scale: loaded ? 1 : 0,
-              }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.05,
-                ease: "easeOut",
-              }}
-              onMouseEnter={() => pauseOnHover && setIsHovered(true)}
-              onMouseLeave={() => pauseOnHover && setIsHovered(false)}
-              onClick={() => handleCardClick(card, index)}
-              {...(pauseOnHover
-                ? {
-                    whileHover: {
-                      scale: 1.05,
-                      transition: { duration: 0.2 },
-                    },
-                  }
-                : {})}
-            >
-              <div className="w-full h-full">
-                {card.content}
-              </div>
-            </motion.div>
-          );
-        })}
+            return (
+              <motion.div
+                key={`${card.id}-${cards.length}`}
+                className={cn(
+                  "absolute cursor-pointer overflow-hidden rounded-xl shadow-lg",
+                  "border-foreground/10 border",
+                  "bg-background text-foreground",
+                  cardClassName
+                )}
+                style={{
+                  width: `${cardWidth}px`,
+                  height: `${cardHeight}px`,
+                  left: "50%",
+                  top: "50%",
+                  x: position.x,
+                  y: position.y,
+                  marginLeft: `-${cardWidth / 2}px`,
+                  marginTop: `-${cardHeight / 2}px`,
+                  background:
+                    card.background ||
+                    (card.image
+                      ? `url(${card.image}) center/cover`
+                      : undefined),
+                  willChange: "transform",
+                  rotate: position.angle + 90,
+                }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{
+                  opacity: loaded ? 1 : 0,
+                  scale: loaded ? 1 : 0,
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.05,
+                  ease: "easeOut",
+                }}
+                onMouseEnter={() => pauseOnHover && setIsHovered(true)}
+                onMouseLeave={() => pauseOnHover && setIsHovered(false)}
+                onClick={() => handleCardClick(card, index)}
+                {...(pauseOnHover
+                  ? {
+                      whileHover: {
+                        scale: 1.05,
+                        transition: { duration: 0.2 },
+                      },
+                    }
+                  : {})}
+              >
+                <div className="h-full w-full">{card.content}</div>
+              </motion.div>
+            );
+          })}
       </motion.div>
     </div>
   );

@@ -46,7 +46,11 @@ export async function GET(request: Request) {
       let cursor: string | undefined;
       let seenLedgers = new Set<number>();
 
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: "connected", contractId })}\n\n`));
+      controller.enqueue(
+        encoder.encode(
+          `data: ${JSON.stringify({ type: "connected", contractId })}\n\n`
+        )
+      );
 
       const poll = async () => {
         try {
@@ -69,7 +73,9 @@ export async function GET(request: Request) {
             if (ledger) seenLedgers.add(ledger);
 
             const rawType = event.topic[0]?.toString() ?? "unknown";
-            const type = rawType.replace(/^Symbol\(\)/, "").replace(/^"(.*)"$/, "");
+            const type = rawType
+              .replace(/^Symbol\(\)/, "")
+              .replace(/^"(.*)"$/, "");
 
             const ev: ContractEvent = {
               type,
@@ -79,7 +85,9 @@ export async function GET(request: Request) {
             };
 
             controller.enqueue(encoder.encode(`event: contract\n`));
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(ev)}\n\n`));
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify(ev)}\n\n`)
+            );
           }
 
           if (response.events.length > 0) {
@@ -102,10 +110,13 @@ export async function GET(request: Request) {
       await poll();
 
       // Auto-close after 5 minutes to prevent infinite connections
-      const maxTimeout = setTimeout(() => {
-        clearInterval(interval);
-        controller.close();
-      }, 5 * 60 * 1000);
+      const maxTimeout = setTimeout(
+        () => {
+          clearInterval(interval);
+          controller.close();
+        },
+        5 * 60 * 1000
+      );
 
       const cleanup = () => {
         clearInterval(interval);

@@ -1,9 +1,17 @@
 import { rateLimit, rateLimitHeaders, RATE_LIMITS } from "@/lib/rate-limit";
 import { validateStellarAddress } from "@/lib/validation";
-import { CONTRACT_ID, XLM_SAC_ADDRESS, USDC_TOKEN_ADDRESS, SITE_URL } from "@/lib/env";
+import {
+  CONTRACT_ID,
+  XLM_SAC_ADDRESS,
+  USDC_TOKEN_ADDRESS,
+  SITE_URL,
+} from "@/lib/env";
 
 // Stellar Asset Contract addresses — testnet SAC tokens
-const STABLECOINS: Record<string, { name: string; issuer: string; decimals: number; code: string }> = {
+const STABLECOINS: Record<
+  string,
+  { name: string; issuer: string; decimals: number; code: string }
+> = {
   [XLM_SAC_ADDRESS]: {
     name: "Stellar Lumen (SAC)",
     issuer: "native",
@@ -18,17 +26,56 @@ const STABLECOINS: Record<string, { name: string; issuer: string; decimals: numb
   },
 };
 
-const CORRIDORS: Record<string, { from: string; to: string; rate: number; fromAsset: string; toAsset: string }> = {
-  "US-PH": { from: "USD", to: "PHP", rate: 56.4, fromAsset: "USDC", toAsset: "PHPC" },
-  "US-MX": { from: "USD", to: "MXN", rate: 17.2, fromAsset: "USDC", toAsset: "MXNC" },
-  "EUR-BR": { from: "EUR", to: "BRL", rate: 5.8, fromAsset: "EURC", toAsset: "BRLC" },
-  "US-NG": { from: "USD", to: "NGN", rate: 1580.0, fromAsset: "USDC", toAsset: "NGNC" },
-  "EUR-IN": { from: "EUR", to: "INR", rate: 92.0, fromAsset: "EURC", toAsset: "INRC" },
+const CORRIDORS: Record<
+  string,
+  { from: string; to: string; rate: number; fromAsset: string; toAsset: string }
+> = {
+  "US-PH": {
+    from: "USD",
+    to: "PHP",
+    rate: 56.4,
+    fromAsset: "USDC",
+    toAsset: "PHPC",
+  },
+  "US-MX": {
+    from: "USD",
+    to: "MXN",
+    rate: 17.2,
+    fromAsset: "USDC",
+    toAsset: "MXNC",
+  },
+  "EUR-BR": {
+    from: "EUR",
+    to: "BRL",
+    rate: 5.8,
+    fromAsset: "EURC",
+    toAsset: "BRLC",
+  },
+  "US-NG": {
+    from: "USD",
+    to: "NGN",
+    rate: 1580.0,
+    fromAsset: "USDC",
+    toAsset: "NGNC",
+  },
+  "EUR-IN": {
+    from: "EUR",
+    to: "INR",
+    rate: 92.0,
+    fromAsset: "EURC",
+    toAsset: "INRC",
+  },
 };
 
 interface Sep31Transaction {
   id: string;
-  status: "pending_sender" | "pending_stellar" | "pending_receiver" | "pending_external" | "completed" | "error";
+  status:
+    | "pending_sender"
+    | "pending_stellar"
+    | "pending_receiver"
+    | "pending_external"
+    | "completed"
+    | "error";
   amount_in: string;
   amount_out: string;
   asset: string;
@@ -44,7 +91,11 @@ interface Sep31Transaction {
 // In-memory store (replace with database for production)
 const txStore = new Map<string, Sep31Transaction>();
 
-function validateAmount(amount: string): { valid: boolean; value: number; error?: string } {
+function validateAmount(amount: string): {
+  valid: boolean;
+  value: number;
+  error?: string;
+} {
   if (!amount || amount.trim() === "") {
     return { valid: false, value: 0, error: "Amount is required" };
   }
@@ -67,7 +118,10 @@ export async function GET(request: Request) {
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
       status: 429,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
@@ -80,100 +134,115 @@ export async function GET(request: Request) {
     if (!tx) {
       return new Response(JSON.stringify({ error: "Transaction not found" }), {
         status: 404,
-        headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+        headers: {
+          "Content-Type": "application/json",
+          ...rateLimitHeaders(limitResult),
+        },
       });
     }
-    return new Response(JSON.stringify({
-      transaction: {
-        id: tx.id,
-        status: tx.status,
-        status_eta: tx.status === "completed" ? 0 : 30,
-        amount_in: {
-          amount: tx.amount_in,
-          asset: tx.asset,
+    return new Response(
+      JSON.stringify({
+        transaction: {
+          id: tx.id,
+          status: tx.status,
+          status_eta: tx.status === "completed" ? 0 : 30,
+          amount_in: {
+            amount: tx.amount_in,
+            asset: tx.asset,
+          },
+          amount_out: {
+            amount: tx.amount_out,
+            asset: CORRIDORS[tx.corridor]?.toAsset ?? "unknown",
+          },
+          started_at: tx.started_at,
+          completed_at: tx.completed_at,
+          stellar_transaction_id: tx.stellar_tx_id,
+          more_info_url: `${SITE_URL}/api/sep31/transaction?tx_id=${tx.id}`,
         },
-        amount_out: {
-          amount: tx.amount_out,
-          asset: CORRIDORS[tx.corridor]?.toAsset ?? "unknown",
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...rateLimitHeaders(limitResult),
         },
-        started_at: tx.started_at,
-        completed_at: tx.completed_at,
-        stellar_transaction_id: tx.stellar_tx_id,
-        more_info_url: `${SITE_URL}/api/sep31/transaction?tx_id=${tx.id}`,
-      },
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-    });
+      }
+    );
   }
 
   // SEP-31 /info response
-  return new Response(JSON.stringify({
-    deposit: {
-      [XLM_SAC_ADDRESS]: {
-        enabled: true,
-        fee_fixed: 0.00001,
-        fee_percent: 0.001,
-        min_amount: 0.1,
-        max_amount: 1000000,
+  return new Response(
+    JSON.stringify({
+      deposit: {
+        [XLM_SAC_ADDRESS]: {
+          enabled: true,
+          fee_fixed: 0.00001,
+          fee_percent: 0.001,
+          min_amount: 0.1,
+          max_amount: 1000000,
+        },
       },
-    },
-    receive: {
-      PHP: {
-        enabled: true,
-        fee_fixed: 25,
-        fee_percent: 0.15,
-        min_amount: 50,
-        max_amount: 5000000,
-        methods: ["bank_account", "cash_pickup"],
+      receive: {
+        PHP: {
+          enabled: true,
+          fee_fixed: 25,
+          fee_percent: 0.15,
+          min_amount: 50,
+          max_amount: 5000000,
+          methods: ["bank_account", "cash_pickup"],
+        },
+        MXN: {
+          enabled: true,
+          fee_fixed: 20,
+          fee_percent: 0.12,
+          min_amount: 50,
+          max_amount: 3000000,
+          methods: ["bank_account"],
+        },
+        BRL: {
+          enabled: true,
+          fee_fixed: 15,
+          fee_percent: 0.18,
+          min_amount: 50,
+          max_amount: 2000000,
+          methods: ["bank_account", "cash_pickup"],
+        },
+        NGN: {
+          enabled: true,
+          fee_fixed: 100,
+          fee_percent: 0.2,
+          min_amount: 50,
+          max_amount: 10000000,
+          methods: ["bank_account"],
+        },
+        INR: {
+          enabled: true,
+          fee_fixed: 50,
+          fee_percent: 0.1,
+          min_amount: 50,
+          max_amount: 7500000,
+          methods: ["bank_account", "upi"],
+        },
       },
-      MXN: {
-        enabled: true,
-        fee_fixed: 20,
-        fee_percent: 0.12,
-        min_amount: 50,
-        max_amount: 3000000,
-        methods: ["bank_account"],
+      fee: {
+        enabled: false,
       },
-      BRL: {
+      transactions: {
         enabled: true,
-        fee_fixed: 15,
-        fee_percent: 0.18,
-        min_amount: 50,
-        max_amount: 2000000,
-        methods: ["bank_account", "cash_pickup"],
+        authentication_required: true,
       },
-      NGN: {
-        enabled: true,
-        fee_fixed: 100,
-        fee_percent: 0.20,
-        min_amount: 50,
-        max_amount: 10000000,
-        methods: ["bank_account"],
+      anchor_name: "AnchorFX",
+      anchor_quote_server: `${SITE_URL}/api/sep31/info`,
+      transfer_protocols: ["sep31"],
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
       },
-      INR: {
-        enabled: true,
-        fee_fixed: 50,
-        fee_percent: 0.10,
-        min_amount: 50,
-        max_amount: 7500000,
-        methods: ["bank_account", "upi"],
-      },
-    },
-    fee: {
-      enabled: false,
-    },
-    transactions: {
-      enabled: true,
-      authentication_required: true,
-    },
-    anchor_name: "AnchorFX",
-    anchor_quote_server: `${SITE_URL}/api/sep31/info`,
-    transfer_protocols: ["sep31"],
-  }), {
-    status: 200,
-    headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+    }
+  );
 }
 
 /** POST /api/sep31/transactions — Initiate SEP-31 receive */
@@ -182,7 +251,10 @@ export async function POST(request: Request) {
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
       status: 429,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
@@ -192,24 +264,35 @@ export async function POST(request: Request) {
   } catch {
     return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
       status: 400,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
   const asset = String(body.asset ?? "");
   const rawAmount = String(body.amount ?? "0");
   const sender = String(body.sender ?? "").trim();
-  const corridor = String(body.corridor ?? "US-PH").trim().toUpperCase();
+  const corridor = String(body.corridor ?? "US-PH")
+    .trim()
+    .toUpperCase();
 
   // Validate asset
   if (!STABLECOINS[asset]) {
-    return new Response(JSON.stringify({
-      error: "Unsupported asset",
-      supported_assets: Object.keys(STABLECOINS),
-    }), {
-      status: 400,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "Unsupported asset",
+        supported_assets: Object.keys(STABLECOINS),
+      }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          ...rateLimitHeaders(limitResult),
+        },
+      }
+    );
   }
 
   // Validate amount
@@ -217,7 +300,10 @@ export async function POST(request: Request) {
   if (!amountCheck.valid) {
     return new Response(JSON.stringify({ error: amountCheck.error }), {
       status: 400,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
@@ -225,23 +311,35 @@ export async function POST(request: Request) {
   if (sender) {
     const addrCheck = validateStellarAddress(sender);
     if (!addrCheck.valid) {
-      return new Response(JSON.stringify({ error: `Invalid sender address: ${addrCheck.error}` }), {
-        status: 400,
-        headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-      });
+      return new Response(
+        JSON.stringify({ error: `Invalid sender address: ${addrCheck.error}` }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+            ...rateLimitHeaders(limitResult),
+          },
+        }
+      );
     }
   }
 
   // Validate corridor
   const corridorInfo = CORRIDORS[corridor];
   if (!corridorInfo) {
-    return new Response(JSON.stringify({
-      error: "Unsupported corridor",
-      supported: Object.keys(CORRIDORS),
-    }), {
-      status: 400,
-      headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-    });
+    return new Response(
+      JSON.stringify({
+        error: "Unsupported corridor",
+        supported: Object.keys(CORRIDORS),
+      }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          ...rateLimitHeaders(limitResult),
+        },
+      }
+    );
   }
 
   const txId = `sep31-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
@@ -264,22 +362,29 @@ export async function POST(request: Request) {
 
   txStore.set(txId, tx);
 
-  return new Response(JSON.stringify({
-    id: txId,
-    status: tx.status,
-    amount_in: {
-      amount: tx.amount_in,
-      asset: STABLECOINS[asset].code,
-    },
-    amount_out: {
-      amount: tx.amount_out,
-      asset: corridorInfo.toAsset,
-    },
-    how: `Send ${tx.amount_in} ${STABLECOINS[asset].code} to AnchorFX escrow contract ${CONTRACT_ID} with memo "${txId}"`,
-    more_info_url: `${SITE_URL}/api/sep31/transaction?tx_id=${txId}`,
-    message: "SEP-31 receive initiated. Funds will settle via AnchorFX escrow contract on Stellar.",
-  }), {
-    status: 201,
-    headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+  return new Response(
+    JSON.stringify({
+      id: txId,
+      status: tx.status,
+      amount_in: {
+        amount: tx.amount_in,
+        asset: STABLECOINS[asset].code,
+      },
+      amount_out: {
+        amount: tx.amount_out,
+        asset: corridorInfo.toAsset,
+      },
+      how: `Send ${tx.amount_in} ${STABLECOINS[asset].code} to AnchorFX escrow contract ${CONTRACT_ID} with memo "${txId}"`,
+      more_info_url: `${SITE_URL}/api/sep31/transaction?tx_id=${txId}`,
+      message:
+        "SEP-31 receive initiated. Funds will settle via AnchorFX escrow contract on Stellar.",
+    }),
+    {
+      status: 201,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    }
+  );
 }

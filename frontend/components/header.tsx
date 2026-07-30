@@ -7,11 +7,20 @@ import React, { useState, useSyncExternalStore, type ReactNode } from "react";
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
 const easeInOut = [0.65, 0, 0.35, 1] as const;
-const spring = { type: "spring", stiffness: 100, damping: 20, mass: 1 } as const;
+const spring = {
+  type: "spring",
+  stiffness: 100,
+  damping: 20,
+  mass: 1,
+} as const;
 const DESKTOP_BREAKPOINT = 700;
 
 const socialLinks = [
-  { label: "GitHub", icon: GitHubIcon, href: "https://github.com/subheeksh5599/AnchorFX" },
+  {
+    label: "GitHub",
+    icon: GitHubIcon,
+    href: "https://github.com/subheeksh5599/AnchorFX",
+  },
 ];
 
 function useIsDesktop(): boolean {
@@ -35,16 +44,32 @@ const menuCards = [
       { label: "Smart Contract", href: "/contract", badge: "NEW" },
       { label: "Settlement", href: "/anchors", badge: null },
       { label: "Admin", href: "/admin", badge: null },
-      { label: "Documentation", href: "https://github.com/subheeksh5599/AnchorFX#readme", badge: null },
+      {
+        label: "Documentation",
+        href: "https://github.com/subheeksh5599/AnchorFX#readme",
+        badge: null,
+      },
     ],
   },
   {
     id: "resources",
     title: "RESOURCES",
     links: [
-      { label: "Stellar Docs", href: "https://developers.stellar.org", badge: null },
-      { label: "Soroban SDK", href: "https://soroban.stellar.org", badge: null },
-      { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX", badge: null },
+      {
+        label: "Stellar Docs",
+        href: "https://developers.stellar.org",
+        badge: null,
+      },
+      {
+        label: "Soroban SDK",
+        href: "https://soroban.stellar.org",
+        badge: null,
+      },
+      {
+        label: "GitHub",
+        href: "https://github.com/subheeksh5599/AnchorFX",
+        badge: null,
+      },
       { label: "Freighter Wallet", href: "https://freighter.app", badge: null },
     ],
   },
@@ -99,12 +124,12 @@ function MenuCard({ card }: { card: (typeof menuCards)[number] }): ReactNode {
 
       {card.id === "contact" && (
         <div className="mt-6 flex h-[calc(100%-2rem)] flex-col justify-between pb-4">
-            <Link
-              href="mailto:komasubheeksh@gmail.com"
-              className="text-background hover:text-background/70 text-xl font-semibold transition-colors md:text-2xl"
-            >
-              komasubheeksh@gmail.com
-            </Link>
+          <Link
+            href="mailto:komasubheeksh@gmail.com"
+            className="text-background hover:text-background/70 text-xl font-semibold transition-colors md:text-2xl"
+          >
+            komasubheeksh@gmail.com
+          </Link>
           <div className="mt-auto flex items-center gap-4 pt-8">
             {socialLinks.map(({ label, icon: Icon, href }) => (
               <a
@@ -158,7 +183,9 @@ export function Header(): ReactNode {
   const cardsDelay = isDesktop ? 0.7 : 0.2;
 
   React.useEffect(() => {
-    const wrapper = document.querySelector('.h-screen.overflow-y-auto') as HTMLElement;
+    const wrapper = document.querySelector(
+      ".h-screen.overflow-y-auto"
+    ) as HTMLElement;
     if (wrapper) {
       setScrollbarWidth(wrapper.offsetWidth - wrapper.clientWidth);
     }
@@ -196,7 +223,7 @@ export function Header(): ReactNode {
 
       <motion.header
         className="fixed top-0 left-0 z-50 flex w-full justify-center px-4 pt-4"
-        style={{ 
+        style={{
           paddingRight: `calc(1rem + ${scrollbarWidth}px)`,
         }}
         initial={{ y: -100, opacity: 0 }}
@@ -208,22 +235,26 @@ export function Header(): ReactNode {
         }}
       >
         <motion.nav
-          className="bg-foreground shadow-2xl/20 border border-neutral-200/10 flex max-w-6xl flex-col overflow-hidden rounded-md"
+          className="bg-foreground flex max-w-6xl flex-col overflow-hidden rounded-md border border-neutral-200/10 shadow-2xl/20"
           initial={false}
-          animate={{ 
-            width: isMenuOpen ? "100%" : hasScrolled ? "min(56rem, calc(100vw - 2rem))" : "min(42rem, calc(100vw - 2rem))",
+          animate={{
+            width: isMenuOpen
+              ? "100%"
+              : hasScrolled
+                ? "min(56rem, calc(100vw - 2rem))"
+                : "min(42rem, calc(100vw - 2rem))",
           }}
           transition={{ ...spring, delay: isMenuOpen ? 0 : 0.15 }}
         >
           <div className="flex w-full items-center justify-between py-2 pr-2 pl-4">
-              <Link href="/" className="flex items-center gap-2">
-                <span className="text-accent text-3xl font-extrabold -tracking-widest">
-                  &#9670;
-                </span>
-                <span className="text-background text-2xl font-extrabold -tracking-tighter">
-                  AnchorFX
-                </span>
-              </Link>
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-accent text-3xl font-extrabold -tracking-widest">
+                &#9670;
+              </span>
+              <span className="text-background text-2xl font-extrabold -tracking-tighter">
+                AnchorFX
+              </span>
+            </Link>
 
             <button
               className="text-background/80 hover:text-background flex h-full cursor-pointer items-center gap-2 rounded-[3.5px] px-2 transition-colors hover:bg-white/10"

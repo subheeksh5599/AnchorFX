@@ -1,7 +1,13 @@
 "use client";
 
 import { useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame, useThree, extend, createPortal } from "@react-three/fiber";
+import {
+  Canvas,
+  useFrame,
+  useThree,
+  extend,
+  createPortal,
+} from "@react-three/fiber";
 import { useFBO, shaderMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { cn } from "@/lib/utils";
@@ -208,9 +214,12 @@ function SceneInternal({
   const resolutionRef = useRef(new THREE.Vector2());
   const directionRef = useRef(new THREE.Vector2());
   const colorRef = useRef(new THREE.Vector3());
-  
+
   const pixelRatio = gl.getPixelRatio();
-  const normalizedRadius = useMemo(() => radius * (1080 / size.height), [radius, size.height]);
+  const normalizedRadius = useMemo(
+    () => radius * (1080 / size.height),
+    [radius, size.height]
+  );
 
   const parsedColor = useMemo(() => {
     const hex = color.replace("#", "");
@@ -232,11 +241,19 @@ function SceneInternal({
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [gl.domElement]);
-  
-  const simTargetA = useFBO({ minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });
-  const simTargetB = useFBO({ minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });
-  
-  const simMaterialRef = useRef<THREE.ShaderMaterial & SimulationUniforms>(null);
+
+  const simTargetA = useFBO({
+    minFilter: THREE.NearestFilter,
+    magFilter: THREE.NearestFilter,
+  });
+  const simTargetB = useFBO({
+    minFilter: THREE.NearestFilter,
+    magFilter: THREE.NearestFilter,
+  });
+
+  const simMaterialRef = useRef<THREE.ShaderMaterial & SimulationUniforms>(
+    null
+  );
   const ditherMaterialRef = useRef<THREE.ShaderMaterial & DitherUniforms>(null);
   const frameRef = useRef(0);
 
@@ -245,7 +262,7 @@ function SceneInternal({
     const isEven = frameRef.current % 2 === 0;
     const writeBuffer = isEven ? simTargetA : simTargetB;
     const readBuffer = isEven ? simTargetB : simTargetA;
-    
+
     if (simMaterialRef.current) {
       const sim = simMaterialRef.current;
       sim.uTime = clock.elapsedTime;
@@ -256,21 +273,23 @@ function SceneInternal({
       sim.uRadius = normalizedRadius;
       sim.uDecay = decay;
       sim.uIntensity = intensity;
-      
+
       const dist = mouseRef.current.distanceTo(prevMouseRef.current);
       speedRef.current += (dist - speedRef.current) * 0.1;
       sim.uSpeed = speedRef.current;
-      
-      directionRef.current.subVectors(mouseRef.current, prevMouseRef.current).normalize();
+
+      directionRef.current
+        .subVectors(mouseRef.current, prevMouseRef.current)
+        .normalize();
       sim.uDirection = directionRef.current;
-      
+
       prevMouseRef.current.copy(mouseRef.current);
     }
-    
+
     gl.setRenderTarget(writeBuffer);
     gl.render(simulationScene, camera);
     gl.setRenderTarget(null);
-    
+
     if (ditherMaterialRef.current) {
       const dither = ditherMaterialRef.current;
       dither.uSimulationState = writeBuffer.texture;
@@ -283,7 +302,7 @@ function SceneInternal({
       dither.uColor = colorRef.current;
       dither.uOpacity = opacity;
     }
-    
+
     frameRef.current++;
   });
 
@@ -330,19 +349,23 @@ export default function DitherCursor({
   const simulationScene = useMemo(() => new THREE.Scene(), []);
 
   return (
-    <div 
+    <div
       className={cn(
         position === "fixed" ? "fixed" : "absolute",
-        "inset-0 w-full h-full pointer-events-none z-0",
+        "pointer-events-none inset-0 z-0 h-full w-full",
         className
       )}
     >
       <Canvas
         orthographic
         camera={{ zoom: 1, position: [0, 0, 1], near: 0.1, far: 1000 }}
-        gl={{ alpha: true, antialias: false, outputColorSpace: THREE.SRGBColorSpace }}
+        gl={{
+          alpha: true,
+          antialias: false,
+          outputColorSpace: THREE.SRGBColorSpace,
+        }}
       >
-        <SceneInternal 
+        <SceneInternal
           simulationScene={simulationScene}
           ditherSize={ditherSize}
           radius={radius}

@@ -29,7 +29,12 @@ export type WalletType = "freighter" | "xbull" | "albedo";
 export type WalletError =
   | { type: "WALLET_NOT_FOUND"; wallet: WalletType; message: string }
   | { type: "USER_REJECTED"; message: string }
-  | { type: "INSUFFICIENT_BALANCE"; required: string; have: string; message: string }
+  | {
+      type: "INSUFFICIENT_BALANCE";
+      required: string;
+      have: string;
+      message: string;
+    }
   | { type: "TRANSACTION_FAILED"; message: string };
 
 interface XBullResponse {
@@ -52,7 +57,9 @@ export async function getAvailableWallets(): Promise<WalletType[]> {
   const available: WalletType[] = [];
 
   if (typeof window !== "undefined") {
-    const hasFreighter = await isConnected().then((r) => r.isConnected).catch(() => false);
+    const hasFreighter = await isConnected()
+      .then((r) => r.isConnected)
+      .catch(() => false);
     const hasXBull = typeof window.xBullSDK !== "undefined";
     if (hasFreighter) available.push("freighter");
     if (hasXBull) available.push("xbull");
@@ -65,13 +72,31 @@ export async function checkConnection(): Promise<WalletState> {
   try {
     const { isConnected: connected } = await isConnected();
     if (!connected) {
-      return { connected: false, publicKey: null, network: null, networkPassphrase: null, walletType: null };
+      return {
+        connected: false,
+        publicKey: null,
+        network: null,
+        networkPassphrase: null,
+        walletType: null,
+      };
     }
     const { address } = await getAddress();
     const { network, networkPassphrase } = await getNetwork();
-    return { connected: true, publicKey: address, network, networkPassphrase, walletType: "freighter" };
+    return {
+      connected: true,
+      publicKey: address,
+      network,
+      networkPassphrase,
+      walletType: "freighter",
+    };
   } catch {
-    return { connected: false, publicKey: null, network: null, networkPassphrase: null, walletType: null };
+    return {
+      connected: false,
+      publicKey: null,
+      network: null,
+      networkPassphrase: null,
+      walletType: null,
+    };
   }
 }
 
@@ -85,42 +110,90 @@ export async function connectWallet(
         if (!connected) {
           return {
             state: null,
-            error: { type: "WALLET_NOT_FOUND", wallet: "freighter", message: "Freighter extension not installed. Install it from freighter.app" },
+            error: {
+              type: "WALLET_NOT_FOUND",
+              wallet: "freighter",
+              message:
+                "Freighter extension not installed. Install it from freighter.app",
+            },
           };
         }
         await setAllowed();
         const { address } = await requestAccess();
         const { network, networkPassphrase } = await getNetwork();
-        return { state: { connected: true, publicKey: address, network, networkPassphrase, walletType: "freighter" } };
+        return {
+          state: {
+            connected: true,
+            publicKey: address,
+            network,
+            networkPassphrase,
+            walletType: "freighter",
+          },
+        };
       }
 
       case "xbull": {
         if (typeof window === "undefined" || !window.xBullSDK) {
           return {
             state: null,
-            error: { type: "WALLET_NOT_FOUND", wallet: "xbull", message: "xBull wallet not detected. Install it from xbull.app" },
+            error: {
+              type: "WALLET_NOT_FOUND",
+              wallet: "xbull",
+              message: "xBull wallet not detected. Install it from xbull.app",
+            },
           };
         }
         const resp = await window.xBullSDK.connect();
-        return { state: { connected: true, publicKey: resp.address, network: resp.network, networkPassphrase: resp.networkPassphrase, walletType: "xbull" } };
+        return {
+          state: {
+            connected: true,
+            publicKey: resp.address,
+            network: resp.network,
+            networkPassphrase: resp.networkPassphrase,
+            walletType: "xbull",
+          },
+        };
       }
 
       case "albedo": {
         return {
           state: null,
-          error: { type: "WALLET_NOT_FOUND", wallet: "albedo", message: "Albedo wallet integration coming soon" },
+          error: {
+            type: "WALLET_NOT_FOUND",
+            wallet: "albedo",
+            message: "Albedo wallet integration coming soon",
+          },
         };
       }
 
       default:
-        return { state: null, error: { type: "WALLET_NOT_FOUND", wallet: type, message: "Unknown wallet type" } };
+        return {
+          state: null,
+          error: {
+            type: "WALLET_NOT_FOUND",
+            wallet: type,
+            message: "Unknown wallet type",
+          },
+        };
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unknown error";
-    if (msg.toLowerCase().includes("reject") || msg.toLowerCase().includes("denied")) {
-      return { state: null, error: { type: "USER_REJECTED", message: "User rejected the wallet connection" } };
+    if (
+      msg.toLowerCase().includes("reject") ||
+      msg.toLowerCase().includes("denied")
+    ) {
+      return {
+        state: null,
+        error: {
+          type: "USER_REJECTED",
+          message: "User rejected the wallet connection",
+        },
+      };
     }
-    return { state: null, error: { type: "WALLET_NOT_FOUND", wallet: type, message: msg } };
+    return {
+      state: null,
+      error: { type: "WALLET_NOT_FOUND", wallet: type, message: msg },
+    };
   }
 }
 
@@ -146,7 +219,9 @@ export async function sendXLM(
     const server = new Horizon.Server(HORIZON_URL);
     const sourceAccount = await server.loadAccount(sourcePublicKey);
 
-    const balance = sourceAccount.balances.find((b) => b.asset_type === "native");
+    const balance = sourceAccount.balances.find(
+      (b) => b.asset_type === "native"
+    );
     const have = Number.parseFloat(balance?.balance ?? "0");
     const need = Number.parseFloat(amount);
     if (need > have) {
@@ -170,7 +245,7 @@ export async function sendXLM(
           destination: destinationAddress,
           asset: Asset.native(),
           amount,
-        }),
+        })
       )
       .setTimeout(30)
       .build();
@@ -190,14 +265,22 @@ export async function sendXLM(
     const result = await response.json();
     if (!response.ok) {
       const codes = result?.extras?.result_codes;
-      const detail = codes ? JSON.stringify(codes) : (result.detail || result.title || "Horizon rejected transaction");
+      const detail = codes
+        ? JSON.stringify(codes)
+        : result.detail || result.title || "Horizon rejected transaction";
       throw new Error(String(detail));
     }
     return { success: true, hash: result.hash ?? result.id };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Transaction failed";
     if (msg.includes("reject") || msg.includes("denied")) {
-      return { success: false, error: { type: "USER_REJECTED", message: "User rejected the transaction" } };
+      return {
+        success: false,
+        error: {
+          type: "USER_REJECTED",
+          message: "User rejected the transaction",
+        },
+      };
     }
     return {
       success: false,
@@ -206,11 +289,19 @@ export async function sendXLM(
   }
 }
 
-export function signSorobanTx(walletType: WalletType, xdr: string, networkPassphrase: string): Promise<{ signedTxXdr: string }> {
+export function signSorobanTx(
+  walletType: WalletType,
+  xdr: string,
+  networkPassphrase: string
+): Promise<{ signedTxXdr: string }> {
   if (walletType === "freighter") {
     return signTransaction(xdr, { networkPassphrase });
   }
-  if (walletType === "xbull" && typeof window !== "undefined" && window.xBullSDK) {
+  if (
+    walletType === "xbull" &&
+    typeof window !== "undefined" &&
+    window.xBullSDK
+  ) {
     return window.xBullSDK.sign(xdr);
   }
   return signTransaction(xdr, { networkPassphrase });

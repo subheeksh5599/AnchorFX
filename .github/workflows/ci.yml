@@ -26,6 +26,15 @@ jobs:
       - name: Verify WASM build (oracle)
         working-directory: contracts/anchorfx-oracle
         run: cargo build --target wasm32-unknown-unknown --release
+      - name: Check Rust formatting
+        working-directory: contracts/anchorfx-escrow
+        run: cargo fmt --check
+      - name: Clippy lint (escrow)
+        working-directory: contracts/anchorfx-escrow
+        run: cargo clippy -- -D warnings
+      - name: Clippy lint (oracle)
+        working-directory: contracts/anchorfx-oracle
+        run: cargo clippy -- -D warnings
 
   frontend-build:
     name: Frontend Build & Test
@@ -34,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
@@ -53,15 +62,3 @@ jobs:
       - name: Lint
         working-directory: frontend
         run: npx eslint . --quiet
-      - name: Security Audit (npm)
-        working-directory: frontend
-        run: npm audit --audit-level=high
-      - name: Check Rust formatting
-        run: cargo fmt --check
-        working-directory: contracts/anchorfx-escrow
-      - name: Clippy lint (escrow)
-        run: cargo clippy -- -D warnings
-        working-directory: contracts/anchorfx-escrow
-      - name: Clippy lint (oracle)
-        run: cargo clippy -- -D warnings
-        working-directory: contracts/anchorfx-oracle

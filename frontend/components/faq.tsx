@@ -52,7 +52,7 @@ function FAQItem({
         onClick={onToggle}
         className="group flex w-full items-center justify-between py-6 text-left"
       >
-        <span className="text-foreground text-lg font-medium pr-8 md:text-xl">
+        <span className="text-foreground pr-8 text-lg font-medium md:text-xl">
           {faq.question}
         </span>
         <motion.div
@@ -92,13 +92,15 @@ export function FAQ(): ReactNode {
   };
 
   return (
-    <section className="bg-foreground px-6 py-16 md:py-32 rounded-4xl">
+    <section className="bg-foreground rounded-4xl px-6 py-16 md:py-32">
       <div className="mx-auto max-w-3xl">
         <motion.div
           ref={headerRef}
           className="mb-12 text-center md:mb-16"
           initial={{ opacity: 0, y: 20 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, ease: easeOut }}
         >
           <h2 className="text-background text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">
@@ -107,7 +109,7 @@ export function FAQ(): ReactNode {
         </motion.div>
 
         <motion.div
-          className="bg-background rounded-2xl px-6 md:px-10 py-2"
+          className="bg-background rounded-2xl px-6 py-2 md:px-10"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -136,11 +138,11 @@ export function FAQ(): ReactNode {
           </p>
           <a
             href="mailto:komasubheeksh@gmail.com"
-            className="group inline-flex items-center gap-3 rounded-md bg-background py-3 pl-5 pr-3 font-medium text-foreground shadow-lg transition-all duration-500 ease-out hover:rounded-[50px]"
+            className="group bg-background text-foreground inline-flex items-center gap-3 rounded-md py-3 pr-3 pl-5 font-medium shadow-lg transition-all duration-500 ease-out hover:rounded-[50px]"
           >
             <span>Get in Touch</span>
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background transition-all duration-300 group-hover:scale-110">
-              <ChevronRightIcon className="h-4 w-4 relative left-px" />
+            <span className="bg-foreground text-background flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110">
+              <ChevronRightIcon className="relative left-px h-4 w-4" />
             </span>
           </a>
         </motion.div>

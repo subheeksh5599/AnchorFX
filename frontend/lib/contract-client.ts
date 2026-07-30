@@ -18,7 +18,14 @@ import { RPC_URL, HORIZON_URL, XLM_SAC_ADDRESS } from "./env";
 const WASM_PATH = "/wasm/anchorfx_escrow.wasm";
 
 interface TxStatus {
-  status: "pending" | "building" | "simulating" | "signing" | "submitting" | "success" | "failed";
+  status:
+    | "pending"
+    | "building"
+    | "simulating"
+    | "signing"
+    | "submitting"
+    | "success"
+    | "failed";
   hash?: string;
   error?: string;
   contractId?: string;
@@ -35,7 +42,8 @@ interface EscrowData {
   createdAt: number;
 }
 
-export type { TxStatus, EscrowData }; export { XLM_SAC_ADDRESS as NATIVE_XLM_SAC };
+export type { TxStatus, EscrowData };
+export { XLM_SAC_ADDRESS as NATIVE_XLM_SAC };
 
 export function createRpcServer(): RpcServer {
   return new RpcServer(RPC_URL, { allowHttp: false });
@@ -57,7 +65,10 @@ export async function deployContract(
     // Load WASM
     const wasmResponse = await fetch(WASM_PATH);
     if (!wasmResponse.ok) {
-      return { status: "failed", error: `Failed to load WASM: ${wasmResponse.status}` };
+      return {
+        status: "failed",
+        error: `Failed to load WASM: ${wasmResponse.status}`,
+      };
     }
     const wasmBuffer = new Uint8Array(await wasmResponse.arrayBuffer());
     const wasmHash = await sha256(wasmBuffer);
@@ -82,7 +93,10 @@ export async function deployContract(
     try {
       uploadPrep = await rpc.prepareTransaction(uploadTx);
     } catch {
-      return { status: "failed", error: "RPC simulation failed — try deploying via Stellar CLI instead" };
+      return {
+        status: "failed",
+        error: "RPC simulation failed — try deploying via Stellar CLI instead",
+      };
     }
 
     onStatus({ status: "signing" });
@@ -97,7 +111,10 @@ export async function deployContract(
       TransactionBuilder.fromXDR(uploadXdr, Networks.PUBLIC)
     );
     if (uploadResult.status === "ERROR") {
-      return { status: "failed", error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}` };
+      return {
+        status: "failed",
+        error: `WASM upload failed: ${JSON.stringify(uploadResult.errorResult ?? "unknown")}`,
+      };
     }
 
     // Wait for upload transaction to confirm on ledger before getting new sequence
@@ -111,14 +128,17 @@ export async function deployContract(
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
     if (!account2!) {
-      return { status: "failed", error: "Timed out waiting for upload to confirm" };
+      return {
+        status: "failed",
+        error: "Timed out waiting for upload to confirm",
+      };
     }
 
     // Step 2: Create contract via RPC (no constructor args — call init separately)
-      onStatus({ status: "simulating" });
-      const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
-      const adminAddress = Address.fromString(sourcePublicKey);
-      const oracleAddress = Address.fromString(sourcePublicKey); // same key owns oracle — deploy oracle contract separately for production
+    onStatus({ status: "simulating" });
+    const salt = Buffer.from(crypto.getRandomValues(new Uint8Array(32)));
+    const adminAddress = Address.fromString(sourcePublicKey);
+    const oracleAddress = Address.fromString(sourcePublicKey); // same key owns oracle — deploy oracle contract separately for production
 
     const createTx = new TransactionBuilder(account2, {
       fee: "100000",
@@ -149,7 +169,10 @@ export async function deployContract(
     );
 
     if (createResult.status === "ERROR") {
-      return { status: "failed", error: `Contract creation failed: ${JSON.stringify(createResult.errorResult ?? "unknown")}` };
+      return {
+        status: "failed",
+        error: `Contract creation failed: ${JSON.stringify(createResult.errorResult ?? "unknown")}`,
+      };
     }
 
     // Compute deterministic contract ID
@@ -174,7 +197,9 @@ export async function deployContract(
         fee: "100000",
         networkPassphrase: Networks.PUBLIC,
       })
-        .addOperation(invoker.call("init", adminAddress.toScVal(), oracleAddress.toScVal()))
+        .addOperation(
+          invoker.call("init", adminAddress.toScVal(), oracleAddress.toScVal())
+        )
         .setTimeout(30)
         .build();
 
@@ -215,14 +240,17 @@ export async function getEscrowFromContract(
     const rpc = createRpcServer();
 
     const contract = new Contract(contractId);
-    const sourcePublicKey = "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+    const sourcePublicKey =
+      "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
     const fakeAccount = new Account(sourcePublicKey, "1");
 
     const tx = new TransactionBuilder(fakeAccount, {
       fee: "100",
       networkPassphrase: Networks.PUBLIC,
     })
-      .addOperation(contract.call("get_escrow", xdr.ScVal.scvU64(new xdr.Uint64(escrowId))))
+      .addOperation(
+        contract.call("get_escrow", xdr.ScVal.scvU64(new xdr.Uint64(escrowId)))
+      )
       .setTimeout(30)
       .build();
 
@@ -328,7 +356,12 @@ export function subscribeContractEvents(
 }
 
 function scvI128(n: bigint): xdr.ScVal {
-  return xdr.ScVal.scvI128(new xdr.Int128Parts({ lo: n as unknown as xdr.Uint64, hi: BigInt(0) as unknown as xdr.Uint64 }));
+  return xdr.ScVal.scvI128(
+    new xdr.Int128Parts({
+      lo: n as unknown as xdr.Uint64,
+      hi: BigInt(0) as unknown as xdr.Uint64,
+    })
+  );
 }
 
 function scvU64(n: number): xdr.ScVal {
@@ -362,7 +395,7 @@ async function invokeContract(
   fnName: string,
   args: xdr.ScVal[],
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
   try {
     onStatus({ status: "building" });
@@ -382,10 +415,14 @@ async function invokeContract(
     const prep = await rpc.prepareTransaction(tx);
 
     onStatus({ status: "signing" });
-    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.PUBLIC);
+    const { signedTxXdr } = await signSorobanTx(
+      walletType,
+      prep.toXDR(),
+      Networks.PUBLIC
+    );
 
     onStatus({ status: "submitting" });
-    
+
     if (sponsored) {
       // Fee sponsorship: submit via API, admin pays the fee
       const { sponsoredSubmit } = await import("./sponsor");
@@ -400,7 +437,11 @@ async function invokeContract(
     if (result.status === "ERROR") {
       const errStr = JSON.stringify(result.errorResult ?? "unknown");
       if (errStr.includes("tx_bad_auth")) {
-        return { status: "failed", error: "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet." };
+        return {
+          status: "failed",
+          error:
+            "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet.",
+        };
       }
       return { status: "failed", error: `Transaction failed: ${errStr}` };
     }
@@ -410,7 +451,10 @@ async function invokeContract(
 
     return { status: "success", hash: result.hash };
   } catch (err: unknown) {
-    return { status: "failed", error: err instanceof Error ? err.message : "Transaction failed" };
+    return {
+      status: "failed",
+      error: err instanceof Error ? err.message : "Transaction failed",
+    };
   }
 }
 
@@ -420,7 +464,7 @@ export async function approveTokenTransfer(
   tokenAddress: string,
   spenderContractId: string,
   amount: bigint,
-  onStatus: (s: TxStatus) => void,
+  onStatus: (s: TxStatus) => void
 ): Promise<TxStatus> {
   try {
     onStatus({ status: "building" });
@@ -436,7 +480,15 @@ export async function approveTokenTransfer(
       fee: "1000000",
       networkPassphrase: Networks.PUBLIC,
     })
-      .addOperation(tokenContract.call("approve", senderAddr.toScVal(), spenderAddr.toScVal(), scvI128(amount), scvU32(expiry)))
+      .addOperation(
+        tokenContract.call(
+          "approve",
+          senderAddr.toScVal(),
+          spenderAddr.toScVal(),
+          scvI128(amount),
+          scvU32(expiry)
+        )
+      )
       .setTimeout(60)
       .build();
 
@@ -444,14 +496,24 @@ export async function approveTokenTransfer(
     const prep = await rpc.prepareTransaction(tx);
 
     onStatus({ status: "signing" });
-    const { signedTxXdr } = await signSorobanTx(walletType, prep.toXDR(), Networks.PUBLIC);
+    const { signedTxXdr } = await signSorobanTx(
+      walletType,
+      prep.toXDR(),
+      Networks.PUBLIC
+    );
 
     onStatus({ status: "submitting" });
-    const result = await rpc.sendTransaction(TransactionBuilder.fromXDR(signedTxXdr, Networks.PUBLIC));
+    const result = await rpc.sendTransaction(
+      TransactionBuilder.fromXDR(signedTxXdr, Networks.PUBLIC)
+    );
     if (result.status === "ERROR") {
       const errStr = JSON.stringify(result.errorResult ?? "unknown");
       if (errStr.includes("tx_bad_auth")) {
-        return { status: "failed", error: "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet." };
+        return {
+          status: "failed",
+          error:
+            "Auth signature missing — ensure Freighter extension is updated to v6+. Try reconnecting wallet.",
+        };
       }
       return { status: "failed", error: `Token approval failed: ${errStr}` };
     }
@@ -460,7 +522,10 @@ export async function approveTokenTransfer(
     await pollTx(result.hash, rpc);
     return { status: "success", hash: result.hash };
   } catch (err: unknown) {
-    return { status: "failed", error: err instanceof Error ? err.message : "Approval failed" };
+    return {
+      status: "failed",
+      error: err instanceof Error ? err.message : "Approval failed",
+    };
   }
 }
 
@@ -474,20 +539,28 @@ export async function createEscrow(
   timeoutBlocks: number,
   corridor: number,
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
   const senderAddr = Address.fromString(sourcePublicKey);
   const receiverAddr = Address.fromString(receiver);
   const tokenAddr = Address.fromString(token);
 
-  return invokeContract(sourcePublicKey, walletType, contractId, "create_escrow", [
-    senderAddr.toScVal(),
-    receiverAddr.toScVal(),
-    tokenAddr.toScVal(),
-    scvI128(amount),
-    scvU32(timeoutBlocks),
-    scvU32(corridor),
-  ], onStatus, sponsored);
+  return invokeContract(
+    sourcePublicKey,
+    walletType,
+    contractId,
+    "create_escrow",
+    [
+      senderAddr.toScVal(),
+      receiverAddr.toScVal(),
+      tokenAddr.toScVal(),
+      scvI128(amount),
+      scvU32(timeoutBlocks),
+      scvU32(corridor),
+    ],
+    onStatus,
+    sponsored
+  );
 }
 
 export async function counterpartyApprove(
@@ -496,9 +569,17 @@ export async function counterpartyApprove(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "counterparty_approve", [scvU64(escrowId)], onStatus, sponsored);
+  return invokeContract(
+    sourcePublicKey,
+    walletType,
+    contractId,
+    "counterparty_approve",
+    [scvU64(escrowId)],
+    onStatus,
+    sponsored
+  );
 }
 
 export async function settleEscrow(
@@ -507,9 +588,17 @@ export async function settleEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "settle", [scvU64(escrowId)], onStatus, sponsored);
+  return invokeContract(
+    sourcePublicKey,
+    walletType,
+    contractId,
+    "settle",
+    [scvU64(escrowId)],
+    onStatus,
+    sponsored
+  );
 }
 
 export async function refundEscrow(
@@ -518,9 +607,17 @@ export async function refundEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "refund", [scvU64(escrowId)], onStatus, sponsored);
+  return invokeContract(
+    sourcePublicKey,
+    walletType,
+    contractId,
+    "refund",
+    [scvU64(escrowId)],
+    onStatus,
+    sponsored
+  );
 }
 
 export async function cancelEscrow(
@@ -529,7 +626,15 @@ export async function cancelEscrow(
   contractId: string,
   escrowId: number,
   onStatus: (s: TxStatus) => void,
-  sponsored = false,
+  sponsored = false
 ): Promise<TxStatus> {
-  return invokeContract(sourcePublicKey, walletType, contractId, "cancel", [scvU64(escrowId)], onStatus, sponsored);
+  return invokeContract(
+    sourcePublicKey,
+    walletType,
+    contractId,
+    "cancel",
+    [scvU64(escrowId)],
+    onStatus,
+    sponsored
+  );
 }

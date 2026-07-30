@@ -42,7 +42,7 @@ function StepCard({
   return (
     <motion.div
       ref={ref}
-      className="bg-muted min-h-48 md:min-h-70 rounded-2xl p-6 md:p-8 flex flex-col"
+      className="bg-muted flex min-h-48 flex-col rounded-2xl p-6 md:min-h-70 md:p-8"
       initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{ duration: 0.6, delay: index * 0.1, ease: easeOut }}
@@ -50,7 +50,7 @@ function StepCard({
       <div className="text-foreground mb-6">
         <Icon className="h-12 w-12" strokeWidth={1} />
       </div>
-      <h3 className="mb-3 text-xl font-medium tracking-tight md:text-2xl mt-auto">
+      <h3 className="mt-auto mb-3 text-xl font-medium tracking-tight md:text-2xl">
         {step.title}
       </h3>
       <p className="text-muted-foreground text-base leading-relaxed">
@@ -71,7 +71,9 @@ export function HowItWorks(): ReactNode {
           ref={headerRef}
           className="mb-8 text-center md:mb-16"
           initial={{ opacity: 0, y: 20 }}
-          animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={
+            isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+          }
           transition={{ duration: 0.6, ease: easeOut }}
         >
           <h2 className="text-3xl font-medium tracking-tight md:text-4xl lg:text-5xl">

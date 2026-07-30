@@ -22,9 +22,9 @@ export function ThemeSwitch(): ReactNode {
 
   if (!mounted) {
     return (
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed right-6 bottom-6 z-50">
         <button
-          className="h-10 w-10 cursor-not-allowed rounded-full bg-foreground/10 opacity-30"
+          className="bg-foreground/10 h-10 w-10 cursor-not-allowed rounded-full opacity-30"
           aria-label="Toggle theme"
           disabled
         />
@@ -35,10 +35,10 @@ export function ThemeSwitch(): ReactNode {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed right-6 bottom-6 z-50">
       <button
         onClick={toggleTheme}
-        className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-muted text-foreground opacity-30 shadow-lg transition-opacity duration-300 hover:opacity-100 hover:shadow-xl"
+        className="bg-muted text-foreground flex h-10 w-10 cursor-pointer items-center justify-center rounded-full opacity-30 shadow-lg transition-opacity duration-300 hover:opacity-100 hover:shadow-xl"
         aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
         aria-pressed={isDark}
         type="button"

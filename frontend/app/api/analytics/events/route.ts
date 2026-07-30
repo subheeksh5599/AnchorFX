@@ -16,39 +16,67 @@ export async function GET(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.api, "analytics");
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
-      status: 429, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
   counters.api_calls = (counters.api_calls ?? 0) + 1;
 
-  return new Response(JSON.stringify({
-    metrics: counters,
-    uptime: Math.round((Date.now() - startTime) / 1000),
-    timestamp: new Date().toISOString(),
-  }), {
-    status: 200,
-    headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+  return new Response(
+    JSON.stringify({
+      metrics: counters,
+      uptime: Math.round((Date.now() - startTime) / 1000),
+      timestamp: new Date().toISOString(),
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    }
+  );
 }
 
 export async function POST(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.wallet, "analytics_write");
   if (!limitResult.allowed) {
     return new Response(JSON.stringify({ error: "Too many requests" }), {
-      status: 429, headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
     });
   }
 
   let body: Record<string, unknown> = {};
-  try { body = await request.json(); } catch { /* ignore */ }
+  try {
+    body = await request.json();
+  } catch {
+    /* ignore */
+  }
 
   const event = String(body.event ?? "");
-  const validEvents = ["page_view", "wallet_connection", "escrow_created", "settlement_completed", "refund"];
+  const validEvents = [
+    "page_view",
+    "wallet_connection",
+    "escrow_created",
+    "settlement_completed",
+    "refund",
+  ];
   if (!validEvents.includes(event)) {
-    return new Response(JSON.stringify({ error: "Invalid event", valid: validEvents }), {
-      status: 400, headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "Invalid event", valid: validEvents }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 
   // Map event names to counter keys
@@ -63,12 +91,18 @@ export async function POST(request: Request) {
   const key = keyMap[event]!;
   counters[key] = (counters[key] ?? 0) + 1;
 
-  return new Response(JSON.stringify({
-    tracked: event,
-    total: counters[key],
-    all: counters,
-  }), {
-    status: 200,
-    headers: { "Content-Type": "application/json", ...rateLimitHeaders(limitResult) },
-  });
+  return new Response(
+    JSON.stringify({
+      tracked: event,
+      total: counters[key],
+      all: counters,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...rateLimitHeaders(limitResult),
+      },
+    }
+  );
 }

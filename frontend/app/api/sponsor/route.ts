@@ -13,15 +13,22 @@ export async function POST(req: Request) {
     }
 
     if (!ADMIN_SECRET) {
-      return Response.json({ error: "Admin key not configured" }, { status: 500 });
+      return Response.json(
+        { error: "Admin key not configured" },
+        { status: 500 }
+      );
     }
 
-    const networkPassphrase = NETWORK === "PUBLIC" ? Networks.PUBLIC : Networks.TESTNET;
+    const networkPassphrase =
+      NETWORK === "PUBLIC" ? Networks.PUBLIC : Networks.TESTNET;
     const adminKp = Keypair.fromSecret(ADMIN_SECRET);
     const rpc = new RpcServer(RPC_URL, { allowHttp: false });
 
     // Wrap the signed inner transaction in a fee bump
-    const innerTx = TransactionBuilder.fromXDR(signedXdr, networkPassphrase) as import("@stellar/stellar-sdk").Transaction;
+    const innerTx = TransactionBuilder.fromXDR(
+      signedXdr,
+      networkPassphrase
+    ) as import("@stellar/stellar-sdk").Transaction;
     const feeBumpTx = TransactionBuilder.buildFeeBumpTransaction(
       adminKp,
       "100000", // 0.01 XLM fee — generous
