@@ -217,7 +217,7 @@ export async function deployContract(
       if (String(initResult.status) === "SUCCESS") {
         onStatus({ status: "success", hash: createResult.hash, contractId });
       }
-    } catch (initErr) {
+    } catch (_initErr) {
       // Contract deployed successfully but init step failed — admin can call init separately
     }
 

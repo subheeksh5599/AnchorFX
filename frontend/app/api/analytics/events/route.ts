@@ -10,7 +10,7 @@ const counters: Record<string, number> = {
   api_calls: 0,
 };
 
-let startTime = Date.now();
+const startTime = Date.now();
 
 export async function GET(request: Request) {
   const limitResult = rateLimit(request, RATE_LIMITS.api, "analytics");
