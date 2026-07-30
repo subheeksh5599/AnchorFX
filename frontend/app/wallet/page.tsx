@@ -131,9 +131,9 @@ export default function WalletPage(): ReactNode {
         setEscrowStatus("error");
         setEscrowError("Escrow creation failed");
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       setEscrowStatus("error");
-      setEscrowError(e.message?.slice(0, 200) || "Unknown error");
+      setEscrowError((e as Error).message?.slice(0, 200) || "Unknown error");
     }
   }, [wallet, escrowReceiver, escrowAmount]);
 
@@ -149,8 +149,8 @@ export default function WalletPage(): ReactNode {
         () => {},
         true
       );
-    } catch (e: any) {
-      setEscrowError(e.message?.slice(0, 200));
+    } catch (e: unknown) {
+      setEscrowError((e as Error).message?.slice(0, 200));
     }
   }, [wallet, escrowId]);
 
