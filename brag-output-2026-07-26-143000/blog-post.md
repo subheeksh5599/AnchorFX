@@ -169,6 +169,6 @@ AnchorFX is MIT licensed. Contracts, frontend, deploy scripts, and tests are all
 
 **GitHub:** [github.com/subheeksh5599/AnchorFX](https://github.com/subheeksh5599/AnchorFX)
 **Live:** [anchorfx.vercel.app](https://anchorfx.vercel.app)
-**Twitter:** [@Tenki_ai](https://x.com/Tenki_ai)
+**Twitter:** [@AnchorFX_](https://x.com/AnchorFX_)
 
 Built for the Stellar Journey to Mastery — Black Belt track. Stellar, Soroban SDK v22, Rust WASM, Next.js 16.
