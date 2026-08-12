@@ -12,6 +12,12 @@ const CORRIDORS: Record<number, { from: string; to: string }> = {
   3: { from: "EUR", to: "BR" },
   4: { from: "US", to: "NG" },
   5: { from: "EUR", to: "IN" },
+  6: { from: "US", to: "AR" },
+  7: { from: "US", to: "GH" },
+  8: { from: "US", to: "KE" },
+  9: { from: "US", to: "ID" },
+  10: { from: "US", to: "VN" },
+  11: { from: "US", to: "TH" },
 };
 
 export async function GET(request: Request) {

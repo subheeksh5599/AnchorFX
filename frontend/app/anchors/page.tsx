@@ -54,6 +54,12 @@ const CORRIDORS: Record<number, { from: string; to: string }> = {
   3: { from: "EUR", to: "BR" },
   4: { from: "US", to: "NG" },
   5: { from: "EUR", to: "IN" },
+  6: { from: "US", to: "AR" },
+  7: { from: "US", to: "GH" },
+  8: { from: "US", to: "KE" },
+  9: { from: "US", to: "ID" },
+  10: { from: "US", to: "VN" },
+  11: { from: "US", to: "TH" },
 };
 
 const CORRIDOR_OPTIONS = [
@@ -62,6 +68,12 @@ const CORRIDOR_OPTIONS = [
   { value: 3, label: "EUR → BR" },
   { value: 4, label: "US → NG" },
   { value: 5, label: "EUR → IN" },
+  { value: 6, label: "US → AR" },
+  { value: 7, label: "US → GH" },
+  { value: 8, label: "US → KE" },
+  { value: 9, label: "US → ID" },
+  { value: 10, label: "US → VN" },
+  { value: 11, label: "US → TH" },
 ];
 
 const TOKEN_PRESETS = [
@@ -879,6 +891,12 @@ export default function AnchorsPage(): ReactNode {
                 <option value="BR">🇧🇷 BRL</option>
                 <option value="NG">🇳🇬 NGN</option>
                 <option value="IN">🇮🇳 INR</option>
+                <option value="AR">🇦🇷 ARS</option>
+                <option value="GH">🇬🇭 GHS</option>
+                <option value="KE">🇰🇪 KES</option>
+                <option value="ID">🇮🇩 IDR</option>
+                <option value="VN">🇻🇳 VND</option>
+                <option value="TH">🇹🇭 THB</option>
               </select>
             </div>
             <div>
