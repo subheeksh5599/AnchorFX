@@ -73,6 +73,7 @@ Testnet contracts (Aug 2026 cycle): escrow `CBPMOQDTG535WEWSSJ2R75KZ27R4CYCH4ENV
 - Technical blog: [Building Atomic Cross-Border Settlement on Stellar](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
 - Product launch post: [@Tenki_ai](https://x.com/Tenki_ai/status/2081345430995308770)
 - Demo video: [@Tenki_ai](https://x.com/Tenki_ai/status/2081994208098050080)
+- Followers on X: **100+** (requirement: 50) — proof available on @Tenki_ai profile
 - (In progress) Product update posts for the August feature batch
 
 ## 6. Next Month Goals

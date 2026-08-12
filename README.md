@@ -106,7 +106,7 @@ After the July review cycle, AnchorFX shipped a new feature batch to address the
 - [x] Updated documentation (this README + [docs/](docs/))
 - [ ] 50+ new mainnet users (onboarding in progress via Google Form)
 - [ ] Monthly growth report ([GROWTH-REPORT.md](GROWTH-REPORT.md))
-- [ ] Social media growth proof (50+ followers)
+- [x] Social media growth proof (100+ followers on @Tenki_ai)
 - [ ] Product update posts on X
 - [x] Community contribution proof ([blog + 9 merged open-source PRs](#community-contribution-))
 
