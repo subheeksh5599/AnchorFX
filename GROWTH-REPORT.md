@@ -28,6 +28,8 @@ top user-feedback requests.
 
 ## 3. On-Chain Metrics
 
+### Mainnet
+
 | Metric | Value |
 |--------|-------|
 | Mainnet escrow contract | `CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V` |
@@ -37,6 +39,27 @@ top user-feedback requests.
 | Contract tests | 27 (23 escrow + 4 oracle) |
 | Frontend tests | 34 |
 | CI | Green (contract tests, build, tsc, eslint, prettier) |
+
+### Testnet (Dev & QA)
+
+Fresh testnet deployment and escrow flows run during the August development cycle to
+validate the expanded corridor set (US→AR corridor #6) and oracle rate publishing
+before mainnet use. Full tx trail below.
+
+| Step | TX |
+|------|----|
+| Testnet wallet funded (friendbot) | [`6cc4bf38...`](https://stellar.expert/explorer/testnet/tx/6cc4bf38795f9cfe3cd7) |
+| Oracle WASM upload + deploy | [`4dec64af...`](https://stellar.expert/explorer/testnet/tx/4dec64afc7ed7fd11d6139bb5bcdaae30c15b72139be32caff855c8d3a7b353d) |
+| Oracle init | [`2613673b...`](https://stellar.expert/explorer/testnet/tx/2613673bfa43bda169ced51f77d5b6af69d407673df437b6b7d7ae386ce072c1) |
+| Escrow WASM upload + deploy | [`898a59ce...`](https://stellar.expert/explorer/testnet/tx/898a59ce1d0de8ae7aba718269959e70c65005b7a22208c950b250ada4946428) |
+| Escrow deploy | [`e4ae9d54...`](https://stellar.expert/explorer/testnet/tx/e4ae9d541d5ed8484ff1d0ccc70a700f93e2da6ff00445cce7484d837cdb9d90) |
+| Escrow init | [`60f17eb9...`](https://stellar.expert/explorer/testnet/tx/60f17eb98c6f1df779ee0fcb9933ef66ace7d875cfd8f3372a12ab144667c7f6) |
+| Oracle set_rate (XLM 1.0x) | [`5f3ea2b2...`](https://stellar.expert/explorer/testnet/tx/5f3ea2b2b44bff63af32647ffc0a64c41d7868c8e9bc11322317211284aca1e3) |
+| Token approve | [`eefae40a...`](https://stellar.expert/explorer/testnet/tx/eefae40a801fb53909f27cc318d9bd24a853394cce552283b633c409e8053dd5) |
+| Create escrow #1 (US→PH) | [`91c68b67...`](https://stellar.expert/explorer/testnet/tx/91c68b67169f125918eb4a317216279ea4eb8924226aa6ed81afcc3f006c4555) |
+| Create escrow #2 (US→AR, new corridor) | [`7c38d028...`](https://stellar.expert/explorer/testnet/tx/7c38d028bf31cefb21e7f7acd1f72c68f8fa81aa4102cdf9567b3e20a48a1917) |
+
+Testnet contracts (Aug 2026 cycle): escrow `CBPMOQDTG535WEWSSJ2R75KZ27R4CYCH4ENVYNWX22K7EC24VN7DYFKL` · oracle `CCSQCI5AGTBVB3QF2P332LEMDAQXN7KE5IZZ4WY36BKBJD4UMUKSRCMW` · deployer `GBXIBDWOUL5I6D2ANUDQF7HNUAWVK47I7BX2MPXSGLRPPWQTX7MMXNQM`
 
 ## 4. User Feedback & Retention
 
