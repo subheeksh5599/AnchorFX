@@ -108,7 +108,7 @@ After the July review cycle, AnchorFX shipped a new feature batch to address the
 - [ ] Monthly growth report ([GROWTH-REPORT.md](GROWTH-REPORT.md))
 - [ ] Social media growth proof (50+ followers)
 - [ ] Product update posts on X
-- [ ] Community contribution proof (blog + open-source)
+- [x] Community contribution proof ([blog + 9 merged open-source PRs](#community-contribution-))
 
 ### Next Phase (September 2026) — From User Feedback
 
@@ -393,8 +393,28 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 
 ## Community Contribution ✅
 
+### Technical Blog
+
 - [x] **Technical blog**: "Building Atomic Cross-Border Settlement on Stellar"
 - **Link:** [dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io](https://dev.to/komari_subheeksh_ced2cb4c/building-atomic-cross-border-settlement-on-stellar-8io)
+
+### Open-Source Contributions (Stellar Ecosystem)
+
+9 merged PRs across 3 Stellar/Soroban ecosystem projects (via GrantFox bounty program):
+
+| # | Repo | PR | What |
+|---|------|----|------|
+| 1 | [Grainlify/Grainlify-Stellar-Contracts](https://github.com/Grainlify/Grainlify-Stellar-Contracts) | [#507](https://github.com/Grainlify/Grainlify-Stellar-Contracts/pull/507) | gate `single_payout`/`batch_payout` on program-escrow |
+| 2 | Grainlify/Grainlify-Stellar-Contracts | [#505](https://github.com/Grainlify/Grainlify-Stellar-Contracts/pull/505) | version 3 mapping in `get_version_semver_string` |
+| 3 | Grainlify/Grainlify-Stellar-Contracts | [#504](https://github.com/Grainlify/Grainlify-Stellar-Contracts/pull/504) | reject duplicate signers in `MultiSig::init` |
+| 4 | Grainlify/Grainlify-Stellar-Contracts | [#411](https://github.com/Grainlify/Grainlify-Stellar-Contracts/pull/411) | unit tests for `health_check`/`get_pending_payouts` |
+| 5 | Grainlify/Grainlify-Stellar-Contracts | [#410](https://github.com/Grainlify/Grainlify-Stellar-Contracts/pull/410) | unit tests for `analytics.rs` init/update helpers |
+| 6 | [FinChippay/Finchippay-Solution](https://github.com/FinChippay/Finchippay-Solution) | [#511](https://github.com/FinChippay/Finchippay-Solution/pull/511) | on-chain dispute resolution for escrow |
+| 7 | FinChippay/Finchippay-Solution | [#510](https://github.com/FinChippay/Finchippay-Solution/pull/510) | admin multi-sig governance with proposals |
+| 8 | FinChippay/Finchippay-Solution | [#507](https://github.com/FinChippay/Finchippay-Solution/pull/507) | event-indexer filtering (`since` param) |
+| 9 | [stolla-labs/stolla](https://github.com/stolla-labs/stolla) | [#153](https://github.com/stolla-labs/stolla/pull/153) | simulated resource fees before community deployment approval |
+
+> All 9 merged, all Stellar/Soroban. (Adamantine-guild SDK PRs excluded — not Stellar.)
 
 ---
 
