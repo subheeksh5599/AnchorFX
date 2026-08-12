@@ -78,6 +78,48 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 
 ---
 
+## 🧡 Master Track — Growth & Retention
+
+> Level 7 focuses on sustainable growth, user retention, product-market fit, and building a real business on Stellar.
+
+### August 2026 Growth Cycle — New Features Shipped
+
+After the July review cycle, AnchorFX shipped a new feature batch to address the top user-feedback requests (API access for institutions, more corridors, public transparency). All features are live on [anchorfx.vercel.app](https://anchorfx.vercel.app).
+
+| # | Improvement | User Feedback Source | Commit(s) |
+|---|-------------|---------------------|-----------|
+| 1 | **Public Escrow Explorer** (`/explorer`) — read-only on-chain explorer with corridor/status filters and address search; no wallet required | David — "Needs API access, webhooks, dashboard" | [`a589495`](https://github.com/subheeksh5599/AnchorFX/commit/a589495) |
+| 2 | **Live FX Rates** (`/rates` + `/api/rates`) — reads the on-chain oracle RATES map live from mainnet | Maria — "Would love to see BRL pairs added" | [`a4bacd9`](https://github.com/subheeksh5599/AnchorFX/commit/a4bacd9) |
+| 3 | **6 new corridors** (ARS, GHS, KES, IDR, VND, THB) — 11 total supported corridors | Fatima, Kenji, Anna, Carlos — "More token pairs" | [`9dab6cc`](https://github.com/subheeksh5599/AnchorFX/commit/9dab6cc) |
+| 4 | **Network Status** (`/status`) — live RPC/contract health + analytics | David, Laura — institutional transparency | [`a589495`](https://github.com/subheeksh5599/AnchorFX/commit/a589495) |
+| 5 | **API Reference** (`/developers`) — public REST + SSE endpoint docs | David — "Needs API access" | [`a589495`](https://github.com/subheeksh5599/AnchorFX/commit/a589495) |
+| 6 | **Live mainnet stats strip** on landing page — real escrow/settled/volume counts from `/api/analytics` | All users — transparency | [`316a778`](https://github.com/subheeksh5599/AnchorFX/commit/316a778) |
+
+### Master Track Checklist
+
+- [x] Public GitHub repository
+- [x] 30+ meaningful commits (100+ as of Aug 2026)
+- [x] Live production application (Vercel)
+- [x] Mainnet transaction proof ([20-users-mainnet-proof.txt](frontend/20-users-mainnet-proof.txt), new activity via explorer)
+- [x] User feedback sheet ([Excel](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
+- [x] Product improvement commit links ([table above](#august-2026-growth-cycle--new-features-shipped))
+- [x] Updated documentation (this README + [docs/](docs/))
+- [ ] 50+ new mainnet users (onboarding in progress via Google Form)
+- [ ] Monthly growth report ([GROWTH-REPORT.md](GROWTH-REPORT.md))
+- [ ] Social media growth proof (50+ followers)
+- [ ] Product update posts on X
+- [ ] Community contribution proof (blog + open-source)
+
+### Next Phase (September 2026) — From User Feedback
+
+1. Recurring payments (Asha) — schedule-based escrow creation
+2. Mobile app / push notifications (Priya, Asha, Sarah)
+3. White-label option for fintechs (Laura)
+4. Webhooks for institutional users (David, Laura)
+5. More token pairs (BRL, JPY, EUR, USDT)
+
+---
+
 ## User Onboarding — Google Form
 
 **Feedback Form:** [https://forms.gle/...](https://docs.google.com/forms/d/e/1FAIpQLSeulA6BSWpbVZBUvv9egWKxTbr_aGe5dNy0AqyDBNH3xqSSjQ/viewform)
@@ -137,6 +179,10 @@ AnchorFX enables trustless, atomic FX settlement between regulated financial anc
 | Contract | https://anchorfx.vercel.app/contract |
 | Anchors | https://anchorfx.vercel.app/anchors |
 | Admin | https://anchorfx.vercel.app/admin |
+| Escrow Explorer | https://anchorfx.vercel.app/explorer |
+| Live FX Rates | https://anchorfx.vercel.app/rates |
+| Network Status | https://anchorfx.vercel.app/status |
+| API Reference | https://anchorfx.vercel.app/developers |
 
 ---
 
@@ -153,8 +199,12 @@ AnchorFX/
 │   │   ├── wallet/page.tsx                 # Multi-wallet connect + balance + send
 │   │   ├── contract/page.tsx               # Deploy + read + SSE event stream
 │   │   ├── anchors/page.tsx                # Escrow management dashboard
+│   │   ├── explorer/page.tsx               # Public on-chain escrow explorer
+│   │   ├── rates/page.tsx                  # Live oracle FX rates
+│   │   ├── status/page.tsx                 # Network + contract health
+│   │   ├── developers/page.tsx             # Public API reference
 │   │   ├── admin/page.tsx                  # Admin analytics + controls
-│   │   └── api/                            # 10 API routes (REST + SSE)
+│   │   └── api/                            # 12 API routes (REST + SSE + rates)
 │   ├── components/
 │   │   ├── wallet-provider.tsx             # React context for multi-wallet state
 │   │   ├── providers.tsx                   # Theme + scroll + wallet providers
@@ -314,11 +364,11 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 | Smart Contracts | 2 (Escrow + Oracle) |
 | Networks | Testnet + Mainnet |
 | Contract Tests | 27 (23 escrow + 4 oracle) |
-| Frontend Tests | 26 |
-| **Total Tests** | **53 passing, zero warnings** |
+| Frontend Tests | 34 |
+| **Total Tests** | **61 passing, zero warnings** |
 | Audit Findings | 257 → all critical/high/medium fixed |
 | Mainnet Deploy TXs | 6 verified |
-| API Routes | 10 (REST + SSE + SEP-31) |
+| API Routes | 12 (REST + SSE + SEP-31 + rates) |
 | License | MIT |
 
 ---
