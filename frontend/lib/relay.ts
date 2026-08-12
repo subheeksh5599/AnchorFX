@@ -271,6 +271,66 @@ export async function getHealth(contractId: string): Promise<HealthStatus> {
   };
 }
 
+export interface OracleRate {
+  token: string;
+  rate: number;
+  updatedAt: number;
+  expiresAt: number;
+}
+
+// Known corridor tokens (address -> label) for the oracle rates page.
+// Falls back to the on-chain RATES map keyed by token address.
+const KNOWN_TOKENS: Record<string, { symbol: string; corridor: string }> = {};
+
+export async function getOracleRates(
+  oracleId: string
+): Promise<OracleRate[]> {
+  const rpc = createRpc();
+
+  try {
+    const ratesKey = xdr.LedgerKey.contractData(
+      new xdr.LedgerKeyContractData({
+        contract: Address.fromString(oracleId).toScAddress(),
+        key: xdr.ScVal.scvSymbol("RATES"),
+        durability: xdr.ContractDataDurability.persistent(),
+      })
+    );
+
+    const result = await rpc.getLedgerEntries(ratesKey);
+    if (!result.entries?.length) return [];
+
+    const raw = scValToNative(result.entries[0]!.val.contractData().val());
+    if (!raw || typeof raw !== "object") return [];
+
+    const entries = Array.isArray(raw)
+      ? (raw as Array<{ key: unknown; val: Record<string, unknown> }>)
+      : Object.entries(raw as Record<string, Record<string, unknown>>).map(
+          ([k, v]) => ({ key: k, val: v })
+        );
+
+    const rates: OracleRate[] = [];
+    for (const entry of entries) {
+      const token = String(entry.key);
+      const val = entry.val;
+      if (!val || typeof val !== "object") continue;
+      rates.push({
+        token,
+        rate: Number(val.rate ?? 0),
+        updatedAt: Number(val.updated_at ?? 0),
+        expiresAt: Number(val.expires_at ?? 0),
+      });
+    }
+    return rates;
+  } catch {
+    return [];
+  }
+}
+
+export function tokenLabel(token: string): string {
+  if (KNOWN_TOKENS[token]) return KNOWN_TOKENS[token]!.symbol;
+  return token.slice(0, 6) + "…" + token.slice(-4);
+}
+
 // Event subscription with cursor persistence
 const eventCursors: Map<string, string> = new Map();
 
