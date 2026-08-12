@@ -43,6 +43,8 @@ const menuCards = [
       { label: "Wallet", href: "/wallet", badge: "LIVE" },
       { label: "Smart Contract", href: "/contract", badge: "NEW" },
       { label: "Settlement", href: "/anchors", badge: null },
+      { label: "Escrow Explorer", href: "/explorer", badge: "NEW" },
+      { label: "Live FX Rates", href: "/rates", badge: "NEW" },
       { label: "Admin", href: "/admin", badge: null },
       {
         label: "Documentation",
@@ -55,6 +57,16 @@ const menuCards = [
     id: "resources",
     title: "RESOURCES",
     links: [
+      {
+        label: "API Reference",
+        href: "/developers",
+        badge: "NEW",
+      },
+      {
+        label: "Network Status",
+        href: "/status",
+        badge: "NEW",
+      },
       {
         label: "Stellar Docs",
         href: "https://developers.stellar.org",

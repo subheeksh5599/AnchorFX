@@ -3,6 +3,7 @@ import { Features } from "@/components/features";
 import { FinalCTA } from "@/components/final-cta";
 import { Hero } from "@/components/hero";
 import { HowItWorks } from "@/components/how-it-works";
+import { LiveStatsStrip } from "@/components/live-stats-strip";
 import { Pricing } from "@/components/pricing";
 import { Stats } from "@/components/stats";
 import { Testimonials } from "@/components/testimonials";
@@ -20,6 +21,7 @@ export default function HomePage(): ReactNode {
   return (
     <main id="main" className="flex-1">
       <Hero />
+      <LiveStatsStrip />
       <HowItWorks />
       <Features />
       <Stats />

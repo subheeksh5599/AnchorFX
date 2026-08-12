@@ -17,7 +17,11 @@ const fadeInUp = {
 
 const productLinks = [
   { label: "Wallet", href: "/wallet" },
-  { label: "Smart Contracts", href: "/contract" },
+  { label: "Settlement", href: "/anchors" },
+  { label: "Escrow Explorer", href: "/explorer" },
+  { label: "Live FX Rates", href: "/rates" },
+  { label: "API Reference", href: "/developers" },
+  { label: "Network Status", href: "/status" },
   {
     label: "Documentation",
     href: "https://github.com/subheeksh5599/AnchorFX#readme",
