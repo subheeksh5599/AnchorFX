@@ -69,9 +69,7 @@ export function LiveStatsStrip(): ReactNode {
               <div className="text-foreground text-3xl font-medium tracking-tight md:text-4xl">
                 {cell.value}
               </div>
-              <p className="text-muted-foreground mt-1 text-sm">
-                {cell.label}
-              </p>
+              <p className="text-muted-foreground mt-1 text-sm">{cell.label}</p>
             </div>
           ))}
         </div>

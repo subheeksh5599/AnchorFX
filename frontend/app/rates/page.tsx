@@ -184,8 +184,12 @@ export default function RatesPage(): ReactNode {
                   <tr className="border-b border-neutral-800 text-[10px] tracking-[0.2em] text-neutral-500 uppercase">
                     <th className="p-4 text-left font-bold">Token</th>
                     <th className="p-4 text-right font-bold">Rate (scaled)</th>
-                    <th className="p-4 text-right font-bold">Updated (ledger)</th>
-                    <th className="p-4 text-right font-bold">Expires (ledger)</th>
+                    <th className="p-4 text-right font-bold">
+                      Updated (ledger)
+                    </th>
+                    <th className="p-4 text-right font-bold">
+                      Expires (ledger)
+                    </th>
                     <th className="p-4 text-center font-bold">Status</th>
                   </tr>
                 </thead>

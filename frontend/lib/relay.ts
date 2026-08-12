@@ -282,9 +282,7 @@ export interface OracleRate {
 // Falls back to the on-chain RATES map keyed by token address.
 const KNOWN_TOKENS: Record<string, { symbol: string; corridor: string }> = {};
 
-export async function getOracleRates(
-  oracleId: string
-): Promise<OracleRate[]> {
+export async function getOracleRates(oracleId: string): Promise<OracleRate[]> {
   const rpc = createRpc();
 
   try {

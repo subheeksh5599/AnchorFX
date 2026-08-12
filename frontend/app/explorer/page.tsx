@@ -5,11 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { Globe, Clock, Search, ArrowUpRight } from "lucide-react";
 import { CONTRACT_ID, NETWORK } from "@/lib/env";
-import {
-  CORRIDOR_OPTIONS,
-  corridorFor,
-  corridorLabel,
-} from "@/lib/corridors";
+import { CORRIDOR_OPTIONS, corridorFor, corridorLabel } from "@/lib/corridors";
 
 interface EscrowRecord {
   id: number;
@@ -34,8 +30,7 @@ const STATUSES = [
   "Cancelled",
 ];
 
-const EXPLORER_NETWORK =
-  NETWORK === "PUBLIC" ? "public" : "testnet";
+const EXPLORER_NETWORK = NETWORK === "PUBLIC" ? "public" : "testnet";
 
 const statusColor = (status: string) => {
   switch (status) {
@@ -93,9 +88,7 @@ export default function ExplorerPage(): ReactNode {
       setError(null);
       setLastUpdated(new Date());
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load escrows"
-      );
+      setError(err instanceof Error ? err.message : "Failed to load escrows");
     }
     setLoading(false);
   };
@@ -112,7 +105,8 @@ export default function ExplorerPage(): ReactNode {
       if (corridor > 0 && e.corridor !== corridor) return false;
       if (status && e.status !== status) return false;
       if (q) {
-        const haystack = `${e.sender} ${e.receiver} ${e.token} #${e.id}`.toLowerCase();
+        const haystack =
+          `${e.sender} ${e.receiver} ${e.token} #${e.id}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
@@ -128,9 +122,8 @@ export default function ExplorerPage(): ReactNode {
     const active = escrows.filter(
       (e) => e.status === "Created" || e.status === "CounterpartyApproved"
     ).length;
-    const uniqueUsers = new Set(
-      escrows.flatMap((e) => [e.sender, e.receiver])
-    ).size;
+    const uniqueUsers = new Set(escrows.flatMap((e) => [e.sender, e.receiver]))
+      .size;
     return {
       total: escrows.length,
       settled: settled.length,
@@ -298,9 +291,7 @@ export default function ExplorerPage(): ReactNode {
               Loading...
             </div>
           ) : error ? (
-            <div className="p-12 text-center text-xs text-red-400">
-              {error}
-            </div>
+            <div className="p-12 text-center text-xs text-red-400">{error}</div>
           ) : filtered.length === 0 ? (
             <div className="p-12 text-center text-xs text-neutral-600">
               No escrows match the current filters.

@@ -54,8 +54,7 @@ const ENDPOINTS: Endpoint[] = [
   {
     method: "GET",
     path: "/api/health",
-    description:
-      "Health check for the RPC endpoint and escrow contract.",
+    description: "Health check for the RPC endpoint and escrow contract.",
     params: ["contract (optional)"],
     example: "/api/health",
   },
@@ -89,7 +88,7 @@ const ENDPOINTS: Endpoint[] = [
     description:
       "Fee sponsorship — submit a transaction XDR and AnchorFX pays the network fee (gasless users).",
     params: ["xdr (body)"],
-    example: "POST /api/sponsor  { \"xdr\": \"AAAA...\" }",
+    example: 'POST /api/sponsor  { "xdr": "AAAA..." }',
   },
   {
     method: "GET",
@@ -190,7 +189,7 @@ export default function DevelopersPage(): ReactNode {
             Example — Escrow Lookup
           </h3>
           <pre className="overflow-x-auto border border-neutral-900 bg-neutral-950 p-4 text-[11px] leading-relaxed text-neutral-500">
-{`curl -s https://anchorfx.vercel.app/api/escrows | jq
+            {`curl -s https://anchorfx.vercel.app/api/escrows | jq
 {
   "escrows": [
     {

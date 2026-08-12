@@ -196,9 +196,7 @@ export default function StatusPage(): ReactNode {
                 <div className="mb-2 font-mono text-xs text-neutral-400">
                   {short(ORACLE_ID)}
                 </div>
-                <div className="text-[10px] text-neutral-600">
-                  FX rate feed
-                </div>
+                <div className="text-[10px] text-neutral-600">FX rate feed</div>
               </div>
             </div>
 
