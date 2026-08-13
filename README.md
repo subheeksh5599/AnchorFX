@@ -97,7 +97,7 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 - [x] **Public production-ready app** — [anchorfx.vercel.app](https://anchorfx.vercel.app)
 - [x] **20+ verified mainnet users** — [feedback table with tx proof](#user-feedback--mainnet-users)
 - [x] **Real on-chain activity** — [20-user proof](frontend/20-users-mainnet-proof.txt) + [30-user August cohort](frontend/scripts/30-users-mainnet-proof.txt)
-- [x] **Google Form + exported Excel** — [responses](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+- [x] **Google Form + exported Excel** — [responses — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 - [x] **Smart contract audit** — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
 - [x] **Launch post on X** — [@AnchorFX_](https://x.com/AnchorFX_/status/2081345430995308770)
 - [x] **Demo video** — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
@@ -112,7 +112,7 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 - [x] 30+ meaningful commits (100+)
 - [x] Live production application (Vercel)
 - [x] Mainnet transaction proof (July + August cohorts)
-- [x] User feedback sheet ([Excel](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
+- [x] User feedback sheet ([Excel — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
 - [x] Product improvement commit links ([table below](#august-2026-growth-cycle))
 - [x] Community contribution ([blog + 9 merged PRs](#community-contribution))
 - [x] Social media growth (100+ followers on [@AnchorFX_](https://x.com/AnchorFX_))
@@ -141,7 +141,7 @@ institutions, more corridors, public transparency):
 ## User Feedback — Mainnet Users
 
 **Feedback form:** [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeulA6BSWpbVZBUvv9egWKxTbr_aGe5dNy0AqyDBNH3xqSSjQ/viewform)
-· **Responses (Excel):** [sheet](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+· **Responses (Excel):** [sheet — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 
 ### July Cohort — 20 verified mainnet users
 
