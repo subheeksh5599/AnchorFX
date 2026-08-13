@@ -27,3 +27,12 @@ run-rest.cjs
 simulate-users.cjs
 20-user-profiles.txt
 brag-output/
+
+# local-only files (not part of the repo)
+PROGRESS.md
+brag-output-2026-07-26-143000/
+docs/instaward-proposal.md
+docs/mainnet-checklist.md
+docs/pitch-deck.md
+frontend/README.md
+frontend/scripts/20-wallets.txt

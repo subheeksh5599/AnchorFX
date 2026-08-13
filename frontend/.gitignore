@@ -47,3 +47,6 @@ scripts/regenerate-july-proof.cjs
 scripts/run-missing-july-users.cjs
 scripts/verify-proofs.cjs
 scripts/6-users-completed-proof.txt
+scripts/AUGUST-USERS-FEEDBACK.md
+scripts/X-POST-DRAFT.md
+scripts/X-GROWTH-POSTS.md
