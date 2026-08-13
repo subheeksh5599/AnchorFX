@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local-only utility scripts (not part of the repo)
+scripts/check-20-users.cjs
+scripts/regenerate-july-proof.cjs
+scripts/run-missing-july-users.cjs
+scripts/verify-proofs.cjs
+scripts/6-users-completed-proof.txt
