@@ -1,31 +1,30 @@
 AnchorFX — 20 Mainnet Users — Verified ✅
-==========================================
+============================================================
 
 Escrow: CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V
 Oracle: CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT
 Admin:  GDHMIQXJITKCXJ5IREK4MUEJKLSZVA6XKBF25WKVN3REC6OMMNENYSK5
-Admin final balance: 11.53 XLM
 
-User 1: https://stellar.expert/explorer/public/tx/fbf407eeb3c8a6d459f223d8b46efbd42747e0b70b26c979e69d23d5807f07c4
-User 2: https://stellar.expert/explorer/public/tx/c86ffa8178c1bf6b65ab5cc9fe525c4e9a94abc6c7e4cfeb29004130d1f1e495
-User 3: https://stellar.expert/explorer/public/tx/1eedfe37eb7a19b50fb66b3e712321f721b76b2c62dc3ef6788437e44c799c2a
-User 4: https://stellar.expert/explorer/public/tx/3bfd01e96421754d02a76f43922fc0669869a12ddd1d8315e45b048d5ae60a5c
-User 5: https://stellar.expert/explorer/public/tx/b89d4e744a64848ca9e0b8d6eb8eee43bafe7fb7fc6f8fa68835dc241a0940f7
-User 6: https://stellar.expert/explorer/public/tx/c7d92fa3ee30ba91d7685604e721c225e1a0ab23b1e02e6a9b4ef129c9d6e641
-User 7: https://stellar.expert/explorer/public/tx/ae03fe3fa2c214846e0b63878a51a0bcd45020f0fc0745f3d48aff03721f001c
-User 8: https://stellar.expert/explorer/public/tx/779e828e4dbf58c9b46b9fd12d292e8fca654a50161485c45315371453a326b3
-User 9: https://stellar.expert/explorer/public/tx/0bcaa2c85df87cb38a0428c1ce61c238257f415376f144ad60b216fe9892889d
-User 10: https://stellar.expert/explorer/public/tx/89812841279a98915adf87a4bf1c42c43e74f5dea865b605e223c1528baee960
-User 11: https://stellar.expert/explorer/public/tx/fa1db92ed204b1f8129d3e42a4139a5243e7add55acf9cb75b10cb6e7df55c40
-User 12: https://stellar.expert/explorer/public/tx/568f5653bf2a55e72b194dee8b4d0b089031adf69294096813bcfe7a2e4b29ba
-User 13: https://stellar.expert/explorer/public/tx/7eeb3358e22c1b532966516f818215f34ee067ecbaa3df64b82f7d5305abe5d8
-User 14: https://stellar.expert/explorer/public/tx/759a5179dbba9e37fe0048de215e7af0267a96cfc1563f87f20a580f39fb268f
-User 15: https://stellar.expert/explorer/public/tx/29253c99b5870820947982788cff8c1c14f5fed26e4f86818b54959da55f51f2
-User 16: https://stellar.expert/explorer/public/tx/ad32a1f44271feeeaec887f772bda94cb9d91aba106ffb0f2a7fe884703de784
-User 17: https://stellar.expert/explorer/public/tx/8e3ca5a0fa16991426df7125ec0def2deda3821f6a3ae170c38348b551bb8468
-User 18: https://stellar.expert/explorer/public/tx/2f2b9a8f5ea96bea067597d07506b50ff75455f5bfd514baf78cf13f2c54354b
-User 19: https://stellar.expert/explorer/public/tx/2ba4b61f98ac8be0f628041a151204204c07d590c1ba922e685940db1dccb428
-User 20: https://stellar.expert/explorer/public/tx/506503c42774a69bcd86f69be0d8bac5c74f7587948b980e49598b6a4f9234da
+User 1: https://stellar.expert/explorer/public/tx/be28ff3696e07939099813ffa8e2854d2f05e5ac8e953629b255526655d5d1cf
+User 2: https://stellar.expert/explorer/public/tx/b0912be10f227ca73ab63b59490aace09218606267f90771b69d9316c112d061
+User 3: https://stellar.expert/explorer/public/tx/d0a48778cc32fb2ecc127f1906f31225eaf05b35c2e1dbf0371cf3569f0123e5
+User 4: https://stellar.expert/explorer/public/tx/4f30788cc8e59ece26c55310ff0063b234aba90af70b07f5abc103878a6e5b62
+User 5: https://stellar.expert/explorer/public/tx/cafb4b7b2b071daaf064ffd6c272d7fe1748530825a72bfdc1df035191f6c60e
+User 6: https://stellar.expert/explorer/public/tx/c8a4c8bd844351963c778d521aa416859459755b6c075ae223048c952d723880
+User 7: https://stellar.expert/explorer/public/tx/9e932581fca95fc914345b9e50cbb12d7b68f02c840175180efb4bbe3ab9b08d
+User 8: https://stellar.expert/explorer/public/tx/f8b778d1fb074451493009ae7e51e510daf61ef09e78ef93851be46eadcdf97e
+User 9: https://stellar.expert/explorer/public/tx/64a29566d75ce8cdea5a8888b4e15b6eeb026d81c25e44bf185b38cd4a5e364b
+User 10: https://stellar.expert/explorer/public/tx/82e90d796224e609503e1731da5d5f05769f3482ed20d5490b4e800045f10542
+User 11: https://stellar.expert/explorer/public/tx/85ae565b93bba8501a083c5333f3d08d6b95de9523d0fabca0fdb19689062e71
+User 12: https://stellar.expert/explorer/public/tx/acdb75345e4d7797d7b14bf68d58f503266fe0ffb853ca236fa223fa76d9e2c1
+User 13: https://stellar.expert/explorer/public/tx/428dd14f26a93477fcc89b4c143f1be9a68eaca9879f395a591a97d14e475775
+User 14: https://stellar.expert/explorer/public/tx/773cebb59f5469b36dfbbddd9f9a80dbe8642379fa28578d0530a9427288571d
+User 15: https://stellar.expert/explorer/public/tx/0f9f5a51b9999699b29b7912ad3f84a6afdfd568fea888e90a3b83a0ed62fe62
+User 16: https://stellar.expert/explorer/public/tx/baf5e7b1277e01ef6e2fab8ac558cd5301d8f538b566e124fa8607fd16583be2
+User 17: https://stellar.expert/explorer/public/tx/6336336bc384e2d12b4db3949f3bfd73557b11e4a3f6a5345fa4841cad41b098
+User 18: https://stellar.expert/explorer/public/tx/7620d59bc81b0be6d674ba747a5cb01a6997245e0ccdc6b83eff8221631ac742
+User 19: https://stellar.expert/explorer/public/tx/98affb2181e604785c2176b447ef1d6804b06906f2353d1d1c09f9f168c7e749
+User 20: https://stellar.expert/explorer/public/tx/842a66846677ba6e568b83c0abce1048b40236cd01baac72f1bca6fa9416d2ec
 
 All 20 users completed full escrow flow (fund → approve token → create escrow → approve → settle → merge)
 on Stellar Mainnet. All accounts merged back — funds recovered.

@@ -83,8 +83,8 @@ mod oracle {
 
 // ── Per-Escrow Storage Helpers ────────────────────────────────────
 
-fn escrow_key(_id: u64) -> soroban_sdk::Symbol {
-    symbol_short!("ESCROW_")
+fn escrow_key(id: u64) -> (soroban_sdk::Symbol, u64) {
+    (symbol_short!("ESCROW"), id)
 }
 
 fn get_escrow(env: &Env, id: u64) -> Option<Escrow> {
@@ -659,6 +659,17 @@ mod test {
         assert_eq!(client.escrow_count(), 2);
         let list = client.list_escrows(&0, &10);
         assert_eq!(list.len(), 2);
+        // Regression: each escrow must be individually readable with its own
+        // data — storage keys must be per-escrow, not a single shared slot.
+        let e1 = client.get_escrow(&1).unwrap();
+        let e2 = client.get_escrow(&2).unwrap();
+        assert_eq!(e1.sender, admin);
+        assert_eq!(e1.receiver, r1);
+        assert_eq!(e1.amount, 500_i128);
+        assert_eq!(e2.sender, admin);
+        assert_eq!(e2.receiver, r2);
+        assert_eq!(e2.amount, 300_i128);
+        assert_ne!(e1.receiver, e2.receiver);
     }
 
     #[test]

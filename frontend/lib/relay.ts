@@ -1,8 +1,21 @@
 // Shared RPC utilities for AnchorFX relay service
 // Handles escrow queries, event aggregation, and contract health
 import { Server as RpcServer } from "@stellar/stellar-sdk/rpc";
-import { Address, xdr, scValToNative } from "@stellar/stellar-sdk";
+import {
+  Address,
+  Account,
+  Contract,
+  TransactionBuilder,
+  xdr,
+  scValToNative,
+} from "@stellar/stellar-sdk";
 import { RPC_URL } from "./env";
+
+const NETWORK_PASSPHRASE = "Public Global Stellar Network ; September 2015";
+
+function scvU64(n: number): xdr.ScVal {
+  return xdr.ScVal.scvU64(new xdr.Uint64(n));
+}
 
 export function createRpc(): RpcServer {
   return new RpcServer(RPC_URL, { allowHttp: false });
@@ -55,7 +68,9 @@ let analyticsCache: { data: AnalyticsSummary; timestamp: number } | null = null;
 
 const CACHE_TTL = 5000;
 
-// Query the escrow contract for escrow count and individual escrows
+// Query the escrow contract for escrow count and individual escrows.
+// Reads via contract calls (list_escrows + get_escrow) — matches the
+// per-escrow storage layout of the deployed contract.
 export async function getEscrows(
   contractId: string,
   forceRefresh = false
@@ -72,43 +87,65 @@ export async function getEscrows(
   const results: EscrowRecord[] = [];
 
   try {
-    // Try v2 format: Map<u64, Escrow> at key "ESCROWS"
-    const escrowsKey = xdr.LedgerKey.contractData(
-      new xdr.LedgerKeyContractData({
-        contract: Address.fromString(contractId).toScAddress(),
-        key: xdr.ScVal.scvSymbol("ESCROWS"),
-        durability: xdr.ContractDataDurability.persistent(),
-      })
-    );
+    const contract = new Contract(contractId);
+    const sourcePublicKey =
+      "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF";
+    const fakeAccount = new Account(sourcePublicKey, "1");
 
-    const escrowsResult = await rpc.getLedgerEntries(escrowsKey);
-    if (escrowsResult.entries?.length) {
-      try {
-        const raw = scValToNative(
-          escrowsResult.entries[0]!.val.contractData().val()
-        );
-        if (raw && typeof raw === "object") {
-          // Soroban Map returns as object with BigInt keys for u64
-          // Handle both array (from older SDK) and object (Map) formats
-          const entries = Array.isArray(raw)
-            ? (raw as Array<{ key: unknown; val: Record<string, unknown> }>)
-            : Object.entries(
-                raw as Record<string, Record<string, unknown>>
-              ).map(([k, v]) => ({ key: k, val: v }));
+    // 1. Get the count
+    const countTx = new TransactionBuilder(fakeAccount, {
+      fee: "100",
+      networkPassphrase: NETWORK_PASSPHRASE,
+    })
+      .addOperation(contract.call("escrow_count"))
+      .setTimeout(30)
+      .build();
 
-          for (const entry of entries) {
-            let id: number;
-            if (typeof entry.key === "bigint") id = Number(entry.key);
-            else if (typeof entry.key === "string" && /^\d+$/.test(entry.key))
-              id = parseInt(entry.key, 10);
-            else if (typeof entry.key === "number") id = entry.key;
-            else continue;
+    const countSim = await rpc.simulateTransaction(countTx);
+    if (!countSim || "error" in countSim || !countSim.result?.retval) {
+      return [];
+    }
+    const count = Number(scValToNative(countSim.result.retval));
+    if (count === 0) return [];
 
-            const val = entry.val;
-            if (!val || typeof val !== "object") continue;
+    // 2. List ids 1..count
+    const listTx = new TransactionBuilder(fakeAccount, {
+      fee: "100",
+      networkPassphrase: NETWORK_PASSPHRASE,
+    })
+      .addOperation(
+        contract.call("list_escrows", scvU64(1), scvU64(Math.min(count, 1000)))
+      )
+      .setTimeout(30)
+      .build();
 
-            results.push({
-              id,
+    const listSim = await rpc.simulateTransaction(listTx);
+    if (!listSim || "error" in listSim || !listSim.result?.retval) return [];
+    const ids = (scValToNative(listSim.result.retval) as unknown[]) ?? [];
+
+    // 3. Fetch each escrow (parallel, small batches)
+    const BATCH = 5;
+    for (let i = 0; i < ids.length; i += BATCH) {
+      const batch = ids.slice(i, i + BATCH);
+      const sims = await Promise.all(
+        batch.map(async (id) => {
+          const tx = new TransactionBuilder(fakeAccount, {
+            fee: "100",
+            networkPassphrase: NETWORK_PASSPHRASE,
+          })
+            .addOperation(contract.call("get_escrow", scvU64(Number(id))))
+            .setTimeout(30)
+            .build();
+          try {
+            const sim = await rpc.simulateTransaction(tx);
+            if (!sim || "error" in sim || !sim.result?.retval) return null;
+            const val = scValToNative(sim.result.retval) as Record<
+              string,
+              unknown
+            > | null;
+            if (!val || typeof val !== "object") return null;
+            return {
+              id: Number(id),
               sender: String(val.sender ?? ""),
               receiver: String(val.receiver ?? ""),
               token: String(val.token ?? ""),
@@ -120,56 +157,21 @@ export async function getEscrows(
               createdAt: Number(val.created_at ?? 0),
               approvedAt: Number(val.approved_at ?? 0),
               settledAt: Number(val.settled_at ?? 0),
-            });
+            } as EscrowRecord;
+          } catch {
+            return null;
           }
-        }
-      } catch {
-        console.error("Failed to parse escrow entries from ledger");
-      }
-    }
-
-    // Fallback: try v1 format — single Escrow at key "ESCROW"
-    if (results.length === 0) {
-      const legacyKey = xdr.LedgerKey.contractData(
-        new xdr.LedgerKeyContractData({
-          contract: Address.fromString(contractId).toScAddress(),
-          key: xdr.ScVal.scvSymbol("ESCROW"),
-          durability: xdr.ContractDataDurability.persistent(),
         })
       );
-
-      const legacyResult = await rpc.getLedgerEntries(legacyKey);
-      if (legacyResult.entries?.length) {
-        const raw = scValToNative(
-          legacyResult.entries[0]!.val.contractData().val()
-        );
-        if (raw && typeof raw === "object") {
-          const val = raw as Record<string, unknown>;
-          results.push({
-            id: 1,
-            sender: String(val.sender ?? ""),
-            receiver: String(val.receiver ?? ""),
-            token: String(val.token ?? ""),
-            amount: String(val.amount ?? "0"),
-            fxRate: 0,
-            corridor: 0,
-            timeoutLedger: Number(val.timeout_ledger ?? 0),
-            status: String(val.status ?? "unknown"),
-            createdAt: Number(val.created_at ?? 0),
-            approvedAt: 0,
-            settledAt: 0,
-          });
-        }
-      }
+      for (const r of sims) if (r) results.push(r);
     }
-
-    escrowCache = { data: results, timestamp: Date.now() };
   } catch {
-    console.error("Failed to get ledger entries for escrows");
+    console.error("Failed to list escrows via contract calls");
     if (escrowCache) return escrowCache.data;
     return [];
   }
 
+  escrowCache = { data: results, timestamp: Date.now() };
   return results;
 }
 
