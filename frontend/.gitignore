@@ -54,3 +54,7 @@ scripts/MASTER-WALLET-TX-LEDGER.txt
 scripts/NEW-WALLETS-51-75.txt
 scripts/merge-ledger.cjs
 scripts/20-wallets.txt
+scripts/run-20-users-aug2.cjs
+scripts/fill-aug2-form.cjs
+scripts/generate-aug2-feedback.cjs
+scripts/AUG2-USERS-FEEDBACK.md

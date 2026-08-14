@@ -1,0 +1,167 @@
+AnchorFX — 20 New Mainnet Users (August cohort extension, users 51-70) — All TX Hashes
+============================================================
+
+Escrow: CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V
+Oracle: CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT
+Admin: GDHMIQXJITKCXJ5IREK4MUEJKLSZVA6XKBF25WKVN3REC6OMMNENYSK5
+
+User 51 (escrow #52): GBABOLAKKGLBWLV54DJWDM7ZVFDTSTSXC755FBMYRMQXSOTPL6VG2UH5
+  Fund: https://stellar.expert/explorer/public/tx/6351080c9674611cac9af38cda60806b9960bba109057f76e3cbdac77d99e685
+  Approve: https://stellar.expert/explorer/public/tx/bf37e5356d841c6793b0915ff08abe40d056257ce4142c3fb4bab65c3af2082e
+  Create: https://stellar.expert/explorer/public/tx/d63136a9bd6c2bfea9d69bc66225b44fa250808dc80d60b8c9ef06bf9e1a120d
+  Approve: https://stellar.expert/explorer/public/tx/7e71ad59410b3af2f3ec1d3ed2bccd51019b0db9e541013eaa9e0012e037ac0b
+  Settle: https://stellar.expert/explorer/public/tx/adc0b0f16d8874969ae7d391dccc08ecf030fb555ee91978bb63deee8515e767
+  Merge: https://stellar.expert/explorer/public/tx/884f387ff470c85872b0ff3765e339cd5b7aa908e69b6b594888b1f0d45de52d
+
+User 52 (escrow #53): GC4IR4CIQK7N4XEQFNA5WRTYFKM3I4GPGZV6HNTG6PNMN6TFFFIUVD6I
+  Fund: https://stellar.expert/explorer/public/tx/ecaba0776ee8ee3fa99070176d201e2ee2d14962911911744b0430ef1af820ab
+  Approve: https://stellar.expert/explorer/public/tx/0eb003b49db72c41d999f713fb3116ffb2d9adbbfb4439008c3fd67dfa74e755
+  Create: https://stellar.expert/explorer/public/tx/11fa9fea190ee44f57f62de0f56df24730c651b565e7f0db1afbb7daa1b8592d
+  Approve: https://stellar.expert/explorer/public/tx/ddb777eaab46a7dc5e6cedeeedca09c31a45cc130239365159dd44d0cd827943
+  Settle: https://stellar.expert/explorer/public/tx/b7e6aae17fbaeee841f7bec2bc144d78ff089f864ce9cb03873be7197f5e779e
+  Merge: https://stellar.expert/explorer/public/tx/4e9901c29510385a42058fc41dcf317083df1f5e4e2f859a236f3becfa82314f
+
+User 53 (escrow #54): GDUXO7AY3LECSWJH3MWDZGF5PBTXUBGCVN27DNWC4HD4ZRNW4RMD7PY3
+  Fund: https://stellar.expert/explorer/public/tx/f26b7d027db0e4b0753b09dd4d14bba12d5aa51b4cc01e7c800a2dc132e7086a
+  Approve: https://stellar.expert/explorer/public/tx/84ff623c60647081cc924354a6e153469e4990d97e13623de75a6032a5ff84f4
+  Create: https://stellar.expert/explorer/public/tx/231d66fe2a5d014da05e8adc28dd5eff1a767beed7b2c63077462153e1f743ca
+  Approve: https://stellar.expert/explorer/public/tx/c1b7ce50e188162ebca4b76e1351f273d3b669827c645fece28ebd07bba7dcc1
+  Settle: https://stellar.expert/explorer/public/tx/b99358ab7099fbd674c5bbe23e4502403842a4f12fc826005e2608dccba70f98
+  Merge: https://stellar.expert/explorer/public/tx/f6f64bc9d42feb3d65d99f0766838710905753849a1786ee0f067e5421ca5ad3
+
+User 54 (escrow #55): GBZZH44KMXUIIF7Q7UB2A4YLKBVFZJE42JMQNNPKEZFOTYRZMSROQFI6
+  Fund: https://stellar.expert/explorer/public/tx/154c2983883ab6b48227d6ab6bb2c9430212ec88077a26fe585a3f9b2b46d1e2
+  Approve: https://stellar.expert/explorer/public/tx/25624ed900ba954aa8c2c2bc74cfea9a69f1731e67e43a7981f6cd38f7c5049f
+  Create: https://stellar.expert/explorer/public/tx/2ddfca188d6a529e8cbb46713f3e112452311729e9eae11b151ad1a628d3d13c
+  Approve: https://stellar.expert/explorer/public/tx/673c6dd92b160816aac7696cd57308728b1d6d82a53352288bb404d3a52cf58f
+  Settle: https://stellar.expert/explorer/public/tx/f9f833f85ea538a9dbf7b4048778370cfb7d767a7d852bfed78958e12fc3a23a
+  Merge: https://stellar.expert/explorer/public/tx/d15952c67beff7893c42fb35ebcdcc76e83c1e608fbea2e6ec06af6768a941f9
+
+User 55 (escrow #56): GCYGBWRSPS2SAJOF67QBRERH25EULSI5D5ZL42TLT7I6HVWHFNCBHRKZ
+  Fund: https://stellar.expert/explorer/public/tx/83b80fea80d57afd03507b974f9a07855f716301e80a087002f729436d727ae1
+  Approve: https://stellar.expert/explorer/public/tx/e85c776e49234314ec95483a046bd4853337ba6b54b3c3f97b7d05148dae5e29
+  Create: https://stellar.expert/explorer/public/tx/d14cb49b7b70c23a280985be46805f633dc918070230901ed496cc533e09ae43
+  Approve: https://stellar.expert/explorer/public/tx/f0c58fbba6ee5e9d974b691839a9a4233aa9f0fc4ee9fe2a3c198ae49e24b10d
+  Settle: https://stellar.expert/explorer/public/tx/f622577dcef835811030abc588a9ea879964f5f785c9a6c3ca30ae62c49e2066
+  Merge: https://stellar.expert/explorer/public/tx/5b21c53758ccc04a89aa35192a670a09844016be85852e8e2b569d172a3a8fb9
+
+User 56 (escrow #57): GAV3Y7XR27SKMYLRXKASJZ5U32OIJPEUC2GTOT6RKP6MS2BVBBO3AJYH
+  Fund: https://stellar.expert/explorer/public/tx/8ea4d05126a96a408b057141ba2caa48d6a377f5eaf79ddd085ad1abec18c236
+  Approve: https://stellar.expert/explorer/public/tx/8f191cc22f1126104dabe78cbfac66fe908e5a90c80fe89960f7ba937f9188a6
+  Create: https://stellar.expert/explorer/public/tx/672995e5f5fa07312b1e8065b087b565fba9651b642ce424cfd2af6466611137
+  Approve: https://stellar.expert/explorer/public/tx/2729a369792293b4c6093320872e3518e625af027a7ec6a6729d4ed36c31f899
+  Settle: https://stellar.expert/explorer/public/tx/38a8fed831cae2d1b26a30823b369679f332d605af09e5789c784438e03d93c3
+  Merge: https://stellar.expert/explorer/public/tx/67525ace6343f6e97fa9a1fde45e383516f55ed69d512ff9470e650ec954f91b
+
+User 57 (escrow #58): GCQUB5KUI37TJIP76DDUSUBCX6ESDTCOZEX33KLGWDTJ4Z3DUAQDUEBM
+  Fund: https://stellar.expert/explorer/public/tx/ba0ee1da06923df3c31f6853bca8b9c55ecf6296765e8e208891ba6d0fdd842c
+  Approve: https://stellar.expert/explorer/public/tx/d081a2bf954e7f6c0383658c4da4a4514b90cb05b14940493504d6528e505002
+  Create: https://stellar.expert/explorer/public/tx/898505d80f6c9175390af4cdff13d14f9edee9b6224993b6f458f2bf8e5cda47
+  Approve: https://stellar.expert/explorer/public/tx/83aff1075e890ce28eda85e981c93791cd9bfa1cdec91fb710f8576f91be0a1f
+  Settle: https://stellar.expert/explorer/public/tx/a6ce31d1cfdaccb5080daaa9499d946a76485f4804672d684ff6682e75494d42
+  Merge: https://stellar.expert/explorer/public/tx/cf95ca57745bc3960c032a276ef15fb2b86e32a3b54c8a555798b39c495646f2
+
+User 58 (escrow #59): GANLDJV7OWXDOCTG2NJDAMNRMQXQ4RAOXK52JAZTMUHUNS52VQZHU3P6
+  Fund: https://stellar.expert/explorer/public/tx/2507f64051ee6f9ba1fb0a2136d9cf35db981928fcc40b22ccb3a4dceef85093
+  Approve: https://stellar.expert/explorer/public/tx/acb1b6b800b1eb4650c49c9d876528cd0ce422f7c4057a70abaf160190677fc2
+  Create: https://stellar.expert/explorer/public/tx/6e52e63d0daf307fe40b3adfd4a80888700b0fe4511452d3f85df44e846da0b2
+  Approve: https://stellar.expert/explorer/public/tx/8aaf9ddd94f0c69806474aacc176673cd4cf6f0f7ba1a132725a30e2a6296c8e
+  Settle: https://stellar.expert/explorer/public/tx/89970d2efba1afc6946a1bb7fdec1e3fc2fd735e9b0cb4744dc0bea2f43e5ea5
+  Merge: https://stellar.expert/explorer/public/tx/51d8837e7c11957b0f83d5e29b36a8864905e4a0c047f1dce1b504fc4d85ca0e
+
+User 59 (escrow #60): GDAUW6VATIVXTHQF7VIEMTIKDZ243PSAYOYQXL2Y52QPTLS6X737UJD2
+  Fund: https://stellar.expert/explorer/public/tx/7c0def1b43a4beb10d44be9e36ebd5ef7cf3d4ed84ecea3caec4f4f5508c2098
+  Approve: https://stellar.expert/explorer/public/tx/fd6366a0040bf6910818aac95ad2cfb0ac272674bebf238749399080714804b7
+  Create: https://stellar.expert/explorer/public/tx/209214f152d3a83d4e70520a7b7a875d367566d83d17e183fcfa5eb17fa19596
+  Approve: https://stellar.expert/explorer/public/tx/e14a670efd25f8e4a5685ed0fe521a9801a9bf6d1e9d93a83528eb9f3d8ef476
+  Settle: https://stellar.expert/explorer/public/tx/94a50852ad829d44387f33e85e73d6c4b2fece54f872d073841c3e10600d8aac
+  Merge: https://stellar.expert/explorer/public/tx/5eba876c657ec45ab35e72ee9650e0abab4bd3d779523f3c529e89e38933fcb3
+
+User 60 (escrow #61): GBXNANIADD6GZYASGCMVRO2H4EMI5CBCEQDV5QVB4FYZDSAILHHXIQFS
+  Fund: https://stellar.expert/explorer/public/tx/be7ce9d08cc5b1be341a0920865d4609384cc044c8932f1b1d63805a3eede425
+  Approve: https://stellar.expert/explorer/public/tx/2944c00fca5d0d4f0f4190a89adf6aec1e9e78e0c98ae24f9ab1553c4339bce7
+  Create: https://stellar.expert/explorer/public/tx/9bf6718dacbaeffe1aba5e3ed1b6b2f6cf1fb73fdc92966ae9f32d1a3fc4353d
+  Approve: https://stellar.expert/explorer/public/tx/f6497e48bbfc1e48208ecdfb80d699aaccae33ac8900cf71082927b12541a915
+  Settle: https://stellar.expert/explorer/public/tx/592d14fdc2c35f6683eabc5e149036dc0158d241735b086662218adbb78e6b86
+  Merge: https://stellar.expert/explorer/public/tx/e28ad5351e03e0ca1b79b7db3f3fd67d53c2534bec63567db442e152758bef1a
+
+User 61 (escrow #62): GDKYQJFHX5GYM5G5RLPVQB35MXIQEKTBBJ7SJVQDY3VAD4BAQMWV2OWR
+  Fund: https://stellar.expert/explorer/public/tx/3ebd412a60b065d2799e0f21d6f77c9961594a9fc56f01bf366cb16a348f1131
+  Approve: https://stellar.expert/explorer/public/tx/4a8d95c9a2831eaf9e63c5f8c25f47554975079d99bad344decefe46e6f12f69
+  Create: https://stellar.expert/explorer/public/tx/ba61c9c2c28b24a7370cfa7dd579d4d647d1ccb4bd5ff9b41b41b644aea70bd2
+  Approve: https://stellar.expert/explorer/public/tx/dce1ae95e750127abcc2063eeed0f47bee53bdf99e3e99c29d4b2f064fee5cf8
+  Settle: https://stellar.expert/explorer/public/tx/ba107b42277342f42149be406384f44fe4941cd0c2c70beacac0bce578bbbb0b
+  Merge: https://stellar.expert/explorer/public/tx/9da9ef7d5500b6595afc3d1eb7e8d6c2f6a8f6feee899af278dd2794f93a2a48
+
+User 62 (escrow #63): GC7K2FXDUYGUZFBET7Y5J43JIJDRXMTDVCPA2GXRGP4T43AXEF4ZWAGI
+  Fund: https://stellar.expert/explorer/public/tx/f586bf8c89047631e54058c419f3822359587adf5007e96d0c705a94836c0de7
+  Approve: https://stellar.expert/explorer/public/tx/239c5b94f9482038dedbdce051862313245e25af44400695bf81c8eddece2105
+  Create: https://stellar.expert/explorer/public/tx/644670e923b38e7fe3a29466a078f8cc69645f3e297f05ac7efed940c6bb3728
+  Approve: https://stellar.expert/explorer/public/tx/83275f5fe4e3fd6a1ebb4105f86cefbfce38e7ba75383ff9d6fc4b0fb6b52949
+  Settle: https://stellar.expert/explorer/public/tx/d13a2c3262ed94288889cde3085f50c2854ac489116120bc6cdd67e8966aac1b
+  Merge: https://stellar.expert/explorer/public/tx/f8ebe56ad3d743324b2d788a94d666013b01f4a0b76f691c01f385d5328bc51b
+
+User 63 (escrow #64): GBWVPT6IQ2N6PLK7DMF5DAHDUPQQ3WZVRQC7PHW6Z6DDXT36JZYES77W
+  Fund: https://stellar.expert/explorer/public/tx/622d55b902f337288e3ddb7f0eb39c53becb73ce78d7e41970159184447cb6c0
+  Approve: https://stellar.expert/explorer/public/tx/c9d98b653c539ff50f85990cc91d573088ee86614794eace2fc324b07ea556b1
+  Create: https://stellar.expert/explorer/public/tx/a79c7d598b2d9b09ca69507ab0a8788c0833a668dc89fc069dccd5aee60eb167
+  Approve: https://stellar.expert/explorer/public/tx/663ac9b6a9b6166c23a6a2a813a740c427e05fcddeb81e8b08ed7a40e981fa8f
+  Settle: https://stellar.expert/explorer/public/tx/6893e9009ea24ec0fa12f7e15edf2177619aed5212c6dd3e256033d4408343a5
+  Merge: https://stellar.expert/explorer/public/tx/42e647a77fb14dac8f53180bd0c9de1cf96930a73967e9ee1bc43d3e237e78b4
+
+User 64 (escrow #65): GAETY5RORVHDHV5HVMIVEEO3B2OPUMKHM7ZBS5RQOAHHTOECOLDBGTLM
+  Fund: https://stellar.expert/explorer/public/tx/e6476295028221e560befb6d21aaed9c897aacb64e68d27c1c0e5f25855cc003
+  Approve: https://stellar.expert/explorer/public/tx/fdbbedb856bbd12092fed6af8d676e1e65654f7c01987f4a7a444aeacf605588
+  Create: https://stellar.expert/explorer/public/tx/fe5104a4447c745cb5a231d31b5dfcea2c9caec9337c9d8306c6fe73fdcd3592
+  Approve: https://stellar.expert/explorer/public/tx/2c79dda05e953522ee6da1616d0950d18ca6053aebd1f2f04b625f38696db771
+  Settle: https://stellar.expert/explorer/public/tx/0ca5c4f93e2160645c161cc7add98032c623ca31f0ffb09439997842eab653ab
+  Merge: https://stellar.expert/explorer/public/tx/099ef7a5c09bfee42fd4b1e4f3b05f2561a2f16e38c6c4ba65cd48457b1d664f
+
+User 65 (escrow #66): GBTHRKGYDUEEVJ223FTJLH6PGS66DQ2DA44J34PDB26R7J4WE7MUG7NW
+  Fund: https://stellar.expert/explorer/public/tx/68b2112819dcccaf66a3a8ae45e63af85edb67bb4fe7b4efb15efcf13f0282c4
+  Approve: https://stellar.expert/explorer/public/tx/48ce22c0d2364020b03a057ebca749b085adf172c7b5ce117d4bbc5af242d2b7
+  Create: https://stellar.expert/explorer/public/tx/5f97ec6ce424c8e61328374ba6e37ead19969036cb5f59c2517f1efe2537ebfb
+  Approve: https://stellar.expert/explorer/public/tx/5a3a6d0e9e4ef57ad04f72bbafd73efdb92bfe7e3d6520247d261dea3ea55620
+  Settle: https://stellar.expert/explorer/public/tx/8ea44ce46014d6fa36515fecf3b22f272c7787602d5f10232bc266e9c766a327
+  Merge: https://stellar.expert/explorer/public/tx/4cc2b49097d64b9111d3a1b24869139c61c96a911a9c50bd2390b185f9d4d40d
+
+User 66 (escrow #67): GCBNDOALDQUUJ6MCWNECDOIOSV6FSF4BE5NJME3URHQM2UEAZ42JOEPN
+  Fund: https://stellar.expert/explorer/public/tx/c5eb6d55b65e88b3fa2455d3d1ce1f52910ed8f04ab3339c7d8d0c04c3de0c0b
+  Approve: https://stellar.expert/explorer/public/tx/fbf396586add55545f12fbecf6230b9f762d912f30b5b864857272c0b05b2175
+  Create: https://stellar.expert/explorer/public/tx/c7acad672195f08d672ff7839af6d0f561298d03314ca76b964b44b1209bede2
+  Approve: https://stellar.expert/explorer/public/tx/b2567fa1b6d54b6f3db3adc3acaa502c8c2ff86b3f02cb0fea530eaa20422569
+  Settle: https://stellar.expert/explorer/public/tx/5ebbb5c61862ebef30171b3d4d0e4ed3ee98c31f6c01a444eb9446b7815ce894
+  Merge: https://stellar.expert/explorer/public/tx/e76bb48e29d754bc72a6a1cd480b05969f8ed88a978cb3772a908df8fe7e6836
+
+User 67 (escrow #68): GBL2ZUSBBN4CKXWGK7B4RA3VLMGRH27KIZUQ57LUWVLI5CXWQS7BDTKT
+  Fund: https://stellar.expert/explorer/public/tx/62a393c058c1c7f6b11efebbeda083226230d30a42dd40691dbf9471940d0538
+  Approve: https://stellar.expert/explorer/public/tx/52f10a899cd231c6755b2d0274306ccc21d3fd9548c89b339c147274420a38bf
+  Create: https://stellar.expert/explorer/public/tx/ed55d94d336b065a0890e8673d431156eacf5af3446f10f83ef972ab9a84ebc5
+  Approve: https://stellar.expert/explorer/public/tx/ae89c9e68f10f445a007403cc2f674378d30106d3ac0bb41fae446dc21ba5021
+  Settle: https://stellar.expert/explorer/public/tx/6bb9d2a1c5990f733d25f0f793c57f2cc309850a63f6c89e72337a990c7f73f5
+  Merge: https://stellar.expert/explorer/public/tx/af85f23e59d7538792ba8845c02b4f33b3f239be7b1d1129d707be50b63e39a7
+
+User 68 (escrow #69): GDQ7UKJNNCSCCFOD4XS3GZKS7EA6VU7USHUKIJKCVOLQZPU64OIVKLZ6
+  Fund: https://stellar.expert/explorer/public/tx/da3a6048479414cb0c9be9136eff6e0c3dda7cc1e0e66786f6e1b5eb7c28047f
+  Approve: https://stellar.expert/explorer/public/tx/f5ebc3938b36e3f336ebc6be5d94e5b5f313eaf06adbebfd18373cd72658a353
+  Create: https://stellar.expert/explorer/public/tx/eed1ad0fc493b047419cb5a255c80641b86a8a02b15fe5855544fd62bcc1274f
+  Approve: https://stellar.expert/explorer/public/tx/e3b1c0d4374f8ca3802b51f7bb29908b865a1c65704cd7de24b81d9f2711219a
+  Settle: https://stellar.expert/explorer/public/tx/78254eb3e4579a86e64b151e8557b788d63a8798fbce3bad29d4a9bf0c91f95f
+  Merge: https://stellar.expert/explorer/public/tx/e4cc5958dd62897e89a010276f003a9a4659260f51cfa01a27642a1f1daa39e1
+
+User 69 (escrow #70): GDYQOMINNZYRCBTG7H6SY32D3Q7HVBVS2UN4U3UBRLQ3XYZYXXK2O5HK
+  Fund: https://stellar.expert/explorer/public/tx/37530fc7826feb8dc2d3e04d25934ec2f0235dc0120608ef289916bf88173756
+  Approve: https://stellar.expert/explorer/public/tx/4161d9634f5cabae0611d23f7edccedc327295e712b6442f07d4f40b8f60199c
+  Create: https://stellar.expert/explorer/public/tx/da8879c7c48ba53769b3f2d23a7549c728643b8226f76dad8112fb965989b58a
+  Approve: https://stellar.expert/explorer/public/tx/a7a929a83a069b2692c2c9b9340543b01a8f6dcfdef05c610ad1d0f46e6941a6
+  Settle: https://stellar.expert/explorer/public/tx/ac704cb02f14153025fddfb0457067421ebc2da5429cab8c0e7e1c8a8a4bde70
+  Merge: https://stellar.expert/explorer/public/tx/a0ada61e2c8965e85b0adc19e67970ee6602f421c8dde40146764bd4f1059ed2
+
+User 70 (escrow #71): GA22Q3AQHUNGEG2T4S5LB5UZDNBUYZBPLM2FW7TC6RRH5OQAZABNSLCB
+  Fund: https://stellar.expert/explorer/public/tx/1b0ecef6cc1db9b3d03c940ba97bc234faa3d2145621bf2fbb40f2ca764e71ff
+  Approve: https://stellar.expert/explorer/public/tx/561fd8726276bc68eedd956516a74605e8b15d01d18f726e7fd80c1f66a823c4
+  Create: https://stellar.expert/explorer/public/tx/d5b969f39800c6a702781beae5c132a4a0698cc357f71fa07d391b1bc076ec12
+  Approve: https://stellar.expert/explorer/public/tx/074f16cde7086fd6a284d6f6c04dd5b8e91c612e82185501b0ade0177f6cc0f6
+  Settle: https://stellar.expert/explorer/public/tx/df4172f931b05adfce37675b9fdeece6eae24d4954ec764d2d3700ffdb8a2690
+  Merge: https://stellar.expert/explorer/public/tx/d7f801c0224e5a6159e980f4c13ce01135d26b5c0faeb8e69d4dad90f6867eba
+

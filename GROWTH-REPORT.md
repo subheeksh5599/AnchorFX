@@ -11,8 +11,8 @@
 ## 1. Summary
 
 August was the growth cycle after the July mainnet launch. The product is live on
-Stellar mainnet with two audited Soroban contracts (escrow + FX oracle), 50+ verified
-mainnet users (20 July cohort + 30 onboarded this cycle), a new feature batch shipped
+Stellar mainnet with two audited Soroban contracts (escrow + FX oracle), 70 verified
+mainnet users (20 July + 30 + 20 August cohorts), a new feature batch shipped
 to address the top user-feedback requests, and a public on-chain explorer so every
 transaction is verifiable.
 
@@ -35,9 +35,9 @@ transaction is verifiable.
 |--------|-------|
 | Mainnet escrow contract | `CDGQ7K4XGAPG3YJVAGHCE45XOR63HLD6ARJCRESEEKSRQZSIRAKG6F6V` |
 | Mainnet oracle contract | `CCOIG4R7AIUQTP5CURK4PFINFF2EVQTBGTCN636E2JY25FGY7L4K54KT` |
-| Verified mainnet users | **50+** (20 July cohort + 30 August cohort) |
-| On-chain escrows | 45 created (IDs 1–45), all settled |
-| August cohort txns | 180+ (fund → approve → create → approve → settle → merge × 30) |
+| Verified mainnet users | **70** (20 July + 30 Aug + 20 Aug-2) |
+| On-chain escrows | 71 created (IDs 1–71), all settled |
+| August cohort txns | 300 (180 × 30 users + 120 × 20 users, 6-tx lifecycle) |
 | Contract tests | 27 (23 escrow + 4 oracle) |
 | Frontend tests | 34 |
 | CI | Green (contract tests, build, tsc, eslint, prettier) |
@@ -80,7 +80,7 @@ Testnet contracts (Aug 2026 cycle): escrow `CBPMOQDTG535WEWSSJ2R75KZ27R4CYCH4ENV
 
 ## 6. Next Month Goals
 
-1. Onboard another 50+ mainnet users (Google Form + explorer-based proof)
+1. Continue monthly onboarding toward 100 mainnet users (Google Form + explorer-based proof)
 2. Ship recurring payments (top feedback item)
 3. Publish product update thread on X
 4. One more community contribution (workshop/tutorial)

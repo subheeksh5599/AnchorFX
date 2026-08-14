@@ -93,12 +93,12 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 
 ### 🔵 Blue Belt — MVP Growth (Level 5)
 
-- [x] **50+ users onboarded** — 50+ verified mainnet users (exceeds the 50-testnet bar); testnet dev/QA flow in [GROWTH-REPORT.md](GROWTH-REPORT.md)
+- [x] **70 users onboarded** — 70 verified mainnet users (exceeds the 50-testnet bar); testnet dev/QA flow in [GROWTH-REPORT.md](GROWTH-REPORT.md)
 - [x] **Product improvements from feedback** — [August 2026 growth cycle](#august-2026-growth-cycle)
 - [x] **Pitch deck** — [AnchorFX-Pitch-Deck.pptx](docs/AnchorFX-Pitch-Deck.pptx) (problem, solution, market, architecture, growth strategy, roadmap)
 - [x] **Demo video** — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
 - [x] **20+ meaningful commits** — [history](https://github.com/subheeksh5599/AnchorFX/commits/main) (100+)
-- [x] **Google Form + exported Excel** — [responses — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+- [x] **Google Form + exported Excel** — [responses — 70 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 - [x] **Feedback iteration plan with commit links** — [below](#august-2026-growth-cycle)
 
 ### ⚫ Black Belt — Mainnet Launch (Level 6)
@@ -106,8 +106,8 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 - [x] **Smart contracts deployed on Stellar Mainnet** — escrow + oracle (addresses above)
 - [x] **Public production-ready app** — [anchorfx.vercel.app](https://anchorfx.vercel.app)
 - [x] **20+ verified mainnet users** — [feedback table with tx proof](#user-feedback--mainnet-users)
-- [x] **Real on-chain activity** — [20-user proof](frontend/20-users-mainnet-proof.txt) + [30-user August cohort](frontend/scripts/30-users-mainnet-proof.txt)
-- [x] **Google Form + exported Excel** — [responses — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+- [x] **Real on-chain activity** — [20-user proof](frontend/20-users-mainnet-proof.txt) + [30-user August cohort](frontend/scripts/30-users-mainnet-proof.txt) + [20-user Aug-2 cohort](frontend/scripts/20-users-aug2-mainnet-proof.txt)
+- [x] **Google Form + exported Excel** — [responses — 70 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 - [x] **Smart contract audit** — 257 findings, all critical/high/medium fixed ([SECURITY.md](docs/SECURITY.md))
 - [x] **Launch post on X** — [@AnchorFX_](https://x.com/AnchorFX_/status/2081345430995308770)
 - [x] **Demo video** — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
@@ -122,13 +122,13 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 - [x] 30+ meaningful commits (100+)
 - [x] Live production application (Vercel)
 - [x] Mainnet transaction proof (July + August cohorts)
-- [x] User feedback sheet ([Excel — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
+- [x] User feedback sheet ([Excel — 70 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing))
 - [x] Product improvement commit links ([table below](#august-2026-growth-cycle))
 - [x] Community contribution ([blog + 9 merged PRs](#community-contribution))
 - [x] Social media growth (100+ followers on [@AnchorFX_](https://x.com/AnchorFX_))
 - [x] Updated documentation
 - [x] Monthly growth report ([GROWTH-REPORT.md](GROWTH-REPORT.md))
-- [x] **50+ new mainnet users** (August cohort adds 30; total 50+)
+- [x] **50+ new mainnet users** (August cohorts: 30 + 20 = 50 new; total 70)
 - [x] Product update posts on X
 
 ### August 2026 Growth Cycle
@@ -151,7 +151,7 @@ institutions, more corridors, public transparency):
 ## User Feedback — Mainnet Users
 
 **Feedback form:** [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeulA6BSWpbVZBUvv9egWKxTbr_aGe5dNy0AqyDBNH3xqSSjQ/viewform)
-· **Responses (Excel):** [sheet — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+· **Responses (Excel):** [sheet — 70 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
 
 ### July Cohort — 20 verified mainnet users
 
@@ -186,6 +186,12 @@ institutions, more corridors, public transparency):
 each completing the full escrow lifecycle. Full per-user tx trail:
 [`frontend/scripts/30-users-mainnet-proof.txt`](frontend/scripts/30-users-mainnet-proof.txt)
 (escrow IDs 16–45, corridors 1–11).
+
+### August Cohort 2 — 20 more new mainnet users
+
+A further 20 mainnet wallets onboarded (users 51–70), each completing the full
+escrow lifecycle (escrow IDs 52–71). Full per-user tx trail:
+[`frontend/scripts/20-users-aug2-mainnet-proof.txt`](frontend/scripts/20-users-aug2-mainnet-proof.txt).
 
 ### Future Improvements (Based on User Feedback)
 
@@ -358,8 +364,8 @@ Full security audit (257 findings) — all critical, high, and medium issues fix
 |--------|-------|
 | Smart Contracts | 2 (Escrow + Oracle) |
 | Networks | Testnet + Mainnet |
-| Mainnet users | 50+ (20 July + 30 August cohorts) |
-| On-chain transactions | 140+ (July) + 180+ (August) |
+| Mainnet users | 70 (20 July + 30 Aug + 20 Aug-2) |
+| On-chain transactions | 440+ (140 July + 180 Aug + 120 Aug-2) |
 | Contract Tests | 27 (23 escrow + 4 oracle) |
 | Frontend Tests | 34 |
 | **Total Tests** | **61 passing, zero warnings** |
