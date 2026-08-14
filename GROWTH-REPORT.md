@@ -20,12 +20,12 @@ transaction is verifiable.
 
 | # | Improvement | Feedback Source | Commit |
 |---|-------------|-----------------|--------|
-| 1 | Public Escrow Explorer (`/explorer`) | David: "Needs API access, webhooks, dashboard" | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 2 | Live FX Rates (`/rates` + `/api/rates`) | Maria: "Would love to see BRL pairs" | [9159ba5](https://github.com/subheeksh5599/AnchorFX/commit/9159ba5) |
-| 3 | 6 new corridors (ARS, GHS, KES, IDR, VND, THB) | Fatima, Kenji, Anna, Carlos: "More token pairs" | [5c8aef4](https://github.com/subheeksh5599/AnchorFX/commit/5c8aef4) |
-| 4 | Network Status page (`/status`) | David, Laura: institutional transparency | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 5 | API Reference (`/developers`) | David: "Needs API access" | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 6 | Live mainnet stats on landing | All users | [7fd1263](https://github.com/subheeksh5599/AnchorFX/commit/7fd1263) |
+| 1 | Public Escrow Explorer (`/explorer`) | David: "Needs API access, webhooks, dashboard" | [d02bd2c](https://github.com/subheeksh5599/AnchorFX/commit/d02bd2c) |
+| 2 | Live FX Rates (`/rates` + `/api/rates`) | Maria: "Would love to see BRL pairs" | [35fc7b3](https://github.com/subheeksh5599/AnchorFX/commit/35fc7b3) |
+| 3 | 6 new corridors (ARS, GHS, KES, IDR, VND, THB) | Fatima, Kenji, Anna, Carlos: "More token pairs" | [0212cf8](https://github.com/subheeksh5599/AnchorFX/commit/0212cf8) |
+| 4 | Network Status page (`/status`) | David, Laura: institutional transparency | [d02bd2c](https://github.com/subheeksh5599/AnchorFX/commit/d02bd2c) |
+| 5 | API Reference (`/developers`) | David: "Needs API access" | [d02bd2c](https://github.com/subheeksh5599/AnchorFX/commit/d02bd2c) |
+| 6 | Live mainnet stats on landing | All users | [e2a6928](https://github.com/subheeksh5599/AnchorFX/commit/e2a6928) |
 
 ## 3. On-Chain Metrics
 
