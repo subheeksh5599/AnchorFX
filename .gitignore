@@ -67,3 +67,4 @@ frontend/capture-screenshots.cjs
 # local tooling
 .venv-pptx/
 gen_pitch.py
+gen-feedback-csv.py

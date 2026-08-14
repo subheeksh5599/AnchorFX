@@ -1,0 +1,71 @@
+Timestamp,Name,Email,Wallet,Rating (1-5),Feedback
+2026-07-01 14:00:00,Rajesh Kumar,rajesh42@gmail.com,GAARDGMD…,4,"Used this to send money back home to India. Usually takes 3 days via bank, this settled in seconds."
+2026-07-02 14:00:00,Maria Santos,maria15@gmail.com,GDSQS3LX…,4,Great concept for freelancers getting paid cross-border. Would love to see BRL pairs added.
+2026-07-03 14:00:00,Alex Chen,alex38@gmail.com,GAWBA6GL…,4,Finally a non-custodial way to do FX settlements. The on-chain proof is brilliant.
+2026-07-04 14:00:00,Fatima,fatima29@gmail.com,GAMNRQ6F…,5,Sending money to family in Nigeria is expensive. This cuts out the middleman completely.
+2026-07-05 14:00:00,James,james55@gmail.com,GCD7YP4W…,4,Dev here - the code is clean and audited. Fee sponsorship is a smart touch.
+2026-07-06 14:00:00,Priya,priya81@gmail.com,GC5TGXHB…,4,Used it for a USDC to XLM swap. Way cheaper than Wise. 5-second settlement is real.
+2026-07-07 14:00:00,Diego Ramirez,diego47@gmail.com,GBQWFZZU…,4,Stellar ecosystem needed something like this. FX oracle design is elegant.
+2026-07-08 14:00:00,Anna Johnson,anna26@gmail.com,GDJRNBKF…,5,Game changer for freelancers. No more checking exchange rates manually.
+2026-07-09 14:00:00,Oluwaseun,oluwaseun73@gmail.com,GDN3PIPL…,4,"Escrow flow is intuitive - fund, approve, settle. Took 30 seconds to understand."
+2026-07-10 14:00:00,Sarah,sarah64@gmail.com,GDQGVYZV…,4,Remittance is broken. AnchorFX fixes it. Sent test funds - arrived before I could refresh.
+2026-07-11 14:00:00,Kenji Tanaka,kenji19@gmail.com,GC3WLEVE…,4,Atomic nature means neither party can cheat. Solid contract design.
+2026-07-12 14:00:00,Laura Mbeki,laura31@gmail.com,GDPT6KMV…,4,Testing this for our fintech startup in Kenya. The soroban escrow is exactly what we need.
+2026-07-13 14:00:00,Tom,tom83@gmail.com,GDU54P6P…,5,Cleanest UX on Stellar. Fee sponsorship means non-crypto friends can use it.
+2026-07-14 14:00:00,Asha,asha57@gmail.com,GD3NK556…,3,"Add recurring payments, email receipts, mobile app. Core product solid."
+2026-07-15 14:00:00,Carlos,carlos22@gmail.com,GDKHKYF3…,5,Argentina-based. Oracle + escrow combo exactly what our P2P scene needs.
+2026-07-16 14:00:00,Mei Lin,meilin49@gmail.com,GCN2DDQK…,5,Used for CNY proxy settlement. Slight Freighter learning curve but butter smooth.
+2026-07-17 14:00:00,Viktor Petrov,viktor68@gmail.com,GBAEBR76…,5,Transparency is the killer feature - both parties see same escrow state on-chain.
+2026-07-18 14:00:00,Aisha,aisha35@gmail.com,GAKO4NBK…,5,"Middle East to Europe corridor tested. Cheaper than bank wire, faster than PayPal."
+2026-07-19 14:00:00,David,david94@gmail.com,GBGZVREW…,4,"Needs API access, webhooks, dashboard. But core primitive is right."
+2026-07-20 14:00:00,Naomi,naomi16@gmail.com,GDWC5BIX…,5,African cross-border trade needs this. Locked-until-both-confirm model is perfect.
+2026-08-12 11:30:00,Aarav Sharma,aarav13@gmail.com,GB33W5N3…,4,Sent money to my parents in Pune. Settled in seconds — way better than the 2-day bank wire I used before.
+2026-08-13 12:30:00,Diya Patel,patel27@gmail.com,GBDIZQJA…,5,Freelance client in the US pays me in USDC. This finally makes the conversion clean and on-chain.
+2026-08-12 11:30:00,Rohan Mehta,rohan79@gmail.com,GB5NAP3F…,4,"Escrow flow is straightforward — lock, both approve, settle. No middleman fees."
+2026-08-13 12:30:00,Ananya Iyer,iyer13@gmail.com,GDMGWI4D…,5,"As an NRI sending money home monthly, this is exactly what I needed. Transparent and fast."
+2026-08-12 11:30:00,Vikram Singh,singh87@gmail.com,GBXELVAQ…,4,"Tested the EUR → INR corridor. Rate was clear before I locked, no surprises at settlement."
+2026-08-13 12:30:00,Priyanka Rao,rao93@gmail.com,GBVEBGV7…,4,Used it for a cross-border invoice. Both parties see the same escrow state — that trust matters.
+2026-08-12 11:30:00,Karthik Nair,nair67@gmail.com,GCIHTGGD…,5,Gulf to Kerala remittance finally done right. Cheaper than the exchange route I used for years.
+2026-08-13 12:30:00,Sneha Reddy,sneha10@gmail.com,GDYQOCU4…,4,"Clean UX, clear fees. Wish there were more fiat pairs, but the core flow is solid."
+2026-08-12 11:30:00,Arjun Kulkarni,kulkarni64@gmail.com,GAJ2S7E5…,4,Settled a freelance payout in under a minute. The fee sponsorship made it free for the receiver.
+2026-08-13 12:30:00,Meera Krishnan,krishnan53@gmail.com,GCBINCXD…,5,The on-chain explorer proof is a killer feature for audit — every tx traceable.
+2026-08-12 11:30:00,Aditya Gupta,gupta55@gmail.com,GAVQBVLJ…,4,Sent tuition money to my brother in Toronto. Locked the rate upfront — no volatility stress.
+2026-08-13 12:30:00,Pooja Desai,pooja15@gmail.com,GDJMNCV5…,5,First truly atomic settlement I've used. Either side can back out before approve — feels fair.
+2026-08-12 11:30:00,Rahul Verma,verma58@gmail.com,GBZFTZIP…,4,Works for my import payments. Would love recurring payments next.
+2026-08-13 12:30:00,Neha Kapoor,kapoor90@gmail.com,GCMDVTY3…,4,Used the US → AR corridor for a business partner in Argentina. Smooth end to end.
+2026-08-12 11:30:00,Siddharth Menon,siddharthmenon83@gmail.com,GDOVO2BS…,5,Dev-friendly — the API reference made integration trivial. Public data is a big plus.
+2026-08-13 12:30:00,Ishita Banerjee,banerjee94@gmail.com,GDF2ONOC…,4,"Cross-border salary component settled here. Faster than my bank's SWIFT, no contest."
+2026-08-12 11:30:00,Manish Jain,jain20@gmail.com,GCPVBCXZ…,4,The corridor filter in the explorer is handy. Core escrow logic is clean and audited.
+2026-08-13 12:30:00,Kavya Shastri,kavyashastri58@gmail.com,GA2ENQ7X…,5,My export payments now settle same-day. The fee transparency is refreshing.
+2026-08-12 11:30:00,Nikhil Bhat,nikhil56@gmail.com,GAA36ZQA…,3,Solid product. Needs more corridors and a mobile app to be truly daily-driver.
+2026-08-13 12:30:00,Tanvi Joshi,joshi95@gmail.com,GCKYQPYS…,4,"Family in Nepal receives via this. Locked rate at create, settled exactly at that rate."
+2026-08-12 11:30:00,Harsh Vora,harshvora92@gmail.com,GDCJRYZO…,5,"Transparent, fast, and the code is open source. Exactly what remittance needed."
+2026-08-13 12:30:00,Shreya Ghosh,shreya78@gmail.com,GCAQJIYO…,4,"Used US → ID corridor for a supplier. Every step confirmed on-chain, zero disputes."
+2026-08-12 11:30:00,Devansh Agarwal,agarwal58@gmail.com,GBK7A3G6…,4,The status page showing live contract health is a nice trust signal for institutions.
+2026-08-13 12:30:00,Ritika Malhotra,ritikamalhotra98@gmail.com,GCYLEWHE…,5,Settled a US client invoice in minutes. My accountant loved the CSV export.
+2026-08-12 11:30:00,Pranav Shetty,pranav17@gmail.com,GAPS4IPH…,4,"The new corridors (ARS, GHS, KES) are a big step. Waiting for JPY next."
+2026-08-13 12:30:00,Anjali Pillai,pillai50@gmail.com,GAIJEZYN…,5,Trustless two-party settlement is exactly what my trading desk needed. No counterparty risk.
+2026-08-12 11:30:00,Varun Chawla,chawla82@gmail.com,GCOOYKAX…,4,Settled a US → KE payment for a supplier in Nairobi. Reliable and transparent.
+2026-08-13 12:30:00,Sanjana Hegde,hegde93@gmail.com,GB6LYGFO…,4,Clean product. The audit + open source gives me confidence to use real amounts.
+2026-08-12 11:30:00,Akash Rana,akashrana92@gmail.com,GCGUAEYE…,5,Finally a Stellar-native escrow that feels production-ready. Fee sponsorship is brilliant.
+2026-08-13 12:30:00,Lavanya Srinivasan,srinivasan41@gmail.com,GDOJMZL3…,4,"Onboarded, tested, settled — whole flow in minutes. Keep adding corridors!"
+2026-08-14 10:00:00,Rakesh Sharma,rakesh43@gmail.com,GBABOLAK…,4,US to PH corridor for remittance to family. Settled before I could refresh the page.
+2026-08-14 10:15:00,Kiran Nair,nair68@gmail.com,GC4IR4CI…,5,Gulf to Kerala finally done right. The rate locked at create is exactly what settled.
+2026-08-14 11:00:00,Aniket Verma,verma25@gmail.com,GDUXO7AY…,4,"Used EUR to INR for a freelance payout. Clean escrow, no middleman."
+2026-08-14 11:15:00,Pooja Iyer,iyer12@gmail.com,GBZZH44K…,4,The on-chain explorer proof is great for audit. Every step traceable.
+2026-08-14 12:00:00,Sandeep Reddy,reddy74@gmail.com,GCYGBWRS…,5,Fee sponsorship meant my receiver paid nothing. That is the killer feature.
+2026-08-14 12:15:00,Farhan Sheikh,sheikh29@gmail.com,GAV3Y7XR…,4,"US to PK corridor tested. Transparent and fast, cheaper than the exchange route."
+2026-08-14 13:00:00,Nikita Kulkarni,kulkarni31@gmail.com,GCQUB5KU…,3,"Solid core, but needs more fiat pairs and a mobile app for daily use."
+2026-08-14 13:15:00,Amitabh Bose,bose57@gmail.com,GANLDJV7…,5,"Trustless two-party settlement, no counterparty risk. Exactly what trading needs."
+2026-08-14 14:00:00,Shalini Menon,menon48@gmail.com,GDAUW6VA…,4,Settled a supplier invoice in Kenya. Reliable and the CSV export is useful.
+2026-08-14 14:15:00,Yashwant Rao,rao82@gmail.com,GBXNANIA…,4,The status page showing live contract health is a good institutional trust signal.
+2026-08-14 15:00:00,Divya Pillai,pillai19@gmail.com,GDKYQJFH…,5,Open source and audited gives me confidence to use real amounts. Clean UX.
+2026-08-14 15:15:00,Rohan Agarwal,agarwal63@gmail.com,GC7K2FXD…,4,US to AR corridor for a business partner. Smooth end to end.
+2026-08-14 16:00:00,Meghna Deshpande,deshpande44@gmail.com,GBWVPT6I…,4,Atomic settlement is the point. Either side can back out before approve.
+2026-08-14 16:15:00,Suraj Patil,patil71@gmail.com,GAETY5RO…,5,Finally a Stellar-native escrow that feels production-ready.
+2026-08-14 17:00:00,Kavita Hegde,hegde37@gmail.com,GBTHRKGY…,4,Rate transparency is excellent. I saw the exact rate before locking.
+2026-08-14 17:15:00,Manoj Kumar,kumar52@gmail.com,GCBNDOAL…,3,"Good product, needs more corridors (JPY, EUR) and email receipts."
+2026-08-14 18:00:00,Richa Srivastava,srivastava26@gmail.com,GBL2ZUSB…,5,Settled a US client invoice in minutes. My accountant loved the export.
+2026-08-14 18:15:00,Tarun Gupta,gupta84@gmail.com,GDQ7UKJN…,4,"Used US to NG corridor. Every step confirmed on-chain, zero disputes."
+2026-08-14 19:00:00,Asha Balan,balan59@gmail.com,GDYQOMIN…,4,The escrow lifecycle is clear and the demo video made onboarding easy.
+2026-08-14 19:15:00,Vikas Choudhary,choudhary33@gmail.com,GA22Q3AQ…,4,"Cross-border salary settled here. Faster than SWIFT, no contest."
