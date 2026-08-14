@@ -63,3 +63,7 @@ frontend/test-send.cjs
 frontend/record-demo.cjs
 frontend/capture-proof.cjs
 frontend/capture-screenshots.cjs
+
+# local tooling
+.venv-pptx/
+gen_pitch.py

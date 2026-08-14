@@ -91,6 +91,16 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 
 ## What's done (verified)
 
+### 🔵 Blue Belt — MVP Growth (Level 5)
+
+- [x] **50+ users onboarded** — 50+ verified mainnet users (exceeds the 50-testnet bar); testnet dev/QA flow in [GROWTH-REPORT.md](GROWTH-REPORT.md)
+- [x] **Product improvements from feedback** — [August 2026 growth cycle](#august-2026-growth-cycle)
+- [x] **Pitch deck** — [AnchorFX-Pitch-Deck.pptx](docs/AnchorFX-Pitch-Deck.pptx) (problem, solution, market, architecture, growth strategy, roadmap)
+- [x] **Demo video** — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
+- [x] **20+ meaningful commits** — [history](https://github.com/subheeksh5599/AnchorFX/commits/main) (100+)
+- [x] **Google Form + exported Excel** — [responses — 50 users](https://docs.google.com/spreadsheets/d/1XzH2UOtSGg7foc8rLsMSwb43BppifJ9J8E6no0djulw/edit?usp=sharing)
+- [x] **Feedback iteration plan with commit links** — [below](#august-2026-growth-cycle)
+
 ### ⚫ Black Belt — Mainnet Launch (Level 6)
 
 - [x] **Smart contracts deployed on Stellar Mainnet** — escrow + oracle (addresses above)
