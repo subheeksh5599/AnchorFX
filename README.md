@@ -128,13 +128,13 @@ institutions, more corridors, public transparency):
 
 | # | Improvement | Feedback Source | Commit |
 |---|-------------|-----------------|--------|
-| 1 | Public Escrow Explorer (`/explorer`) | David: "Needs API access, webhooks, dashboard" | [a589495](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 2 | Live FX Rates (`/rates` + `/api/rates`) | Maria: "Would love to see BRL pairs" | [a4bacd9](https://github.com/subheeksh5599/AnchorFX/commit/9159ba5) |
-| 3 | 6 new corridors (ARS, GHS, KES, IDR, VND, THB) | Fatima, Kenji, Anna, Carlos: "More token pairs" | [9dab6cc](https://github.com/subheeksh5599/AnchorFX/commit/5c8aef4) |
-| 4 | Network Status (`/status`) | David, Laura: institutional transparency | [a589495](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 5 | API Reference (`/developers`) | David: "Needs API access" | [a589495](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
-| 6 | Live mainnet stats on landing | All users | [316a778](https://github.com/subheeksh5599/AnchorFX/commit/7fd1263) |
-| 7 | 30-user mainnet onboarding run + script | Growth requirement | [f83c246](https://github.com/subheeksh5599/AnchorFX/commit/9b8e52d) |
+| 1 | Public Escrow Explorer (`/explorer`) | David: "Needs API access, webhooks, dashboard" | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
+| 2 | Live FX Rates (`/rates` + `/api/rates`) | Maria: "Would love to see BRL pairs" | [9159ba5](https://github.com/subheeksh5599/AnchorFX/commit/9159ba5) |
+| 3 | 6 new corridors (ARS, GHS, KES, IDR, VND, THB) | Fatima, Kenji, Anna, Carlos: "More token pairs" | [5c8aef4](https://github.com/subheeksh5599/AnchorFX/commit/5c8aef4) |
+| 4 | Network Status (`/status`) | David, Laura: institutional transparency | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
+| 5 | API Reference (`/developers`) | David: "Needs API access" | [d45ba5d](https://github.com/subheeksh5599/AnchorFX/commit/d45ba5d) |
+| 6 | Live mainnet stats on landing | All users | [7fd1263](https://github.com/subheeksh5599/AnchorFX/commit/7fd1263) |
+| 7 | 30-user mainnet onboarding run + script | Growth requirement | [9b8e52d](https://github.com/subheeksh5599/AnchorFX/commit/9b8e52d) |
 
 ---
 
