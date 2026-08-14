@@ -119,7 +119,7 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 - [x] Updated documentation
 - [x] Monthly growth report ([GROWTH-REPORT.md](GROWTH-REPORT.md))
 - [x] **50+ new mainnet users** (August cohort adds 30; total 50+)
-- [ ] Product update posts on X (in progress)
+- [x] Product update posts on X
 
 ### August 2026 Growth Cycle
 
