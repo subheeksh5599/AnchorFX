@@ -509,7 +509,7 @@ mod test {
     fn create_sac(env: &Env, admin: &Address) -> Address {
         let sac = env.register_stellar_asset_contract_v2(admin.clone());
         let token = soroban_sdk::token::StellarAssetClient::new(env, &sac.address());
-        token.mint(&admin, &10000000);
+        token.mint(admin, &10000000);
         sac.address()
     }
 
@@ -1070,10 +1070,10 @@ mod test {
         for step in 0..50 {
             match step % 5 {
                 0 => {
-                    let receiver = receivers.get((step % receivers.len()) as u32).unwrap();
+                    let receiver = receivers.get(step % receivers.len()).unwrap();
                     let amount = ((step as i128 + 1) * 1000) % 100000 + 100;
-                    let timeout = (step as u32 * 10) % 5000 + 100;
-                    let corridor = ((step % 5) + 1) as u32;
+                    let timeout = (step * 10) % 5000 + 100;
+                    let corridor = (step % 5) + 1;
                     let id = client
                         .create_escrow(&admin, &receiver, &token, &amount, &timeout, &corridor);
                     expected_count += 1;
