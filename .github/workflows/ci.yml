@@ -14,6 +14,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Rust toolchain
         run: rustup update stable && rustup target add wasm32-unknown-unknown
+      - name: Cache cargo builds
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "./contracts/anchorfx-escrow -> target, ./contracts/anchorfx-oracle -> target"
       - name: Run escrow contract tests
         working-directory: contracts/anchorfx-escrow
         run: cargo test
@@ -26,15 +30,18 @@ jobs:
       - name: Verify WASM build (oracle)
         working-directory: contracts/anchorfx-oracle
         run: cargo build --target wasm32-unknown-unknown --release
-      - name: Check Rust formatting
+      - name: Check Rust formatting (escrow)
         working-directory: contracts/anchorfx-escrow
+        run: cargo fmt --check
+      - name: Check Rust formatting (oracle)
+        working-directory: contracts/anchorfx-oracle
         run: cargo fmt --check
       - name: Clippy lint (escrow)
         working-directory: contracts/anchorfx-escrow
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --all-targets -- -D warnings
       - name: Clippy lint (oracle)
         working-directory: contracts/anchorfx-oracle
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --all-targets -- -D warnings
 
   frontend-build:
     name: Frontend Build & Test
@@ -44,6 +51,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         working-directory: frontend
         run: npm ci
@@ -58,7 +67,7 @@ jobs:
         run: npx tsc --noEmit
       - name: Format Check
         working-directory: frontend
-        run: npx prettier --check "app/**/*.{ts,tsx}" "components/**/*.{ts,tsx}" "lib/**/*.ts"
+        run: npx prettier --check "*.{ts,tsx,mjs,json}" "app/**/*.{ts,tsx}" "components/**/*.{ts,tsx}" "lib/**/*.{ts,tsx}" "__tests__/**/*.{ts,tsx}"
       - name: Lint
         working-directory: frontend
         run: npx eslint . --quiet
