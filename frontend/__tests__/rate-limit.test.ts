@@ -13,7 +13,9 @@ describe("rateLimit", () => {
   });
 
   it("allows requests within burst limit", () => {
-    const req = { headers: new Map([["x-forwarded-for", "10.0.0.1"]]) } as unknown as Request;
+    const req = {
+      headers: new Map([["x-forwarded-for", "10.0.0.1"]]),
+    } as unknown as Request;
     for (let i = 0; i < RATE_LIMITS.api.burst; i++) {
       const r = rateLimit(req, RATE_LIMITS.api, "test");
       expect(r.allowed).toBe(true);
@@ -21,7 +23,9 @@ describe("rateLimit", () => {
   });
 
   it("blocks requests exceeding burst limit", () => {
-    const req = { headers: new Map([["x-forwarded-for", "10.0.0.2"]]) } as unknown as Request;
+    const req = {
+      headers: new Map([["x-forwarded-for", "10.0.0.2"]]),
+    } as unknown as Request;
     for (let i = 0; i < RATE_LIMITS.api.burst; i++) {
       rateLimit(req, RATE_LIMITS.api, "test");
     }
@@ -31,14 +35,18 @@ describe("rateLimit", () => {
   });
 
   it("uses X-Forwarded-For header for client IP", () => {
-    const req = { headers: new Map([["x-forwarded-for", "192.168.1.100"]]) } as unknown as Request;
+    const req = {
+      headers: new Map([["x-forwarded-for", "192.168.1.100"]]),
+    } as unknown as Request;
     const r = rateLimit(req, RATE_LIMITS.api, "test");
     expect(r.allowed).toBe(true);
     expect(r.remaining).toBe(RATE_LIMITS.api.burst - 1);
   });
 
   it("isolates rate limits per endpoint", () => {
-    const req = { headers: new Map([["x-forwarded-for", "10.0.0.3"]]) } as unknown as Request;
+    const req = {
+      headers: new Map([["x-forwarded-for", "10.0.0.3"]]),
+    } as unknown as Request;
     const r1 = rateLimit(req, RATE_LIMITS.api, "endpoint-a");
     const r2 = rateLimit(req, RATE_LIMITS.wallet, "endpoint-b");
     expect(r1.allowed).toBe(true);
@@ -46,8 +54,12 @@ describe("rateLimit", () => {
   });
 
   it("isolates rate limits per IP", () => {
-    const req1 = { headers: new Map([["x-forwarded-for", "10.0.0.4"]]) } as unknown as Request;
-    const req2 = { headers: new Map([["x-forwarded-for", "10.0.0.5"]]) } as unknown as Request;
+    const req1 = {
+      headers: new Map([["x-forwarded-for", "10.0.0.4"]]),
+    } as unknown as Request;
+    const req2 = {
+      headers: new Map([["x-forwarded-for", "10.0.0.5"]]),
+    } as unknown as Request;
     rateLimit(req1, RATE_LIMITS.api, "test");
     rateLimit(req1, RATE_LIMITS.api, "test");
     const r = rateLimit(req2, RATE_LIMITS.api, "test");

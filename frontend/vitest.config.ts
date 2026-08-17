@@ -3,7 +3,12 @@ import path from "path";
 
 export default defineConfig({
   test: {
-    include: ["__tests__/**/*.test.ts", "__tests__/**/*.test.tsx", "**/*.test.ts", "**/*.test.tsx"],
+    include: [
+      "__tests__/**/*.test.ts",
+      "__tests__/**/*.test.tsx",
+      "**/*.test.ts",
+      "**/*.test.tsx",
+    ],
     environment: "node",
     coverage: {
       provider: "v8",

@@ -8,9 +8,13 @@ import {
 
 describe("validateStellarAddress", () => {
   it("accepts valid testnet public key", () => {
-    const r = validateStellarAddress("GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF");
+    const r = validateStellarAddress(
+      "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF"
+    );
     expect(r.valid).toBe(true);
-    expect(r.sanitized).toBe("GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF");
+    expect(r.sanitized).toBe(
+      "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF"
+    );
   });
 
   it("rejects empty string", () => {
@@ -32,21 +36,29 @@ describe("validateStellarAddress", () => {
   });
 
   it("rejects address with wrong prefix", () => {
-    const r = validateStellarAddress("SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    const r = validateStellarAddress(
+      "SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    );
     expect(r.valid).toBe(false);
     expect(r.error).toContain("Invalid Stellar");
   });
 
   it("trims whitespace from valid address", () => {
-    const r = validateStellarAddress("  GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF  ");
+    const r = validateStellarAddress(
+      "  GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF  "
+    );
     expect(r.valid).toBe(true);
-    expect(r.sanitized).toBe("GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF");
+    expect(r.sanitized).toBe(
+      "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF"
+    );
   });
 });
 
 describe("validateContractId", () => {
   it("accepts valid Soroban contract ID", () => {
-    const r = validateContractId("CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26");
+    const r = validateContractId(
+      "CB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26"
+    );
     expect(r.valid).toBe(true);
   });
 
@@ -56,7 +68,9 @@ describe("validateContractId", () => {
   });
 
   it("rejects non-C prefix", () => {
-    const r = validateContractId("GB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26");
+    const r = validateContractId(
+      "GB4U7NLHDRGQQEKBNJ7GBPMXW4AA2VGTGEURS2FF34ZCRJMVOCFBKE26"
+    );
     expect(r.valid).toBe(false);
   });
 });
@@ -110,10 +124,15 @@ describe("validateSchema", () => {
   });
 
   it("accepts valid schema with optional field missing", () => {
-    const r = validateSchema({ destination: "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF" }, [
-      { name: "destination", type: "stellarAddress" as const },
-      { name: "memo", type: "string" as const },
-    ]);
+    const r = validateSchema(
+      {
+        destination: "GC3Z6XEDF25KKJGGKF6V4ALMWWLWOD3KHKYM3DO5WJJTVHXJMEY64BWF",
+      },
+      [
+        { name: "destination", type: "stellarAddress" as const },
+        { name: "memo", type: "string" as const },
+      ]
+    );
     expect(r.valid).toBe(true);
   });
 
