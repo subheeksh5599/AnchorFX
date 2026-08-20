@@ -91,6 +91,156 @@ Deployment proof ([stellar.expert](https://stellar.expert/explorer/public/contra
 
 ## What's done (verified)
 
+AnchorFX is being driven through the **Stellar Journey to Mastery** monthly builder
+challenge. All seven levels are complete and documented here — this README shows the
+full requirement detail for **every belt** (Level 1 → Level 7), with live evidence
+for each item, so the Master Track (Level 7) submission has no gaps from the
+sequential gate (earlier levels must be complete before a later belt can pass).
+
+| Belt | Level | Focus | Status |
+|------|-------|-------|--------|
+| ⚪️ White | 1 | First dApp + wallet connect + deploy | ✅ Complete |
+| 🟡 Yellow | 2 | Multi-wallet + contract deploy + real-time events | ✅ Complete |
+| 🟠 Orange | 3 | Advanced contracts + production dApp + CI/CD | ✅ Complete |
+| 💭 Idea | — | Project idea approved | ✅ Approved |
+| 🟢 Green | 4 | Production MVP + real users + feedback | ✅ Complete |
+| 🔵 Blue | 5 | MVP growth + pitch + demo | ✅ Complete |
+| ⚫ Black | 6 | Mainnet launch + security + adoption | ✅ Complete |
+| 🧡 Master | 7 | Founder/growth + 50 new users | ✅ Complete |
+
+---
+
+### ⚪️ White Belt — First dApp (Level 1)
+
+**Focus:** Deploy your first dApp on Stellar, connect a wallet, and make your first
+live on-chain transaction.
+
+**Requirements & evidence:**
+
+- [x] **React/Next.js dApp deployed** — [anchorfx.vercel.app](https://anchorfx.vercel.app)
+- [x] **Wallet connect (Freighter, xBull)** — multi-wallet UI at [`/wallet`](https://anchorfx.vercel.app/wallet)
+  - Wallet options shown: [docs/walletshow.png](docs/walletshow.png) · wallet popup: [docs/walletpopup.png](docs/walletpopup.png)
+- [x] **Connected account + balance display** — live balance read from the Stellar network
+- [x] **Initial contract deployed (testnet)** — escrow + oracle (addresses in [GROWTH-REPORT.md §3](GROWTH-REPORT.md))
+- [x] **Live/demo link in README** — [anchorfx.vercel.app](https://anchorfx.vercel.app)
+- [x] **Minimum meaningful commits** — 119+ total; [history](https://github.com/subheeksh5599/AnchorFX/commits/main)
+
+---
+
+### 🟡 Yellow Belt — Multi-Wallet + Contract + Real-time (Level 2)
+
+**Focus:** Multi-wallet integration, smart contract deployment, and real-time data
+synchronization. Learn: StellarWalletsKit, error handling, deploying a contract to
+testnet, calling contract functions from the frontend, reading/writing contract
+data, event listening + state sync, and transaction status tracking.
+
+**Requirements & evidence:**
+
+- [x] **3 error types handled** — wallet-not-found, connection-rejected, insufficient-balance
+  (typed error handling in `frontend/lib/` and error boundaries)
+- [x] **Contract deployed on testnet** — escrow + oracle testnet deploy TXs:
+  [GROWTH-REPORT.md §3](GROWTH-REPORT.md) (escrow `CBPMOQDTG…`, oracle `CCSQCI5AG…`)
+- [x] **Contract called from the frontend** — [`/contract`](https://anchorfx.vercel.app/contract) deploys + reads live contract state
+- [x] **Transaction status visible** — pending/success/fail tracking in the wallet + escrow flows
+- [x] **2+ meaningful commits** — 119+ total; [history](https://github.com/subheeksh5599/AnchorFX/commits/main)
+- [x] **Deliverable: multi-wallet app with deployed contract + real-time events** — live SSE event
+  stream at [`/contract`](https://anchorfx.vercel.app/contract) / `GET /api/events`
+
+**Required in README (all present):** live demo link ✅ · wallet-options screenshot
+[docs/walletshow.png](docs/walletshow.png) ✅ · deployed contract address
+[GROWTH-REPORT.md §3](GROWTH-REPORT.md) ✅ · transaction hash of a contract call
+[verifiable on Stellar Explorer](https://stellar.expert/explorer/testnet) ✅
+
+---
+
+### 🟠 Orange Belt — Advanced Contracts + Production dApp (Level 3)
+
+**Focus:** Go deeper into smart contracts, production architecture, and real-world
+dApp development — advanced contract logic, testing, deployment, CI/CD, and
+production-ready infrastructure. Learn: inter-contract communication, event
+streaming, CI/CD, mobile-responsive frontend, error/loading states, tests, and
+production architecture.
+
+**Requirements & evidence:**
+
+- [x] **Inter-contract communication** — escrow factory + FX oracle contract call each
+  other (`contracts/anchorfx-escrow`, `contracts/anchorfx-oracle`)
+- [x] **Event streaming & real-time updates** — SSE at [`/contract`](https://anchorfx.vercel.app/contract) + `GET /api/events`
+- [x] **CI/CD pipeline** — [GitHub Actions](.github/workflows/ci.yml), green on every push;
+  pipeline screenshot [docs/ci-pipeline.png](docs/ci-pipeline.png); badge at top of this README
+- [x] **Smart contract deployment workflow** — scripted [`frontend/deploy.cjs`](frontend/deploy.cjs)
+- [x] **Mobile responsive frontend** — [docs/mobile-wallet.png](docs/mobile-wallet.png),
+  [docs/mobile-contract.png](docs/mobile-contract.png)
+- [x] **Error handling & loading states** — error boundaries + loading UI across routes
+- [x] **Tests (3+ passing)** — 61 total (27 contract + 34 frontend); output
+  [docs/test-output.txt](docs/test-output.txt) / [docs/test-output.png](docs/test-output.png)
+- [x] **Production-ready architecture** — clean modular structure (see [Project Structure](#project-structure))
+- [x] **Documentation & demo** — full README + demo video
+- [x] **10+ meaningful commits** — 119+ total; [history](https://github.com/subheeksh5599/AnchorFX/commits/main)
+- [x] **Demo video** — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
+
+**Submission checklist (all present):** public repo ✅ · README with complete docs ✅ ·
+deployed contract address ✅ · contract-interaction tx hash ✅ · mobile-responsive
+screenshot ✅ · CI/CD screenshot ✅ · test output (3+ passing) ✅ · demo video ✅
+
+---
+
+### 💭 Idea Submission — Project Concept Approved
+
+**Focus:** Propose your project idea (problem, solution, target users, why Stellar)
+for team approval before building it out.
+
+- [x] **Idea submitted & approved** — AnchorFX: atomic cross-border FX settlement on
+  Stellar (escrow + oracle). Problem: correspondent banking is slow, opaque and
+  expensive for cross-border payments. Solution: a non-custodial, on-chain escrow
+  settlement primitive with an FX oracle. Live product: [anchorfx.vercel.app](https://anchorfx.vercel.app)
+
+---
+
+### 🟢 Green Belt — Production MVP + Real Users (Level 4)
+
+**Focus:** Turn the approved concept into a real production-ready MVP with actual
+users — scalable product, user onboarding, performance, and real-world usability.
+Learn: scalable production dApps, advanced frontend/backend architecture, real user
+onboarding, feedback collection, performance optimization, error tracking, contract
+optimization, analytics, and product presentation.
+
+**Requirements & evidence:**
+
+**Production MVP:**
+- [x] Fully functional production-ready MVP — [anchorfx.vercel.app](https://anchorfx.vercel.app)
+- [x] Stable frontend + smart contract architecture
+- [x] Mobile responsive UI — [docs/mobile-wallet.png](docs/mobile-wallet.png)
+- [x] Loading states + error handling
+
+**User Onboarding:**
+- [x] **10+ real users onboarded** — **70 verified mainnet users** (exceeds the bar);
+  feedback table below with per-user wallet proof
+- [x] Proof of wallet interactions — per-user TX links in [User Feedback](#user-feedback--mainnet-users)
+- [x] Basic user feedback collection — [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeulA6BSWpbVZBUvv9egWKxTbr_aGe5dNy0AqyDBNH3xqSSjQ/viewform)
+
+**Product Quality:**
+- [x] Production deployment — [anchorfx.vercel.app](https://anchorfx.vercel.app)
+- [x] Monitoring & analytics — [`/status`](https://anchorfx.vercel.app/status) + analytics API
+- [x] Optimized UX
+- [x] Proper project structure & docs
+
+**Technical Standards:**
+- [x] Contracts on Stellar testnet — [GROWTH-REPORT.md §3](GROWTH-REPORT.md)
+  (and now **mainnet**, see [Deployed on Stellar Mainnet](#deployed-on-stellar-mainnet))
+- [x] **15+ meaningful commits** — 119+ total; [history](https://github.com/subheeksh5599/AnchorFX/commits/main)
+- [x] Public GitHub repository
+
+**Demo & Review:**
+- [x] Live demo video — [@AnchorFX_](https://x.com/AnchorFX_/status/2087687947000934893)
+
+**Submission checklist (all present):** public repo ✅ · README with complete docs ✅ ·
+15+ commits ✅ · live demo link ✅ · contract address ✅ · product UI + mobile
+responsive + analytics screenshots ✅ · demo video ✅ · proof of 10+ user wallet
+interactions ✅ · user feedback summary ✅
+
+---
+
 ### 🔵 Blue Belt — MVP Growth (Level 5)
 
 - [x] **70 users onboarded** — 70 verified mainnet users (exceeds the 50-testnet bar); testnet dev/QA flow in [GROWTH-REPORT.md](GROWTH-REPORT.md)
