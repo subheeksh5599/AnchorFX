@@ -21,6 +21,7 @@ It is built entirely on Stellar primitives:
 - **Stellar DEX path payments** — corridor quotes map fiat pairs to on-chain routes.
 
 **Live app:** [https://anchorfx.vercel.app](https://anchorfx.vercel.app)
+**Documentation:** [https://anchorfx.vercel.app/docs](https://anchorfx.vercel.app/docs)
 **X / Twitter:** [@AnchorFX_](https://x.com/AnchorFX_)
 **GitHub:** [subheeksh5599/AnchorFX](https://github.com/subheeksh5599/AnchorFX)
 
@@ -65,6 +66,26 @@ non-custodial, auditable alternative to correspondent banking.
 | Fee sponsorship (gasless users, fee bump) | `POST /api/sponsor` |
 | 11 corridors (US→PH, US→MX, EUR→BR, US→NG, EUR→IN, US→AR, US→GH, US→KE, US→ID, US→VN, US→TH) | `/api/fxroute` |
 | CSV/JSON export of all escrows | `/api/export` |
+
+---
+
+## Documentation Website
+
+A dedicated, publicly-accessible documentation website covers the complete project —
+features, user guide, setup & deployment, implementation (architecture + contracts),
+API reference, and security.
+
+**👉 [anchorfx.vercel.app/docs](https://anchorfx.vercel.app/docs)**
+
+| Docs page | Covers |
+|-----------|--------|
+| [Overview](https://anchorfx.vercel.app/docs) | What AnchorFX is, the atomic settlement primitive, live mainnet contracts |
+| [Features](https://anchorfx.vercel.app/docs/features) | App, contracts, and developer-API feature set |
+| [User Guide](https://anchorfx.vercel.app/docs/usage) | Connect wallet, escrow lifecycle, settle/refund/cancel, explore |
+| [Setup & Deployment](https://anchorfx.vercel.app/docs/setup) | Prerequisites, install, contract build, testnet/mainnet deploy, CI/CD |
+| [Implementation](https://anchorfx.vercel.app/docs/implementation) | Architecture, contract APIs, state machine, project structure |
+| [API Reference](https://anchorfx.vercel.app/docs/api) | REST + SSE endpoints, base URL, example |
+| [Security](https://anchorfx.vercel.app/docs/security) | Audit summary, contract hardening, disclosure policy |
 
 ---
 

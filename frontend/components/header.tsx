@@ -48,8 +48,8 @@ const menuCards = [
       { label: "Admin", href: "/admin", badge: null },
       {
         label: "Documentation",
-        href: "https://github.com/subheeksh5599/AnchorFX#readme",
-        badge: null,
+        href: "/docs",
+        badge: "NEW",
       },
     ],
   },

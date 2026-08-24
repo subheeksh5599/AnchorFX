@@ -24,7 +24,7 @@ const productLinks = [
   { label: "Network Status", href: "/status" },
   {
     label: "Documentation",
-    href: "https://github.com/subheeksh5599/AnchorFX#readme",
+    href: "/docs",
   },
   { label: "GitHub", href: "https://github.com/subheeksh5599/AnchorFX" },
 ];
